@@ -48,6 +48,7 @@ async def create_project(
         "style_id": project_data.style_id,
         "context_input": project_data.context_input,
         "lyrics_final": project_data.lyrics_final,
+        "audio_url": project_data.audio_url,
         "status": "draft"
     })
     

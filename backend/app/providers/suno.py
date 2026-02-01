@@ -57,7 +57,8 @@ class SunoProvider:
         lyrics: str,
         style_id: str,
         language: str = "fr",
-        title: str = ""
+        title: str = "",
+        audio_url: str = None
     ) -> str:
         """
         Create a track on SunoAPI.org.
@@ -67,6 +68,7 @@ class SunoProvider:
             style_id: Musical style from registry
             language: "fr" or "en"
             title: Song title (auto-generated if empty)
+            audio_url: Optional URL of user uploaded audio (humming/singing)
         
         Returns:
             task_id (str): Provider task ID
@@ -92,11 +94,21 @@ class SunoProvider:
             "model": "V4_5PLUS"  # Model enum: V4, V4_5PLUS, V5
         }
         
+        if audio_url:
+            payload["uploadUrl"] = audio_url  # Use uploaded audio as input
+
+        
+        endpoint = f"{self.base_url}/api/v1/generate"
+        
+        if audio_url:
+            endpoint = f"{self.base_url}/api/v1/generate/upload-cover"
+            payload["uploadUrl"] = audio_url
+        
         response = self.client.post(
-            f"{self.base_url}/api/v1/generate",
+            endpoint,
             json=payload,
             headers={
-                "Authorization": f"Bearer {self.api_key}",  # Bearer token auth
+                "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json"
             }
         )

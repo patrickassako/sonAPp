@@ -22,3 +22,8 @@ DEBUG SUNO PAYLOAD: {'customMode': True, 'prompt': '[Intro]\nJ’rap pour ma sœ
 05:06:41 Successfully completed app.workers.music_worker.generate_music('c94556c8-85ca-4b72-b61b-174803e018d8', 'b8b5b65d-a568-440f-b31d-cf71c9e52f02') job in 0:01:23.203767s on worker be7f9ed8cf7247bda059b9866f304b63
 05:06:41 music_generation: Job OK (3f9d0cc3-be95-4b52-8ed6-6da5f079121e)
 05:06:41 Result is kept for 500 seconds
+05:20:11 Worker be7f9ed8cf7247bda059b9866f304b63: cleaning registries for queue: music_generation
+05:33:42 Worker be7f9ed8cf7247bda059b9866f304b63: cleaning registries for queue: music_generation
+05:47:12 Worker be7f9ed8cf7247bda059b9866f304b63: cleaning registries for queue: music_generation
+05:47:19 Worker be7f9ed8cf7247bda059b9866f304b63 [PID 7678]: warm shut down requested
+05:47:21 Worker be7f9ed8cf7247bda059b9866f304b63: unsubscribing from channel rq:pubsub:be7f9ed8cf7247bda059b9866f304b63

@@ -80,7 +80,8 @@ async def _generate_music_impl(job_id: str, project_id: str):
             lyrics=project.get("lyrics_final", ""),
             style_id=project["style_id"],
             language=project["language"],
-            title=project["title"]
+            title=project["title"],
+            audio_url=project.get("audio_url")
         )
         
         # Update job with provider ID

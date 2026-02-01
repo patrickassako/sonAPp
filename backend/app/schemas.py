@@ -76,6 +76,7 @@ class ProjectCreate(BaseModel):
     style_id: str
     context_input: Optional[str] = None  # For CONTEXT mode
     lyrics_final: Optional[str] = None   # For TEXT mode
+    audio_url: Optional[str] = None      # For AUDIO_INPUT mode or idea
 
 
 class ProjectResponse(BaseModel):
@@ -88,6 +89,7 @@ class ProjectResponse(BaseModel):
     style_id: str
     context_input: Optional[str]
     lyrics_final: Optional[str]
+    audio_url: Optional[str]
     status: str
     created_at: datetime
     updated_at: datetime

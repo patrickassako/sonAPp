@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Sparkles, Loader2, Music2, Edit, Check, Clock, Globe } from "lucide-react";
+import { ArrowLeft, ArrowRight, Sparkles, Loader2, Music2, Edit, Check, Clock, Globe, Mic } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useWallet } from "@/lib/hooks/useWallet";
+import { AudioRecorder } from "@/components/molecules/AudioRecorder";
 
 interface Style {
     id: string;
@@ -29,6 +30,7 @@ export default function CreateWizardPage() {
     const [language, setLanguage] = useState<"en" | "fr">("fr");
     const [voice, setVoice] = useState<"auto" | "male" | "female">("auto");
     const [duration, setDuration] = useState(60);
+    const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
 
     // Step 3: Confirmation
     const [generatingLyrics, setGeneratingLyrics] = useState(false);
@@ -111,6 +113,27 @@ export default function CreateWizardPage() {
             const supabase = createClient();
             const { data: { session } } = await supabase.auth.getSession();
 
+            // 1. Upload audio if present
+            let audioUrl = null;
+            if (audioBlob) {
+                const fileName = `input-${Date.now()}-${session?.user?.id}.webm`;
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from("input-audio")
+                    .upload(fileName, audioBlob, {
+                        contentType: "audio/webm",
+                        upsert: false
+                    });
+
+                if (uploadError) throw new Error("Upload failed: " + uploadError.message);
+
+                // Get public URL
+                const { data: publicUrlData } = supabase.storage
+                    .from("input-audio")
+                    .getPublicUrl(fileName);
+
+                audioUrl = publicUrlData.publicUrl;
+            }
+
             // Create project
             const projectResponse = await fetch("http://localhost:8000/api/v1/projects/", {
                 method: "POST",
@@ -125,6 +148,7 @@ export default function CreateWizardPage() {
                     style_id: voice !== "auto" ? `${selectedStyle}:${voice}` : selectedStyle,
                     context_input: description, // Mapped from description
                     lyrics_final: lyrics,
+                    audio_url: audioUrl || undefined,
                     // Invalid fields removed: description, settings
                 })
             });
@@ -380,6 +404,22 @@ export default function CreateWizardPage() {
                             </div>
                         </div>
 
+                        {/* Audio Recorder Input (Optional) */}
+                        <div className="pt-6 border-t border-white/10">
+                            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                                <span className="material-symbols-outlined text-[#FFD700]">mic</span>
+                                Add Vocal Guide (Optional)
+                            </h2>
+                            <p className="text-white/60 text-sm mb-4">
+                                Record a melody, beatbox, or singing to guide the AI.
+                                <span className="text-primary block mt-1 font-bold">The AI will use this audio as the foundation.</span>
+                            </p>
+                            <AudioRecorder
+                                onAudioCaptured={(blob) => setAudioBlob(blob)}
+                                onClear={() => setAudioBlob(null)}
+                            />
+                        </div>
+
                         {/* Parameters */}
                         <div className="flex flex-col gap-8 pt-6 border-t border-white/10">
                             {/* Language */}
@@ -504,6 +544,14 @@ export default function CreateWizardPage() {
                                                 </div>
                                             </div>
                                         </div>
+
+                                        {/* Audio Present */}
+                                        {audioBlob && (
+                                            <div className="mt-4 p-3 bg-primary/10 rounded-lg flex items-center gap-3 border border-primary/20">
+                                                <Mic className="w-5 h-5 text-primary" />
+                                                <span className="text-sm font-bold text-primary">Audio Guide Included</span>
+                                            </div>
+                                        )}
 
                                         {/* Lyrics Preview if generated */}
                                         {lyrics && (
