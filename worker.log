@@ -1,0 +1,24 @@
+🎵 Starting MusicApp Worker...
+✅ Activated virtual environment.
+🚀 Listening for jobs on queue: music_generation...
+05:04:17 Worker be7f9ed8cf7247bda059b9866f304b63: started with PID 7678, version 2.6.1
+05:04:17 Worker be7f9ed8cf7247bda059b9866f304b63: subscribing to channel rq:pubsub:be7f9ed8cf7247bda059b9866f304b63
+05:04:17 *** Listening on music_generation...
+05:04:17 Acquired scheduler lock for music_generation
+05:04:17 Worker be7f9ed8cf7247bda059b9866f304b63: cleaning registries for queue: music_generation
+05:05:18 music_generation: app.workers.music_worker.generate_music('c94556c8-85ca-4b72-b61b-174803e018d8', 'b8b5b65d-a568-440f-b31d-cf71c9e52f02') (3f9d0cc3-be95-4b52-8ed6-6da5f079121e)
+🎵 Generating music for project Rap feminin
+DEBUG SUNO PAYLOAD: {'customMode': True, 'prompt': '[Intro]\nJ’rap pour ma sœur, ma mère, ma fille\nPour toutes celles qu’on fait taire en plein jour tranquille (hey)\nSi t’es prête à te lever, respire\nOn va réécrire la suite, ligne par ligne\n\n[Verse 1]\nElle se lève avant l’aube\nDeux boulots, trois gosses à l’école\nMême diplôme, moitié du salaire\nOn lui dit "patiente", comme si c’était normal de se taire\n\nDans la rue, ses clés entre les doigts\nElle calcule le chemin, pas les étoiles là-haut\nOn lui dit "souris", on lui dit "exagère"\nMais qui compte les bleus cachés sous son pull en hiver\n\nCarrière en pause pour porter la vie\nEt quand elle revient, son bureau a rétréci\nOn la coupe en réunion, parle par-dessus ses idées\nPuis on sigle ça d’un sourire poli, bien élevé\n\n[Chorus]\nFemme debout, lève la voix\nT’es pas un rôle secondaire dans l’histoire\nFemme debout, regarde-toi\nTa force, c’est une armure, c’est ta victoire (oh)\nOn t’a dressé des murs trop hauts\nOn va les prendre à coups de mots\nFemme debout, femme debout\nOn ne s’excuse plus d’être forte\n\n[Verse 2]\nPetite fille déjà, on lui parle de "sois jolie"\nPas trop bruyante, pas trop brillante, sois "gentille"\nOn apprend aux garçons à gagner\nÀ elle, on apprend surtout à s’excuser\n\nMais elle lit, elle questionne, elle discute, elle s’arme\nElle découvre que sa colère, c’est pas un défaut, c’est une flamme\nSororité dans le bus, dans les bureaux, dans les cages d’escalier\nUn regard suffit pour dire "je t’ai captée"\n\nElle aime qui elle veut, s’habille comme elle le sent\nPas un objet, pas une case, pas un "divertissement"\nSon corps lui appartient, point final, pas de débat\nSi tu le comprends pas, recule, on t’expliquera\n\n[Chorus]\nFemme debout, lève la voix\nT’es pas un rôle secondaire dans l’histoire\nFemme debout, regarde-toi\nTa force, c’est une armure, c’est ta victoire (yeah)\nOn t’a dressé des murs trop hauts\nOn va les prendre à coups de mots\nFemme debout, femme debout\nOn ne s’excuse plus d’être forte\n\n[Bridge]\nÀ toutes celles qui se cachent encore\nQui baissent les yeux, qui serrent le corps\nOn n’est pas seules, on est des millions\nÀ transformer la peur en révolution (hey)\n\n[Chorus]\nFemme debout, lève la voix\nT’es pas un rôle secondaire dans l’histoire\nFemme debout, regarde-toi\nTa force, c’est une armure, c’est ta victoire\nOn t’a dressé des murs trop hauts\nOn va les prendre à coups de mots\nFemme debout, femme debout\nOn ne s’excuse plus d’être forte', 'style': 'Female vocals, Beat rap moderne, voix rap, 808 bass puissante, hi-hats rapides, snare claquant, Hip Hop, Flow, 808 bass, hi-hats, snare, medium energy, 80-100 bpm, no rock, no guitar solo, no R&B, no Pop, no Melodic, no Male vocals, no Man', 'title': 'Rap feminin', 'instrumental': False, 'callBackUrl': 'https://example.com/callback', 'model': 'V4_5PLUS'}
+🎶 Provider job created: ecca1e84fcafc49625b76e2fa4a5d205
+[1/30] Status: processing
+[2/30] Status: processing
+[3/30] Status: processing
+[4/30] Status: queued
+[5/30] Status: queued
+[6/30] Status: queued
+[7/30] Status: queued
+[8/30] Status: completed
+✅ Generation completed successfully!
+05:06:41 Successfully completed app.workers.music_worker.generate_music('c94556c8-85ca-4b72-b61b-174803e018d8', 'b8b5b65d-a568-440f-b31d-cf71c9e52f02') job in 0:01:23.203767s on worker be7f9ed8cf7247bda059b9866f304b63
+05:06:41 music_generation: Job OK (3f9d0cc3-be95-4b52-8ed6-6da5f079121e)
+05:06:41 Result is kept for 500 seconds

@@ -1,0 +1,56 @@
+🎵 Test Epic 4 - Génération Makossa End-to-End
+======================================================================
+
+1️⃣ Vérification du wallet...
+✅ Credits disponibles: 100
+
+2️⃣ Création du projet...
+✅ Projet créé: Test Makossa E2E
+   ID: 268722c8-0492-4b41-a456-02b579fa34f8
+   Status: draft
+
+3️⃣ Lancement de la génération...
+✅ Job créé: e854bedd-4cbc-409e-896b-735164dfb2cc
+   Status: queued
+   Coût: 10 crédits
+
+4️⃣ Surveillance du job (max 6 minutes)...
+   Le worker va appeler SunoAPI et poller le status...
+   [1/36] Status: processing
+   [2/36] Status: processing
+   [3/36] Status: processing
+   [4/36] Status: processing
+   [5/36] Status: processing
+   [6/36] Status: processing
+   [7/36] Status: processing
+   [8/36] Status: processing
+   [9/36] Status: processing
+   [10/36] Status: processing
+   [11/36] Status: processing
+   [12/36] Status: processing
+   [13/36] Status: processing
+   [14/36] Status: processing
+   [15/36] Status: processing
+   [16/36] Status: processing
+   [17/36] Status: processing
+   [18/36] Status: processing
+   [19/36] Status: processing
+   [20/36] Status: processing
+   [21/36] Status: processing
+   [22/36] Status: processing
+   [23/36] Status: processing
+   [24/36] Status: processing
+   [25/36] Status: processing
+   [26/36] Status: processing
+   [27/36] Status: processing
+   [28/36] Status: processing
+   [29/36] Status: processing
+   [30/36] Status: processing
+   [31/36] Status: processing
+   [32/36] Status: processing
+   [33/36] Status: processing
+   [34/36] Status: processing
+   [35/36] Status: processing
+   [36/36] Status: processing
+
+⏱️ Timeout après 360s

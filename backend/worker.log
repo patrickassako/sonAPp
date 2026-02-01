@@ -1,0 +1,130 @@
+🎵 MusicApp Worker Starting...
+Redis: redis://localhost:6379/0
+============================================================
+Listening to queue: music_generation
+Worker ready! Waiting for jobs...
+============================================================
+21:40:46 Worker cdef6d74b0004b06a9353ff583e3a1d4: started with PID 50446, version 2.6.1
+21:40:46 Worker cdef6d74b0004b06a9353ff583e3a1d4: subscribing to channel rq:pubsub:cdef6d74b0004b06a9353ff583e3a1d4
+21:40:46 *** Listening on music_generation...
+21:40:46 Worker cdef6d74b0004b06a9353ff583e3a1d4: cleaning registries for queue: music_generation
+21:40:51 music_generation: app.workers.music_worker.generate_music('e0494d25-1e91-4e4a-a477-0c756be2f6a4', '9a9eda8e-9a27-4063-8164-bf36d31bb098') (f296e736-7f1b-4b5f-8921-36203c0bd1af)
+Traceback (most recent call last):
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpcore/_exceptions.py", line 10, in map_exceptions
+    yield
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpcore/_backends/sync.py", line 62, in start_tls
+    raise exc
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpcore/_backends/sync.py", line 57, in start_tls
+    sock = ssl_context.wrap_socket(
+        self._sock, server_hostname=server_hostname
+    )
+  File "/usr/local/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13/ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/usr/local/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13/ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13/ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+TimeoutError: _ssl.c:1011: The handshake operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpx/_transports/default.py", line 60, in map_httpcore_exceptions
+    yield
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpx/_transports/default.py", line 218, in handle_request
+    resp = self._pool.handle_request(req)
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpcore/_sync/connection_pool.py", line 262, in handle_request
+    raise exc
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpcore/_sync/connection_pool.py", line 245, in handle_request
+    response = connection.handle_request(request)
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpcore/_sync/connection.py", line 92, in handle_request
+    raise exc
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpcore/_sync/connection.py", line 69, in handle_request
+    stream = self._connect(request)
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpcore/_sync/connection.py", line 149, in _connect
+    stream = stream.start_tls(**kwargs)
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpcore/_backends/sync.py", line 54, in start_tls
+    with map_exceptions(exc_map):
+         ~~~~~~~~~~~~~~^^^^^^^^^
+  File "/usr/local/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectTimeout: _ssl.c:1011: The handshake operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/apple/Documents/MusicAPp/backend/app/workers/music_worker.py", line 94, in generate_music
+    status_data = provider.get_status(task_id)
+  File "/Users/apple/Documents/MusicAPp/backend/app/providers/suno.py", line 127, in get_status
+    response = self.client.get(
+        f"{self.base_url}/api/v1/generate/record-info",
+        params={"taskId": task_id},
+        headers={"Authorization": f"Bearer {self.api_key}"}
+    )
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpx/_client.py", line 1041, in get
+    return self.request(
+           ~~~~~~~~~~~~^
+        "GET",
+        ^^^^^^
+    ...<7 lines>...
+        extensions=extensions,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpx/_client.py", line 814, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpx/_client.py", line 901, in send
+    response = self._send_handling_auth(
+        request,
+    ...<2 lines>...
+        history=[],
+    )
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpx/_client.py", line 929, in _send_handling_auth
+    response = self._send_handling_redirects(
+        request,
+        follow_redirects=follow_redirects,
+        history=history,
+    )
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpx/_client.py", line 966, in _send_handling_redirects
+    response = self._send_single_request(request)
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpx/_client.py", line 1002, in _send_single_request
+    response = transport.handle_request(request)
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpx/_transports/default.py", line 217, in handle_request
+    with map_httpcore_exceptions():
+         ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/httpx/_transports/default.py", line 77, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectTimeout: _ssl.c:1011: The handshake operation timed out
+[Worker] Creating track for project 9a9eda8e-9a27-4063-8164-bf36d31bb098...
+[Worker] SunoAPI task created: 64b2958d6c3f9cfff19c1fd065b1feb1
+[Worker] Attempt 1/30...
+[Worker] Attempt 2/30...
+[Worker] Attempt 3/30...
+[Worker] Attempt 4/30...
+[Worker] Attempt 5/30...
+[Worker] Attempt 6/30...
+[Worker] Attempt 7/30...
+[Worker] Error: _ssl.c:1011: The handshake operation timed out
+21:42:20 Successfully completed app.workers.music_worker.generate_music('e0494d25-1e91-4e4a-a477-0c756be2f6a4', '9a9eda8e-9a27-4063-8164-bf36d31bb098') job in 0:01:29.004362s on worker cdef6d74b0004b06a9353ff583e3a1d4
+21:42:20 music_generation: Job OK (f296e736-7f1b-4b5f-8921-36203c0bd1af)
+21:42:20 Result is kept for 500 seconds
+21:55:50 Worker cdef6d74b0004b06a9353ff583e3a1d4: cleaning registries for queue: music_generation
+22:00:45 Worker cdef6d74b0004b06a9353ff583e3a1d4 [PID 50446]: warm shut down requested
+22:00:45 Worker cdef6d74b0004b06a9353ff583e3a1d4: unsubscribing from channel rq:pubsub:cdef6d74b0004b06a9353ff583e3a1d4

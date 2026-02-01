@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sign Up - MusicApp</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7f13ec",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#0a070e",
+                        "card-dark": "#160f1e",
+                        "border-dark": "#2d1b41",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(22, 15, 30, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col text-slate-900 dark:text-white font-display transition-colors duration-300">
+<!-- Top Navigation -->
+<header class="w-full px-6 py-6 lg:px-12 flex items-center justify-between">
+<div class="flex items-center gap-2 group cursor-pointer">
+<div class="bg-primary p-2 rounded-lg text-white">
+<span class="material-symbols-outlined block text-2xl">graphic_eq</span>
+</div>
+<h2 class="text-xl font-bold tracking-tight">MusicApp</h2>
+</div>
+<div class="hidden sm:block">
+<span class="text-sm text-slate-500 dark:text-slate-400">Step 1 of 2</span>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex items-center justify-center px-4 py-12">
+<div class="w-full max-w-[440px] flex flex-col items-center">
+<!-- Headline Section -->
+<div class="text-center mb-10">
+<h1 class="text-4xl font-bold mb-3 tracking-tight">Join MusicApp</h1>
+<p class="text-slate-500 dark:text-slate-400 text-lg">Start generating AI music in seconds.</p>
+</div>
+<!-- Sign Up Card -->
+<div class="w-full glass-effect border border-slate-200 dark:border-border-dark p-8 rounded-xl shadow-2xl">
+<form class="space-y-6" onsubmit="return false;">
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="block text-sm font-medium px-1">Email Address</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">mail</span>
+<input class="w-full h-14 pl-12 pr-4 rounded-full border border-slate-200 dark:border-border-dark bg-white dark:bg-background-dark/50 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-400" placeholder="name@example.com" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<label class="block text-sm font-medium px-1">Create Password</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">lock</span>
+<input class="w-full h-14 pl-12 pr-4 rounded-full border border-slate-200 dark:border-border-dark bg-white dark:bg-background-dark/50 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-400" placeholder="Minimum 8 characters" type="password"/>
+</div>
+</div>
+<!-- Submit Button -->
+<button class="w-full h-14 bg-primary hover:bg-primary/90 text-white font-bold rounded-full transition-all transform hover:scale-[1.01] active:scale-[0.98] shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+                        Create Account
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</form>
+<!-- Divider -->
+<div class="relative my-8">
+<div class="absolute inset-0 flex items-center">
+<div class="w-full border-t border-slate-200 dark:border-border-dark"></div>
+</div>
+<div class="relative flex justify-center text-xs uppercase">
+<span class="bg-card-dark px-2 text-slate-500">Or continue with</span>
+</div>
+</div>
+<!-- Social Sign Up (Minimal) -->
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center h-12 rounded-full border border-slate-200 dark:border-border-dark hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+<img alt="" class="w-5 h-5" data-alt="Google colorful brand icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6EBl1dSTfoIINrQ-8Rh_vej-l5QBFto9lP4qsPwqgaBA8UQTTcivlaGXFz-fC8fEA8J2owrtPyzOjsV4mrk1VdQHM51Tx6svrI00UpTVCrExk9HxtV80Oh6PLnoblGFxAIsX1R8XF8GfRsbvtvcwHcfMYl4k9tGIXU6vU8T4RrfOAWgaMevW9159m7HKP5nTxQzVZl0cszncfDhRPduv1UM2SX4RCw5oXL2fb2vPz6wk2W7QWaXeVgtg48NvP2hHBlHQ1uYqO9sx9"/>
+</button>
+<button class="flex items-center justify-center h-12 rounded-full border border-slate-200 dark:border-border-dark hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-2xl">ios</span>
+</button>
+</div>
+</div>
+<!-- Footer Link -->
+<p class="mt-8 text-slate-500 dark:text-slate-400 font-medium">
+                Already have an account? 
+                <a class="text-primary hover:underline underline-offset-4 ml-1" href="#">Log in</a>
+</p>
+<!-- Terms -->
+<p class="mt-12 text-xs text-slate-500 dark:text-slate-600 text-center max-w-[300px]">
+                By creating an account, you agree to our 
+                <a class="underline" href="#">Terms of Service</a> and 
+                <a class="underline" href="#">Privacy Policy</a>.
+            </p>
+</div>
+</main>
+<!-- Background Decorative Elements (Ambient Glow) -->
+<div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+<div class="fixed bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-primary/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+</body></html>

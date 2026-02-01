@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MelodyAI - Personalized African-Inspired AI Music</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7f13ec",
+                        "accent-gold": "#FFD700",
+                        "accent-orange": "#FF8C00",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#0a0a0a",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        .african-pattern-overlay {
+            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuCjhflQd2pu4UxPSEuRBojMG7C-4ymG7tPOKemXoIg9MQShINRQ6Ngpf71euoYIjFtTo1jFRl6YwyXFnw_SgeB_3kq467whb-Wa3ghVX7Qjpv_I05oz0PLX47gJK286zv97WTmFcnVhYDsueAKanrLMoaCFfiVFKC7IalAFyenOynr0x_gQZ9kONJTRruTynQexer4l6Dc0jA6pQ03ZFRCBmyB8Dr-T1fSoqGumDSPYYtbzN2H7aduCOktfLo8kMTSA_uS3zrcjxB27);
+            background-blend-mode: overlay;
+        }
+        .glass-card {
+            background: rgba(26, 17, 34, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at 50% 50%, rgba(127, 19, 236, 0.15) 0%, rgba(10, 10, 10, 0) 70%)
+        }
+        .pill-active {
+            @apply bg-accent-gold text-background-dark font-bold border-accent-gold;
+        }
+        .pill-inactive {
+            @apply bg-white/5 text-white/70 border-white/10 hover:border-white/30;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white selection:bg-primary/30">
+<nav class="fixed top-0 w-full z-50 border-b border-white/5 bg-background-dark/80 backdrop-blur-md">
+<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="bg-primary rounded-lg p-1.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-2xl font-bold">music_note</span>
+</div>
+<span class="text-xl font-bold tracking-tight">MelodyAI</span>
+</div>
+<div class="hidden md:flex items-center gap-10">
+<a class="text-sm font-medium text-white/70 hover:text-white transition-colors" href="#">How it Works</a>
+<a class="text-sm font-medium text-white/70 hover:text-white transition-colors" href="#">Rhythms</a>
+<a class="text-sm font-medium text-white/70 hover:text-white transition-colors" href="#">Pricing</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-sm font-medium text-white/70 hover:text-white px-4">Login</button>
+<button class="bg-gradient-to-r from-primary to-accent-orange hover:opacity-90 text-white px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-lg shadow-primary/20">
+                Create my song
+            </button>
+</div>
+</div>
+</nav>
+<main class="relative african-pattern-overlay pt-20">
+<section class="relative min-h-[80vh] flex items-center justify-center px-6 overflow-hidden hero-gradient">
+<div class="max-w-5xl w-full text-center z-10">
+<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest mb-8">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+                African Heritage × AI Precision
+            </div>
+<h1 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-8 leading-[1.1]">
+                Create your own <br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-accent-gold via-accent-orange to-primary">song in seconds.</span>
+</h1>
+<p class="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-12 leading-relaxed">
+                Personalized songs for birthdays, weddings, and every celebration. AI-powered melodies infused with the vibrant soul of Africa.
+            </p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+<button class="group relative flex items-center gap-2 bg-gradient-to-r from-primary to-accent-orange hover:opacity-90 text-white px-10 py-5 rounded-full text-lg font-bold transition-all shadow-2xl shadow-primary/40 overflow-hidden">
+<span class="relative z-10">Start Creating</span>
+<span class="material-symbols-outlined relative z-10 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+<button class="px-10 py-5 rounded-full text-lg font-bold border border-white/10 hover:bg-white/5 transition-colors">
+                    Hear Samples
+                </button>
+</div>
+</div>
+</section>
+<section class="py-24 px-6 relative bg-background-dark/50">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="text-accent-gold font-bold uppercase tracking-[0.2em] text-sm mb-4">Simple Flow</h2>
+<h3 class="text-4xl md:text-5xl font-bold tracking-tight">How It Works</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+<div class="flex flex-col items-center text-center group">
+<div class="w-24 h-24 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 group-hover:border-accent-gold/50 transition-all duration-300 relative">
+<span class="material-symbols-outlined text-accent-gold text-5xl">music_note</span>
+<div class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-accent-gold text-background-dark font-bold flex items-center justify-center text-sm">1</div>
+</div>
+<h4 class="text-xl font-bold mb-2">Choose a style</h4>
+<p class="text-white/50 text-sm max-w-[200px]">Select your favorite African rhythm or genre.</p>
+</div>
+<div class="flex flex-col items-center text-center group">
+<div class="w-24 h-24 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 group-hover:border-accent-gold/50 transition-all duration-300 relative">
+<span class="material-symbols-outlined text-accent-gold text-5xl">auto_stories</span>
+<div class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-accent-gold text-background-dark font-bold flex items-center justify-center text-sm">2</div>
+</div>
+<h4 class="text-xl font-bold mb-2">Add your story</h4>
+<p class="text-white/50 text-sm max-w-[200px]">Tell us about the person or the occasion.</p>
+</div>
+<div class="flex flex-col items-center text-center group">
+<div class="w-24 h-24 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 group-hover:border-accent-gold/50 transition-all duration-300 relative">
+<span class="material-symbols-outlined text-accent-gold text-5xl">celebration</span>
+<div class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-accent-gold text-background-dark font-bold flex items-center justify-center text-sm">3</div>
+</div>
+<h4 class="text-xl font-bold mb-2">Get your song</h4>
+<p class="text-white/50 text-sm max-w-[200px]">Receive your high-quality AI-crafted track.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="py-24 px-6 bg-background-dark">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+<div>
+<h2 class="text-accent-orange font-bold uppercase tracking-[0.2em] text-sm mb-4">Discovery</h2>
+<h3 class="text-4xl font-bold tracking-tight">Choose your rhythm</h3>
+</div>
+<div class="flex flex-wrap gap-3">
+<button class="px-6 py-2 rounded-full border pill-active transition-all">All</button>
+<button class="px-6 py-2 rounded-full border pill-inactive transition-all">Afrobeats 🇳🇬</button>
+<button class="px-6 py-2 rounded-full border pill-inactive transition-all">Amapiano 🇿🇦</button>
+<button class="px-6 py-2 rounded-full border pill-inactive transition-all">Makossa 🇨🇲</button>
+<button class="px-6 py-2 rounded-full border pill-inactive transition-all">Bongo Flava 🇹🇿</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="glass-card rounded-2xl overflow-hidden group">
+<div class="aspect-video relative overflow-hidden bg-white/5 flex items-center justify-center">
+<img alt="Afrobeats cover" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUZ44N5YvOXzeG1XiozYi79Q2ap9DqnoPTjy07yEJii_LNCcIP-8wd0PNMuLZkzvd_GuSHWUpP0YgNwkQCjfy7YWyRGoNVvJdDhA-f_7ICkkQjXEwZYlWTvbRzgkE7QKtbIQ7tnkkeu086NkJmHNtT77DHMqy94mj9IpxIQeDSB5ezTO-VC57WhzEt1TxqeQcNOs9iDqlbEuQykCmjbW8qW7K6RRQLOFUdaSumYfbLpij7icNT2mmDdjPgDZ4u7Atx018cu50yTQlQ"/>
+<button class="relative z-10 w-14 h-14 rounded-full bg-accent-gold text-background-dark flex items-center justify-center shadow-xl hover:scale-110 transition-transform">
+<span class="material-symbols-outlined fill-1">play_arrow</span>
+</button>
+</div>
+<div class="p-6">
+<div class="flex items-center justify-between mb-3">
+<h4 class="text-xl font-bold">Afrobeats</h4>
+<span class="text-xs bg-accent-gold/20 text-accent-gold px-2 py-1 rounded">Popular</span>
+</div>
+<p class="text-white/50 text-sm mb-4">High-energy rhythms mixed with modern pop elements.</p>
+<div class="inline-flex items-center gap-2 text-xs font-medium py-1.5 px-3 rounded-full bg-white/5 text-accent-orange border border-accent-orange/20">
+<span class="material-symbols-outlined text-sm">auto_awesome</span>
+                            Perfect for birthdays
+                        </div>
+</div>
+</div>
+<div class="glass-card rounded-2xl overflow-hidden group">
+<div class="aspect-video relative overflow-hidden bg-white/5 flex items-center justify-center">
+<img alt="Amapiano cover" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGS3qyokqa_L5l1k6-5nefWjrY47OjEIPaDGOWSZkMWCgl6-9TBmJz4ETZK5kf-Nbqr8kPja4oDch1e4hOrp6NMw1ZLs78ToRyoIm0WaV2IF4VEFQmzbnisXUDjlvnT9HmX1BGsNSYIDkL-VlObyHiq_Spt6DKOSnY-uQLGdby8eEfNlPPfJXxipm0ZB1dtGX7saifAn6sV5hN4re2_4IXhYPGcpbk7QYgpMzO3CRSnMNEcwAkbFTmuBDDaEE1OzJblQ7spVmInLth"/>
+<button class="relative z-10 w-14 h-14 rounded-full bg-accent-gold text-background-dark flex items-center justify-center shadow-xl hover:scale-110 transition-transform">
+<span class="material-symbols-outlined fill-1">play_arrow</span>
+</button>
+</div>
+<div class="p-6">
+<div class="flex items-center justify-between mb-3">
+<h4 class="text-xl font-bold">Amapiano</h4>
+<span class="text-xs bg-white/10 text-white/50 px-2 py-1 rounded">Trending</span>
+</div>
+<p class="text-white/50 text-sm mb-4">Soulful piano lines meets deep house and log-drum bass.</p>
+<div class="inline-flex items-center gap-2 text-xs font-medium py-1.5 px-3 rounded-full bg-white/5 text-accent-orange border border-accent-orange/20">
+<span class="material-symbols-outlined text-sm">auto_awesome</span>
+                            Perfect for lounge vibes
+                        </div>
+</div>
+</div>
+<div class="glass-card rounded-2xl overflow-hidden group">
+<div class="aspect-video relative overflow-hidden bg-white/5 flex items-center justify-center">
+<img alt="Makossa cover" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0w6U-ixUeq9onq57_BRy5RIwdqmNvuGGp8prr6RD7qC8_mrWo5b7UHSayTYcCFt2ubB1rJfzkC_OC4I0vUQ0-ONO27UJ_K8h1MMwJMo7cZSBay8L62xPi3WNyoH1XB65q_1FOt_hUY-jtRGYnD9E4HsJcZLt4HWf0kpIeqRcdpXi6KZQXAmAeSI2rmOCBlj0C60vP7eQ9KO85TDDQ99MCFmp6Ome85uxgQjNxVwCbxzuZejrJbStoqZt6I6Q6N92Ib0DQxmzVrWVi"/>
+<button class="relative z-10 w-14 h-14 rounded-full bg-accent-gold text-background-dark flex items-center justify-center shadow-xl hover:scale-110 transition-transform">
+<span class="material-symbols-outlined fill-1">play_arrow</span>
+</button>
+</div>
+<div class="p-6">
+<div class="flex items-center justify-between mb-3">
+<h4 class="text-xl font-bold">Makossa</h4>
+<span class="text-xs bg-white/10 text-white/50 px-2 py-1 rounded">Heritage</span>
+</div>
+<p class="text-white/50 text-sm mb-4">Upbeat bass guitar melodies and infectious brass sections.</p>
+<div class="inline-flex items-center gap-2 text-xs font-medium py-1.5 px-3 rounded-full bg-white/5 text-accent-orange border border-accent-orange/20">
+<span class="material-symbols-outlined text-sm">auto_awesome</span>
+                            Perfect for weddings
+                        </div>
+</div>
+</div>
+<div class="glass-card rounded-2xl overflow-hidden group">
+<div class="aspect-video relative overflow-hidden bg-white/5 flex items-center justify-center">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/40 to-accent-orange/40"></div>
+<button class="relative z-10 w-14 h-14 rounded-full bg-accent-gold text-background-dark flex items-center justify-center shadow-xl hover:scale-110 transition-transform">
+<span class="material-symbols-outlined fill-1">play_arrow</span>
+</button>
+</div>
+<div class="p-6">
+<div class="flex items-center justify-between mb-3">
+<h4 class="text-xl font-bold">Highlife</h4>
+<span class="text-xs bg-white/10 text-white/50 px-2 py-1 rounded">Classic</span>
+</div>
+<p class="text-white/50 text-sm mb-4">Authentic West African sound with rhythmic guitar patterns.</p>
+<div class="inline-flex items-center gap-2 text-xs font-medium py-1.5 px-3 rounded-full bg-white/5 text-accent-orange border border-accent-orange/20">
+<span class="material-symbols-outlined text-sm">auto_awesome</span>
+                            Perfect for anniversaries
+                        </div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-24 px-6 bg-background-dark">
+<div class="max-w-4xl mx-auto glass-card rounded-3xl p-12 md:p-20 text-center relative overflow-hidden border-accent-gold/20">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-[100px] -mr-32 -mt-32"></div>
+<div class="absolute bottom-0 left-0 w-64 h-64 bg-accent-gold/10 rounded-full blur-[100px] -ml-32 -mb-32"></div>
+<h2 class="text-3xl md:text-5xl font-bold mb-6 relative z-10">Stay ahead of the beat</h2>
+<p class="text-white/60 text-lg mb-10 relative z-10">Join 50k+ creators. Be the first to try new African styles and AI features.</p>
+<div class="max-w-md mx-auto relative z-10">
+<div class="flex flex-col sm:flex-row gap-3">
+<input class="flex-1 bg-white/5 border border-white/10 rounded-full px-6 py-4 focus:outline-none focus:ring-2 focus:ring-accent-gold text-white placeholder:text-white/30" placeholder="Enter your email" type="email"/>
+<button class="bg-gradient-to-r from-primary to-accent-orange hover:opacity-90 text-white font-bold px-8 py-4 rounded-full transition-all whitespace-nowrap">
+                        Join Waitlist
+                    </button>
+</div>
+<p class="mt-4 text-xs text-white/40">No spam, just rhythm. Unsubscribe anytime.</p>
+</div>
+</div>
+</section>
+<footer class="py-16 px-6 border-t border-white/5 bg-background-dark">
+<div class="max-w-7xl mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+<div class="col-span-1 md:col-span-2">
+<div class="flex items-center gap-2 mb-6">
+<div class="bg-primary rounded-lg p-1 flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-xl">music_note</span>
+</div>
+<span class="font-bold text-xl">MelodyAI</span>
+</div>
+<p class="text-white/40 max-w-sm mb-6">The first AI music platform dedicated to the preservation and celebration of African musical heritage through personalized song generation.</p>
+</div>
+<div>
+<h5 class="font-bold mb-6">Quick Links</h5>
+<ul class="space-y-4 text-white/50 text-sm">
+<li><a class="hover:text-accent-gold transition-colors" href="#">How it works</a></li>
+<li><a class="hover:text-accent-gold transition-colors" href="#">Style Gallery</a></li>
+<li><a class="hover:text-accent-gold transition-colors" href="#">Pricing Plans</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold mb-6">Connect</h5>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-accent-gold/20 hover:text-accent-gold transition-all" href="#">
+<span class="material-symbols-outlined text-xl">public</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-accent-gold/20 hover:text-accent-gold transition-all" href="#">
+<span class="material-symbols-outlined text-xl">camera</span>
+</a>
+</div>
+</div>
+</div>
+<div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-white/30 text-xs">
+<p>© 2024 MelodyAI. Made with ❤️ for the world.</p>
+<div class="flex gap-6">
+<a class="hover:text-white transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-white transition-colors" href="#">Terms of Service</a>
+</div>
+</div>
+</div>
+</footer>
+</main>
+
+</body></html>

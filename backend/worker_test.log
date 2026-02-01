@@ -1,0 +1,72 @@
+🎵 MusicApp Worker Starting...
+Redis: redis://localhost:6379/0
+============================================================
+Listening to queue: music_generation
+Worker ready! Waiting for jobs...
+============================================================
+22:08:42 Worker 5c62d8e41458466cb0c98f2c4aede489: started with PID 63644, version 2.6.1
+22:08:42 Worker 5c62d8e41458466cb0c98f2c4aede489: subscribing to channel rq:pubsub:5c62d8e41458466cb0c98f2c4aede489
+22:08:42 *** Listening on music_generation...
+22:08:42 Worker 5c62d8e41458466cb0c98f2c4aede489: cleaning registries for queue: music_generation
+22:22:12 Worker 5c62d8e41458466cb0c98f2c4aede489: cleaning registries for queue: music_generation
+22:35:42 Worker 5c62d8e41458466cb0c98f2c4aede489: cleaning registries for queue: music_generation
+22:49:12 Worker 5c62d8e41458466cb0c98f2c4aede489: cleaning registries for queue: music_generation
+23:02:42 Worker 5c62d8e41458466cb0c98f2c4aede489: cleaning registries for queue: music_generation
+23:07:00 Worker 5c62d8e41458466cb0c98f2c4aede489: could not connect to Redis instance: Connection closed by server. retrying in 1 seconds...
+23:07:00 Worker 5c62d8e41458466cb0c98f2c4aede489: could not connect to Redis instance: Error 61 connecting to localhost:6379. Connection refused. retrying in 2 seconds...
+23:07:01 Worker 5c62d8e41458466cb0c98f2c4aede489: could not connect to Redis instance: Error 61 connecting to localhost:6379. Connection refused. retrying in 2 seconds...
+23:07:02 Worker 5c62d8e41458466cb0c98f2c4aede489: could not connect to Redis instance: Error 61 connecting to localhost:6379. Connection refused. retrying in 2 seconds...
+23:07:03 Worker 5c62d8e41458466cb0c98f2c4aede489: could not connect to Redis instance: Error 61 connecting to localhost:6379. Connection refused. retrying in 4 seconds...
+23:07:04 Worker 5c62d8e41458466cb0c98f2c4aede489: could not connect to Redis instance: Error 61 connecting to localhost:6379. Connection refused. retrying in 2 seconds...
+23:07:06 Worker 5c62d8e41458466cb0c98f2c4aede489: could not connect to Redis instance: Error 61 connecting to localhost:6379. Connection refused. retrying in 2 seconds...
+23:07:07 Worker 5c62d8e41458466cb0c98f2c4aede489: could not connect to Redis instance: Error 61 connecting to localhost:6379. Connection refused. retrying in 8 seconds...
+23:07:08 Worker 5c62d8e41458466cb0c98f2c4aede489: could not connect to Redis instance: Error 61 connecting to localhost:6379. Connection refused. retrying in 2 seconds...
+23:07:09 Worker 5c62d8e41458466cb0c98f2c4aede489 [PID 63644]: warm shut down requested
+Traceback (most recent call last):
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/redis/connection.py", line 855, in connect_check_health
+    sock = self.retry.call_with_retry(
+        lambda: self._connect(), lambda error: self.disconnect(error)
+    )
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/redis/retry.py", line 116, in call_with_retry
+    return do()
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/redis/connection.py", line 856, in <lambda>
+    lambda: self._connect(), lambda error: self.disconnect(error)
+            ~~~~~~~~~~~~~^^
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/redis/connection.py", line 1306, in _connect
+    raise err
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/redis/connection.py", line 1290, in _connect
+    sock.connect(socket_address)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+ConnectionRefusedError: [Errno 61] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/apple/Documents/MusicAPp/backend/start_worker.py", line 42, in <module>
+    main()
+    ~~~~^^
+  File "/Users/apple/Documents/MusicAPp/backend/start_worker.py", line 38, in main
+    worker.work()
+    ~~~~~~~~~~~^^
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/rq/worker.py", line 631, in work
+    self.teardown()
+    ~~~~~~~~~~~~~^^
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/rq/worker.py", line 1150, in teardown
+    self.register_death()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/rq/worker.py", line 885, in register_death
+    p.execute()
+    ~~~~~~~~~^^
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/redis/client.py", line 1687, in execute
+    conn = self.connection_pool.get_connection()
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/redis/utils.py", line 196, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/redis/connection.py", line 2603, in get_connection
+    connection.connect()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/redis/connection.py", line 846, in connect
+    self.connect_check_health(check_health=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/apple/Documents/MusicAPp/backend/venv/lib/python3.13/site-packages/redis/connection.py", line 863, in connect_check_health
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to localhost:6379. Connection refused.

@@ -1,0 +1,33 @@
+# Backend dependencies - Flexible versions for Python 3.13
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+python-dotenv>=1.0.0
+pydantic>=2.0
+pydantic-settings>=2.0
+
+# Database
+sqlalchemy>=2.0
+psycopg[binary]>=3.2
+alembic>=1.13
+
+# Supabase
+supabase>=2.0
+postgrest>=0.13
+
+# Redis & Queue
+redis>=5.0
+rq>=1.16
+
+# HTTP Client (compatible with supabase)
+httpx>=0.24,<0.25
+
+# Auth & Security
+python-jose[cryptography]>=3.3
+passlib[bcrypt]>=1.7
+python-multipart>=0.0.6
+
+# Payment
+requests>=2.31
+
+# Utils
+python-dateutil>=2.8

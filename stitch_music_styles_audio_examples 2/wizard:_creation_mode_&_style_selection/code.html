@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Music Studio - Wizard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7f13ec",
+                        "accent-gold": "#FFD700",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191022",
+                        "card-dark": "#251a31",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(37, 26, 49, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(127, 19, 236, 0.2);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #4d3267;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen text-slate-900 dark:text-white transition-colors duration-300">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-[#362348] px-6 py-3 bg-white dark:bg-background-dark/80 backdrop-blur-md sticky top-0 z-50">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-8 flex items-center justify-center">
+<svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M42.4379 44C42.4379 44 36.0744 33.9038 41.1692 24C46.8624 12.9336 42.2078 4 42.2078 4L7.01134 4C7.01134 4 11.6577 12.932 5.96912 23.9969C0.876273 33.9029 7.27094 44 7.27094 44L42.4379 44Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-tight">AI Music Studio</h2>
+</div>
+<div class="flex flex-1 justify-end gap-4 items-center">
+<div class="flex gap-2">
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-[#362348] text-slate-600 dark:text-white hover:bg-primary/20 transition-all">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-[#362348] text-slate-600 dark:text-white hover:bg-primary/20 transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+<div class="h-10 w-10 rounded-full bg-primary/20 border-2 border-primary/50 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="User avatar with neon purple highlights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsBHnA6rzL0u8qGGt1NtYlnBSV3MSCCNEOFar0Dd3pRC55rKSb7NoVG7kcJNr1J30fU1MQQ9vAKPBDvnE3NWdcCpJ5dn_jkaDaOv_rmld11g9kM2hnHw_oLmg3C8M61zQbFZ89n6QFo9l-s6fSxSk9nUZ7CtFkJtA0zhS5UWJhCF61590wVIKPV74fVQbyppEXWVTRloKHbn_9-0aDNqYrdYa-Sqtfgq3Tgh4hDgW5elZ_xIeYG-OyCu8GzbdeuFFhC4lTSBE49Tpj"/>
+</div>
+</div>
+</header>
+<main class="max-w-5xl mx-auto px-4 py-12">
+<!-- Progress Bar Section -->
+<div class="flex flex-col gap-3 mb-10 max-w-2xl mx-auto">
+<div class="flex gap-6 justify-between items-end">
+<div>
+<span class="text-primary font-bold text-sm uppercase tracking-widest">Step 1 of 2</span>
+<p class="text-slate-900 dark:text-white text-2xl font-bold leading-normal">Creation Mode &amp; Style</p>
+</div>
+<p class="text-slate-600 dark:text-white text-sm font-medium mb-1">50% Complete</p>
+</div>
+<div class="h-2.5 rounded-full bg-slate-200 dark:bg-[#4d3267] overflow-hidden">
+<div class="h-full rounded-full bg-primary shadow-[0_0_15px_rgba(127,19,236,0.6)]" style="width: 50%;"></div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Step 1: Choose Creation Mode -->
+<div class="lg:col-span-12">
+<h1 class="text-slate-900 dark:text-white text-2xl font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-accent-gold">magic_button</span>
+                    1. Choose Your Creation Mode
+                </h1>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+<!-- Text to Song Card -->
+<button class="flex flex-col items-start text-left p-8 rounded-xl bg-white dark:bg-card-dark border-2 border-primary group hover:bg-primary/5 transition-all relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4">
+<span class="material-symbols-outlined text-primary text-3xl">check_circle</span>
+</div>
+<div class="mb-6 p-4 rounded-2xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-accent-gold text-5xl">description</span>
+</div>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Text to Song</h3>
+<p class="text-slate-500 dark:text-[#ad92c9] text-base leading-relaxed">
+                            Input your raw lyrics or a poem. Our AI will analyze the sentiment and rhythm to compose a unique melody tailored to your words.
+                        </p>
+</button>
+<!-- Idea to Song Card -->
+<button class="flex flex-col items-start text-left p-8 rounded-xl bg-white dark:bg-card-dark border-2 border-transparent hover:border-primary/50 group hover:bg-primary/5 transition-all">
+<div class="mb-6 p-4 rounded-2xl bg-slate-100 dark:bg-[#362348] group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-accent-gold text-5xl">lightbulb</span>
+</div>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Idea to Song</h3>
+<p class="text-slate-500 dark:text-[#ad92c9] text-base leading-relaxed">
+                            Describe a vibe, a story, or a mood. You can even hum a melody. The AI generates lyrics and music based on your prompt.
+                        </p>
+</button>
+</div>
+</div>
+<!-- Step 2: Choose Music Style -->
+<div class="lg:col-span-12">
+<h1 class="text-slate-900 dark:text-white text-2xl font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-accent-gold">music_note</span>
+                    2. Choose Music Style
+                </h1>
+<div class="space-y-8">
+<!-- African Category -->
+<section>
+<h3 class="text-slate-400 dark:text-[#ad92c9] text-sm font-bold uppercase tracking-wider mb-4 flex items-center gap-2">
+                            African Heritage 🌍
+                        </h3>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="group relative flex flex-col items-center justify-center p-6 rounded-xl bg-white dark:bg-card-dark border border-slate-200 dark:border-[#362348] hover:border-primary transition-all cursor-pointer">
+<span class="material-symbols-outlined absolute top-2 right-2 text-primary opacity-0 group-hover:opacity-100 transition-opacity">play_circle</span>
+<div class="w-12 h-12 mb-3 bg-center bg-cover rounded-lg" data-alt="Traditional African drum pattern" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDl1RYQWrgeDXEMlQCy_6Hvtvq_Bc5wA71q2gHHlgpLViGrcd6mIYlVZ1uqviH_PAlClhsNaz2yHk6X0_8U0idiKhKWrY2ZgIZx839bxSGI9Fp_UVJwn-VwxC5-PgETxpN6XCl_Vab9V86z9UIzxqxyyAcFFIA3jQnvptkp6tBP3DOCldOGdikbRXIgAugn3jvZJyCO7zWE5EaLl5E2jvLcOS6VDc4iXPpau88or29sjkcnlHpQcpAOe0y4sJuBCYjroK0Ot95UKwE2");'></div>
+<p class="text-slate-900 dark:text-white font-semibold">Makossa</p>
+</div>
+<div class="group relative flex flex-col items-center justify-center p-6 rounded-xl bg-white dark:bg-card-dark border border-slate-200 dark:border-[#362348] hover:border-primary transition-all cursor-pointer">
+<span class="material-symbols-outlined absolute top-2 right-2 text-primary opacity-0 group-hover:opacity-100 transition-opacity">play_circle</span>
+<div class="w-12 h-12 mb-3 bg-center bg-cover rounded-lg" data-alt="Rhythmic texture for Bikutsi genre" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBhl1NO5Y721PVEpkUEymf9U9cit1pcXDvhtFdF_OGkT6NpKmIV4PTkZch9FJuQwbnxMo6UACEgom1U2HdxO6p1wSgdMzHDajFw5PjybWE4xXHyToUbN3D6goL0sGnGG-Tnb-GKOCyItBEJHppcl2Z1ZEzV2TwNE8w9iF7Db9t9jun36_5OSCkv401Y27ioWQ_puGpBc1FQU9u4YUABW-pbWZs53KB_G73z9jxv0YbUfNCsrZzvfoBC_zHTIS7bOHtbw5gpqMH_nSmH");'></div>
+<p class="text-slate-900 dark:text-white font-semibold">Bikutsi</p>
+</div>
+<div class="group relative flex flex-col items-center justify-center p-6 rounded-xl bg-white dark:bg-card-dark border border-primary bg-primary/5 transition-all cursor-pointer">
+<span class="material-symbols-outlined absolute top-2 right-2 text-primary">check_circle</span>
+<div class="w-12 h-12 mb-3 bg-center bg-cover rounded-lg" data-alt="Modern Afrobeats visual icon" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBoOla4d5qxeJy44XDxCet-qYnxc-xbcX1DHOVRtWeFlYoOEc6mANO6EgR3g2_w724cC4RmTtzFHDKj_7OXQ3qbMGU1ztbAtdJK5b3MIXHmPrSORvzOMQZEdhYeZm2g8TFB2ImN5f_rZRDOb4Cj4cqjaYuhjYnrPtakPSDWpdF7_sTDszkpB7DvDQ8lm4g41kXeW95WLm1AyT-RPzk_n1tb_soF4uAFhz8ofjn0wXZr8IhXff0uMkoLvhigZ-RHd0rjanuf8RgJruS0");'></div>
+<p class="text-slate-900 dark:text-white font-semibold">Afrobeats</p>
+</div>
+<div class="group relative flex flex-col items-center justify-center p-6 rounded-xl bg-white dark:bg-card-dark border border-slate-200 dark:border-[#362348] hover:border-primary transition-all cursor-pointer">
+<span class="material-symbols-outlined absolute top-2 right-2 text-primary opacity-0 group-hover:opacity-100 transition-opacity">play_circle</span>
+<div class="w-12 h-12 mb-3 bg-center bg-cover rounded-lg" data-alt="Deep house amapiano log drum" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC6jUUW6AJ-2GjPp9g9EyTw_MHK-fDPXULLuDDzSCgugrP92oTfIhT76UYcIAnOOWRqrIiF2wyBv4GlxKGDeNMbMSePjqRIcXD9OzEtN1gIoYiaXejqFOUnRkDb4V6MwYGpPB9QyvdOTi2ghpi7WRQeAo-ffO76_oMPszWWkcrlYh2HsWLQGtdK92kdCe0zM8QhR4hS7mqUeasbTrlXVkbrhHdfeuH2o3rHCelsSieLkknFurQ3FBQAsx0YnQ96fnQtYiNVj8roaAAD");'></div>
+<p class="text-slate-900 dark:text-white font-semibold">Amapiano</p>
+</div>
+</div>
+</section>
+<!-- Urban & Universal -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<section>
+<h3 class="text-slate-400 dark:text-[#ad92c9] text-sm font-bold uppercase tracking-wider mb-4">Urban</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="group relative flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-card-dark border border-slate-200 dark:border-[#362348] hover:border-primary transition-all cursor-pointer">
+<span class="material-symbols-outlined text-primary">play_circle</span>
+<p class="text-slate-900 dark:text-white font-semibold">Afro Trap</p>
+</div>
+<div class="group relative flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-card-dark border border-slate-200 dark:border-[#362348] hover:border-primary transition-all cursor-pointer">
+<span class="material-symbols-outlined text-primary">play_circle</span>
+<p class="text-slate-900 dark:text-white font-semibold">Rap</p>
+</div>
+</div>
+</section>
+<section>
+<h3 class="text-slate-400 dark:text-[#ad92c9] text-sm font-bold uppercase tracking-wider mb-4">Universal</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="group relative flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-card-dark border border-slate-200 dark:border-[#362348] hover:border-primary transition-all cursor-pointer">
+<span class="material-symbols-outlined text-primary">play_circle</span>
+<p class="text-slate-900 dark:text-white font-semibold">Pop</p>
+</div>
+<div class="group relative flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-card-dark border border-slate-200 dark:border-[#362348] hover:border-primary transition-all cursor-pointer">
+<span class="material-symbols-outlined text-primary">play_circle</span>
+<p class="text-slate-900 dark:text-white font-semibold">R&amp;B</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Footer Navigation -->
+<div class="mt-12 flex justify-between items-center pt-8 border-t border-slate-200 dark:border-[#362348]">
+<button class="flex items-center gap-2 px-6 h-12 rounded-lg border border-slate-300 dark:border-[#4d3267] text-slate-600 dark:text-white font-bold hover:bg-slate-50 dark:hover:bg-[#362348] transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+                Back
+            </button>
+<div class="flex gap-4">
+<button class="px-6 h-12 rounded-lg text-slate-500 dark:text-[#ad92c9] font-bold hover:text-slate-700 dark:hover:text-white transition-colors">
+                    Save Draft
+                </button>
+<button class="flex items-center gap-2 px-10 h-12 rounded-lg bg-primary text-white font-bold hover:brightness-110 shadow-lg shadow-primary/20 transition-all">
+                    Next Step
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Floating Preview Player (Mini) -->
+<div class="fixed bottom-6 right-6 glass-panel p-4 rounded-2xl flex items-center gap-4 shadow-2xl border border-primary/30 max-w-xs">
+<div class="size-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">music_note</span>
+</div>
+<div class="flex-1 overflow-hidden">
+<p class="text-xs text-primary font-bold uppercase tracking-tight">Now Previewing</p>
+<p class="text-sm font-bold truncate">Afrobeats Sample #1</p>
+</div>
+<button class="size-8 rounded-full bg-primary text-white flex items-center justify-center">
+<span class="material-symbols-outlined text-lg">pause</span>
+</button>
+</div>
+</body></html>

@@ -1,0 +1,641 @@
+INFO:     Started server process [49008]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-01-29 21:39:07,126 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:39:07,132 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:39:07,133 INFO sqlalchemy.engine.Engine [generated in 0.00047s] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51036 - "GET /api/v1/users/wallet HTTP/1.1" 200 OK
+2026-01-29 21:39:07,137 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:51038 - "POST /api/v1/projects HTTP/1.1" 307 Temporary Redirect
+2026-01-29 21:39:07,146 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:39:07,147 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:39:07,147 INFO sqlalchemy.engine.Engine [cached since 0.01468s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:39:07,151 INFO sqlalchemy.engine.Engine INSERT INTO projects (id, user_id, title, mode, language, style_id, context_input, lyrics_final, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING created_at, updated_at
+2026-01-29 21:39:07,151 INFO sqlalchemy.engine.Engine [generated in 0.00031s] ('268722c8-0492-4b41-a456-02b579fa34f8', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 'Test Makossa E2E', 'TEXT', 'fr', 'makossa', None, "Je veux danser au rythme du Makossa\nLa guitare groove, les cuivres éclatent\nC'est la fête ce soir, tout le monde danse\nMakossa makossa, on ne s'arrête pas", 'draft')
+2026-01-29 21:39:07,153 INFO sqlalchemy.engine.Engine COMMIT
+2026-01-29 21:39:07,155 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:39:07,157 INFO sqlalchemy.engine.Engine SELECT projects.id, projects.user_id, projects.title, projects.mode, projects.language, projects.style_id, projects.context_input, projects.lyrics_final, projects.status, projects.created_at, projects.updated_at 
+FROM projects 
+WHERE projects.id = ?
+2026-01-29 21:39:07,157 INFO sqlalchemy.engine.Engine [generated in 0.00019s] ('268722c8-0492-4b41-a456-02b579fa34f8',)
+INFO:     127.0.0.1:51038 - "POST /api/v1/projects/ HTTP/1.1" 201 Created
+2026-01-29 21:39:07,159 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:51040 - "POST /api/v1/generate HTTP/1.1" 307 Temporary Redirect
+2026-01-29 21:39:07,166 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:39:07,167 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:39:07,167 INFO sqlalchemy.engine.Engine [cached since 0.03486s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:39:07,169 INFO sqlalchemy.engine.Engine SELECT projects.id AS projects_id, projects.user_id AS projects_user_id, projects.title AS projects_title, projects.mode AS projects_mode, projects.language AS projects_language, projects.style_id AS projects_style_id, projects.context_input AS projects_context_input, projects.lyrics_final AS projects_lyrics_final, projects.status AS projects_status, projects.created_at AS projects_created_at, projects.updated_at AS projects_updated_at 
+FROM projects 
+WHERE projects.id = ? AND projects.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:39:07,170 INFO sqlalchemy.engine.Engine [generated in 0.00029s] ('268722c8-0492-4b41-a456-02b579fa34f8', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:39:07,170 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:39:07,171 INFO sqlalchemy.engine.Engine [cached since 0.03847s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:39:07,173 INFO sqlalchemy.engine.Engine UPDATE profiles SET credits_reserved=? WHERE profiles.id = ?
+2026-01-29 21:39:07,173 INFO sqlalchemy.engine.Engine [generated in 0.00017s] (10, 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c')
+2026-01-29 21:39:07,175 INFO sqlalchemy.engine.Engine INSERT INTO transactions (id, user_id, type, amount, price, balance_after, payment_provider, payment_id, status, transaction_metadata) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING created_at
+2026-01-29 21:39:07,175 INFO sqlalchemy.engine.Engine [generated in 0.00028s] ('c4ed2824-520f-4d55-a54d-62d400c2ea0d', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', <TransactionType.RESERVE: 'reserve'>, 10, None, 90, None, None, <TransactionStatus.COMPLETED: 'completed'>, '{"action": "reserve_for_generation"}')
+2026-01-29 21:39:07,176 INFO sqlalchemy.engine.Engine COMMIT
+2026-01-29 21:39:07,178 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:39:07,179 INFO sqlalchemy.engine.Engine SELECT profiles.id, profiles.email, profiles.created_at, profiles.credits, profiles.credits_reserved, profiles.total_credits_spent, profiles.total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+2026-01-29 21:39:07,179 INFO sqlalchemy.engine.Engine [generated in 0.00017s] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c',)
+2026-01-29 21:39:07,181 INFO sqlalchemy.engine.Engine SELECT transactions.id, transactions.user_id, transactions.type, transactions.amount, transactions.price, transactions.balance_after, transactions.payment_provider, transactions.payment_id, transactions.status, transactions.transaction_metadata, transactions.created_at 
+FROM transactions 
+WHERE transactions.id = ?
+2026-01-29 21:39:07,181 INFO sqlalchemy.engine.Engine [generated in 0.00015s] ('c4ed2824-520f-4d55-a54d-62d400c2ea0d',)
+2026-01-29 21:39:07,182 INFO sqlalchemy.engine.Engine SELECT projects.id AS projects_id, projects.user_id AS projects_user_id, projects.title AS projects_title, projects.mode AS projects_mode, projects.language AS projects_language, projects.style_id AS projects_style_id, projects.context_input AS projects_context_input, projects.lyrics_final AS projects_lyrics_final, projects.status AS projects_status, projects.created_at AS projects_created_at, projects.updated_at AS projects_updated_at 
+FROM projects 
+WHERE projects.id = ?
+2026-01-29 21:39:07,182 INFO sqlalchemy.engine.Engine [generated in 0.00017s] ('268722c8-0492-4b41-a456-02b579fa34f8',)
+2026-01-29 21:39:07,184 INFO sqlalchemy.engine.Engine INSERT INTO generation_jobs (id, project_id, user_id, provider_job_id, status, credits_cost, job_metadata, error_message, completed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING created_at
+2026-01-29 21:39:07,184 INFO sqlalchemy.engine.Engine [generated in 0.00027s] ('e854bedd-4cbc-409e-896b-735164dfb2cc', '268722c8-0492-4b41-a456-02b579fa34f8', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', None, <JobStatus.QUEUED: 'queued'>, 10, '{"style_id": "makossa", "language": "fr"}', None, None)
+2026-01-29 21:39:07,186 INFO sqlalchemy.engine.Engine UPDATE projects SET status=?, updated_at=CURRENT_TIMESTAMP WHERE projects.id = ?
+2026-01-29 21:39:07,186 INFO sqlalchemy.engine.Engine [generated in 0.00018s] ('generating', '268722c8-0492-4b41-a456-02b579fa34f8')
+2026-01-29 21:39:07,187 INFO sqlalchemy.engine.Engine COMMIT
+2026-01-29 21:39:07,188 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:39:07,189 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id, generation_jobs.project_id, generation_jobs.user_id, generation_jobs.provider_job_id, generation_jobs.status, generation_jobs.credits_cost, generation_jobs.job_metadata, generation_jobs.error_message, generation_jobs.created_at, generation_jobs.completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ?
+2026-01-29 21:39:07,190 INFO sqlalchemy.engine.Engine [generated in 0.00018s] ('e854bedd-4cbc-409e-896b-735164dfb2cc',)
+2026-01-29 21:39:07,190 INFO sqlalchemy.engine.Engine SELECT projects.id, projects.user_id, projects.title, projects.mode, projects.language, projects.style_id, projects.context_input, projects.lyrics_final, projects.status, projects.created_at, projects.updated_at 
+FROM projects 
+WHERE projects.id = ?
+2026-01-29 21:39:07,191 INFO sqlalchemy.engine.Engine [cached since 0.03402s ago] ('268722c8-0492-4b41-a456-02b579fa34f8',)
+INFO:     127.0.0.1:51040 - "POST /api/v1/generate/ HTTP/1.1" 202 Accepted
+2026-01-29 21:39:07,207 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:39:17,215 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:39:17,216 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:39:17,216 INFO sqlalchemy.engine.Engine [cached since 10.08s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:39:17,226 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:39:17,227 INFO sqlalchemy.engine.Engine [generated in 0.00022s] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51050 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:39:17,228 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:39:27,267 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:39:27,270 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:39:27,271 INFO sqlalchemy.engine.Engine [cached since 20.14s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:39:27,275 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:39:27,276 INFO sqlalchemy.engine.Engine [cached since 10.05s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51055 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:39:27,287 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:39:37,297 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:39:37,297 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:39:37,297 INFO sqlalchemy.engine.Engine [cached since 30.17s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:39:37,299 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:39:37,299 INFO sqlalchemy.engine.Engine [cached since 20.07s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51063 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:39:37,301 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:39:47,310 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:39:47,310 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:39:47,311 INFO sqlalchemy.engine.Engine [cached since 40.18s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:39:47,313 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:39:47,314 INFO sqlalchemy.engine.Engine [cached since 30.09s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51066 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:39:47,314 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:39:57,322 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:39:57,323 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:39:57,323 INFO sqlalchemy.engine.Engine [cached since 50.19s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:39:57,324 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:39:57,324 INFO sqlalchemy.engine.Engine [cached since 40.1s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51070 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:39:57,325 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:40:07,334 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:40:07,335 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:40:07,335 INFO sqlalchemy.engine.Engine [cached since 60.2s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:40:07,336 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:40:07,336 INFO sqlalchemy.engine.Engine [cached since 50.11s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51072 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:40:07,337 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:40:17,344 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:40:17,345 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:40:17,345 INFO sqlalchemy.engine.Engine [cached since 70.21s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:40:17,346 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:40:17,346 INFO sqlalchemy.engine.Engine [cached since 60.12s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51076 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:40:17,347 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:40:27,352 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:40:27,352 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:40:27,352 INFO sqlalchemy.engine.Engine [cached since 80.22s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:40:27,353 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:40:27,353 INFO sqlalchemy.engine.Engine [cached since 70.13s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51082 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:40:27,354 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:40:37,361 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:40:37,361 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:40:37,361 INFO sqlalchemy.engine.Engine [cached since 90.23s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:40:37,362 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:40:37,362 INFO sqlalchemy.engine.Engine [cached since 80.13s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51093 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:40:37,363 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:40:47,371 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:40:47,371 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:40:47,371 INFO sqlalchemy.engine.Engine [cached since 100.2s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:40:47,372 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:40:47,372 INFO sqlalchemy.engine.Engine [cached since 90.14s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51101 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:40:47,373 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:40:51,207 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:40:51,208 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:40:51,208 INFO sqlalchemy.engine.Engine [cached since 104.1s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51105 - "GET /api/v1/users/wallet HTTP/1.1" 200 OK
+2026-01-29 21:40:51,214 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:51107 - "POST /api/v1/projects HTTP/1.1" 307 Temporary Redirect
+2026-01-29 21:40:51,223 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:40:51,223 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:40:51,224 INFO sqlalchemy.engine.Engine [cached since 104.1s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:40:51,232 INFO sqlalchemy.engine.Engine INSERT INTO projects (id, user_id, title, mode, language, style_id, context_input, lyrics_final, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING created_at, updated_at
+2026-01-29 21:40:51,232 INFO sqlalchemy.engine.Engine [cached since 104.1s ago] ('9a9eda8e-9a27-4063-8164-bf36d31bb098', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 'Test Makossa E2E', 'TEXT', 'fr', 'makossa', None, "Je veux danser au rythme du Makossa\nLa guitare groove, les cuivres éclatent\nC'est la fête ce soir, tout le monde danse\nMakossa makossa, on ne s'arrête pas", 'draft')
+2026-01-29 21:40:51,234 INFO sqlalchemy.engine.Engine COMMIT
+2026-01-29 21:40:51,236 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:40:51,237 INFO sqlalchemy.engine.Engine SELECT projects.id, projects.user_id, projects.title, projects.mode, projects.language, projects.style_id, projects.context_input, projects.lyrics_final, projects.status, projects.created_at, projects.updated_at 
+FROM projects 
+WHERE projects.id = ?
+2026-01-29 21:40:51,237 INFO sqlalchemy.engine.Engine [cached since 104.1s ago] ('9a9eda8e-9a27-4063-8164-bf36d31bb098',)
+INFO:     127.0.0.1:51107 - "POST /api/v1/projects/ HTTP/1.1" 201 Created
+2026-01-29 21:40:51,239 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:51109 - "POST /api/v1/generate HTTP/1.1" 307 Temporary Redirect
+2026-01-29 21:40:51,243 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:40:51,243 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:40:51,243 INFO sqlalchemy.engine.Engine [cached since 104.1s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:40:51,244 INFO sqlalchemy.engine.Engine SELECT projects.id AS projects_id, projects.user_id AS projects_user_id, projects.title AS projects_title, projects.mode AS projects_mode, projects.language AS projects_language, projects.style_id AS projects_style_id, projects.context_input AS projects_context_input, projects.lyrics_final AS projects_lyrics_final, projects.status AS projects_status, projects.created_at AS projects_created_at, projects.updated_at AS projects_updated_at 
+FROM projects 
+WHERE projects.id = ? AND projects.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:40:51,244 INFO sqlalchemy.engine.Engine [cached since 104.1s ago] ('9a9eda8e-9a27-4063-8164-bf36d31bb098', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:40:51,244 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:40:51,244 INFO sqlalchemy.engine.Engine [cached since 104.1s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:40:51,246 INFO sqlalchemy.engine.Engine UPDATE profiles SET credits_reserved=? WHERE profiles.id = ?
+2026-01-29 21:40:51,246 INFO sqlalchemy.engine.Engine [cached since 104.1s ago] (20, 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c')
+2026-01-29 21:40:51,248 INFO sqlalchemy.engine.Engine INSERT INTO transactions (id, user_id, type, amount, price, balance_after, payment_provider, payment_id, status, transaction_metadata) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING created_at
+2026-01-29 21:40:51,248 INFO sqlalchemy.engine.Engine [cached since 104.1s ago] ('246489d8-4114-4736-8c1f-e32347508081', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', <TransactionType.RESERVE: 'reserve'>, 10, None, 80, None, None, <TransactionStatus.COMPLETED: 'completed'>, '{"action": "reserve_for_generation"}')
+2026-01-29 21:40:51,248 INFO sqlalchemy.engine.Engine COMMIT
+2026-01-29 21:40:51,249 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:40:51,250 INFO sqlalchemy.engine.Engine SELECT profiles.id, profiles.email, profiles.created_at, profiles.credits, profiles.credits_reserved, profiles.total_credits_spent, profiles.total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+2026-01-29 21:40:51,250 INFO sqlalchemy.engine.Engine [cached since 104.1s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c',)
+2026-01-29 21:40:51,250 INFO sqlalchemy.engine.Engine SELECT transactions.id, transactions.user_id, transactions.type, transactions.amount, transactions.price, transactions.balance_after, transactions.payment_provider, transactions.payment_id, transactions.status, transactions.transaction_metadata, transactions.created_at 
+FROM transactions 
+WHERE transactions.id = ?
+2026-01-29 21:40:51,250 INFO sqlalchemy.engine.Engine [cached since 104.1s ago] ('246489d8-4114-4736-8c1f-e32347508081',)
+2026-01-29 21:40:51,251 INFO sqlalchemy.engine.Engine SELECT projects.id AS projects_id, projects.user_id AS projects_user_id, projects.title AS projects_title, projects.mode AS projects_mode, projects.language AS projects_language, projects.style_id AS projects_style_id, projects.context_input AS projects_context_input, projects.lyrics_final AS projects_lyrics_final, projects.status AS projects_status, projects.created_at AS projects_created_at, projects.updated_at AS projects_updated_at 
+FROM projects 
+WHERE projects.id = ?
+2026-01-29 21:40:51,251 INFO sqlalchemy.engine.Engine [cached since 104.1s ago] ('9a9eda8e-9a27-4063-8164-bf36d31bb098',)
+2026-01-29 21:40:51,251 INFO sqlalchemy.engine.Engine INSERT INTO generation_jobs (id, project_id, user_id, provider_job_id, status, credits_cost, job_metadata, error_message, completed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING created_at
+2026-01-29 21:40:51,252 INFO sqlalchemy.engine.Engine [cached since 104.1s ago] ('e0494d25-1e91-4e4a-a477-0c756be2f6a4', '9a9eda8e-9a27-4063-8164-bf36d31bb098', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', None, <JobStatus.QUEUED: 'queued'>, 10, '{"style_id": "makossa", "language": "fr"}', None, None)
+2026-01-29 21:40:51,253 INFO sqlalchemy.engine.Engine UPDATE projects SET status=?, updated_at=CURRENT_TIMESTAMP WHERE projects.id = ?
+2026-01-29 21:40:51,253 INFO sqlalchemy.engine.Engine [cached since 104.1s ago] ('generating', '9a9eda8e-9a27-4063-8164-bf36d31bb098')
+2026-01-29 21:40:51,254 INFO sqlalchemy.engine.Engine COMMIT
+2026-01-29 21:40:51,254 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:40:51,255 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id, generation_jobs.project_id, generation_jobs.user_id, generation_jobs.provider_job_id, generation_jobs.status, generation_jobs.credits_cost, generation_jobs.job_metadata, generation_jobs.error_message, generation_jobs.created_at, generation_jobs.completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ?
+2026-01-29 21:40:51,255 INFO sqlalchemy.engine.Engine [cached since 104.1s ago] ('e0494d25-1e91-4e4a-a477-0c756be2f6a4',)
+2026-01-29 21:40:51,255 INFO sqlalchemy.engine.Engine SELECT projects.id, projects.user_id, projects.title, projects.mode, projects.language, projects.style_id, projects.context_input, projects.lyrics_final, projects.status, projects.created_at, projects.updated_at 
+FROM projects 
+WHERE projects.id = ?
+2026-01-29 21:40:51,255 INFO sqlalchemy.engine.Engine [cached since 104.1s ago] ('9a9eda8e-9a27-4063-8164-bf36d31bb098',)
+INFO:     127.0.0.1:51109 - "POST /api/v1/generate/ HTTP/1.1" 202 Accepted
+2026-01-29 21:40:51,264 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:40:57,378 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:40:57,378 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:40:57,378 INFO sqlalchemy.engine.Engine [cached since 110.2s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:40:57,379 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:40:57,379 INFO sqlalchemy.engine.Engine [cached since 100.2s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51113 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:40:57,380 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:41:01,270 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:41:01,270 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:41:01,271 INFO sqlalchemy.engine.Engine [cached since 114.1s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:41:01,271 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:41:01,271 INFO sqlalchemy.engine.Engine [cached since 104s ago] ('e0494d25-1e91-4e4a-a477-0c756be2f6a4', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51115 - "GET /api/v1/generate/jobs/e0494d25-1e91-4e4a-a477-0c756be2f6a4 HTTP/1.1" 200 OK
+2026-01-29 21:41:01,272 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:41:07,387 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:41:07,388 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:41:07,388 INFO sqlalchemy.engine.Engine [cached since 120.3s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:41:07,388 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:41:07,388 INFO sqlalchemy.engine.Engine [cached since 110.2s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51119 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:41:07,389 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:41:17,394 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:41:17,395 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:41:17,395 INFO sqlalchemy.engine.Engine [cached since 130.3s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:41:17,396 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:41:17,396 INFO sqlalchemy.engine.Engine [cached since 120.2s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51128 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:41:17,397 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:41:27,407 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:41:27,407 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:41:27,408 INFO sqlalchemy.engine.Engine [cached since 140.3s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:41:27,409 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:41:27,409 INFO sqlalchemy.engine.Engine [cached since 130.2s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51134 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:41:27,410 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:41:37,421 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:41:37,422 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:41:37,422 INFO sqlalchemy.engine.Engine [cached since 150.3s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:41:37,423 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:41:37,423 INFO sqlalchemy.engine.Engine [cached since 140.2s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51145 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:41:37,425 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:41:47,430 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:41:47,430 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:41:47,430 INFO sqlalchemy.engine.Engine [cached since 160.3s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:41:47,435 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:41:47,435 INFO sqlalchemy.engine.Engine [cached since 150.2s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51150 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:41:47,437 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:41:57,444 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:41:57,445 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:41:57,445 INFO sqlalchemy.engine.Engine [cached since 170.3s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:41:57,447 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:41:57,447 INFO sqlalchemy.engine.Engine [cached since 160.2s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51153 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:41:57,448 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:42:07,456 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:42:07,456 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:42:07,457 INFO sqlalchemy.engine.Engine [cached since 180.3s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:42:07,457 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:42:07,457 INFO sqlalchemy.engine.Engine [cached since 170.2s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51162 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:42:07,458 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:42:17,464 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:42:17,465 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:42:17,465 INFO sqlalchemy.engine.Engine [cached since 190.3s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:42:17,466 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:42:17,466 INFO sqlalchemy.engine.Engine [cached since 180.2s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51174 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:42:17,467 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:42:27,477 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:42:27,477 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:42:27,478 INFO sqlalchemy.engine.Engine [cached since 200.3s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:42:27,479 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:42:27,479 INFO sqlalchemy.engine.Engine [cached since 190.2s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51177 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:42:27,480 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:42:37,488 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:42:37,489 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:42:37,490 INFO sqlalchemy.engine.Engine [cached since 210.4s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:42:37,491 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:42:37,491 INFO sqlalchemy.engine.Engine [cached since 200.3s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51185 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:42:37,492 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:42:47,501 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:42:47,501 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:42:47,501 INFO sqlalchemy.engine.Engine [cached since 220.4s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:42:47,502 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:42:47,502 INFO sqlalchemy.engine.Engine [cached since 210.3s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51205 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:42:47,505 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:42:57,520 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:42:57,521 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:42:57,521 INFO sqlalchemy.engine.Engine [cached since 230.4s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:42:57,523 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:42:57,523 INFO sqlalchemy.engine.Engine [cached since 220.3s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51209 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:42:57,524 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:43:07,530 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:43:07,531 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:43:07,531 INFO sqlalchemy.engine.Engine [cached since 240.4s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:43:07,531 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:43:07,531 INFO sqlalchemy.engine.Engine [cached since 230.3s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51213 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:43:07,532 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:43:17,541 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:43:17,541 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:43:17,541 INFO sqlalchemy.engine.Engine [cached since 250.4s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:43:17,542 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:43:17,543 INFO sqlalchemy.engine.Engine [cached since 240.3s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51217 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:43:17,543 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:43:27,549 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:43:27,549 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:43:27,549 INFO sqlalchemy.engine.Engine [cached since 260.4s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:43:27,551 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:43:27,553 INFO sqlalchemy.engine.Engine [cached since 250.3s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51219 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:43:27,554 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:43:37,562 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:43:37,562 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:43:37,563 INFO sqlalchemy.engine.Engine [cached since 270.4s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:43:37,563 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:43:37,564 INFO sqlalchemy.engine.Engine [cached since 260.3s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51226 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:43:37,565 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:43:47,572 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:43:47,572 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:43:47,572 INFO sqlalchemy.engine.Engine [cached since 280.4s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:43:47,573 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:43:47,573 INFO sqlalchemy.engine.Engine [cached since 270.3s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51235 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:43:47,575 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:43:57,580 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:43:57,581 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:43:57,581 INFO sqlalchemy.engine.Engine [cached since 290.4s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:43:57,581 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:43:57,581 INFO sqlalchemy.engine.Engine [cached since 280.3s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51238 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:43:57,582 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:44:07,591 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:44:07,592 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:44:07,592 INFO sqlalchemy.engine.Engine [cached since 300.5s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:44:07,593 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:44:07,593 INFO sqlalchemy.engine.Engine [cached since 290.4s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51240 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:44:07,594 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:44:17,599 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:44:17,599 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:44:17,599 INFO sqlalchemy.engine.Engine [cached since 310.5s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:44:17,600 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:44:17,600 INFO sqlalchemy.engine.Engine [cached since 300.4s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51244 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:44:17,601 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:44:27,607 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:44:27,608 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:44:27,608 INFO sqlalchemy.engine.Engine [cached since 320.5s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:44:27,609 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:44:27,609 INFO sqlalchemy.engine.Engine [cached since 310.4s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51246 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:44:27,609 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:44:37,619 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:44:37,620 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:44:37,620 INFO sqlalchemy.engine.Engine [cached since 330.5s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:44:37,621 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:44:37,621 INFO sqlalchemy.engine.Engine [cached since 320.4s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51252 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:44:37,622 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:44:47,632 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:44:47,632 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:44:47,632 INFO sqlalchemy.engine.Engine [cached since 340.5s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:44:47,633 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:44:47,633 INFO sqlalchemy.engine.Engine [cached since 330.4s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51255 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:44:47,634 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:44:57,640 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:44:57,641 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:44:57,641 INFO sqlalchemy.engine.Engine [cached since 350.5s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:44:57,642 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:44:57,642 INFO sqlalchemy.engine.Engine [cached since 340.4s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51258 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:44:57,643 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-01-29 21:45:07,652 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-01-29 21:45:07,652 INFO sqlalchemy.engine.Engine SELECT profiles.id AS profiles_id, profiles.email AS profiles_email, profiles.created_at AS profiles_created_at, profiles.credits AS profiles_credits, profiles.credits_reserved AS profiles_credits_reserved, profiles.total_credits_spent AS profiles_total_credits_spent, profiles.total_spent_money AS profiles_total_spent_money 
+FROM profiles 
+WHERE profiles.id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:45:07,653 INFO sqlalchemy.engine.Engine [cached since 360.5s ago] ('e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+2026-01-29 21:45:07,654 INFO sqlalchemy.engine.Engine SELECT generation_jobs.id AS generation_jobs_id, generation_jobs.project_id AS generation_jobs_project_id, generation_jobs.user_id AS generation_jobs_user_id, generation_jobs.provider_job_id AS generation_jobs_provider_job_id, generation_jobs.status AS generation_jobs_status, generation_jobs.credits_cost AS generation_jobs_credits_cost, generation_jobs.job_metadata AS generation_jobs_job_metadata, generation_jobs.error_message AS generation_jobs_error_message, generation_jobs.created_at AS generation_jobs_created_at, generation_jobs.completed_at AS generation_jobs_completed_at 
+FROM generation_jobs 
+WHERE generation_jobs.id = ? AND generation_jobs.user_id = ?
+ LIMIT ? OFFSET ?
+2026-01-29 21:45:07,654 INFO sqlalchemy.engine.Engine [cached since 350.4s ago] ('e854bedd-4cbc-409e-896b-735164dfb2cc', 'e49a1c9e-b750-4ec1-a37e-b79fd2e2b34c', 1, 0)
+INFO:     127.0.0.1:51261 - "GET /api/v1/generate/jobs/e854bedd-4cbc-409e-896b-735164dfb2cc HTTP/1.1" 200 OK
+2026-01-29 21:45:07,655 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [49008]

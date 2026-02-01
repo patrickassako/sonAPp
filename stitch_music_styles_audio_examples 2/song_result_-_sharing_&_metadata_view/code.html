@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Song Result - AI Music Studio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f49d25",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#221a10",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Spline Sans', sans-serif; }
+        .primary-gradient {
+            background: linear-gradient(135deg, #f49d25 0%, #ffc163 100%);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen transition-colors duration-300">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-b-[#493922] px-10 py-3 bg-background-light dark:bg-background-dark sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-6">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M42.4379 44C42.4379 44 36.0744 33.9038 41.1692 24C46.8624 12.9336 42.2078 4 42.2078 4L7.01134 4C7.01134 4 11.6577 12.932 5.96912 23.9969C0.876273 33.9029 7.27094 44 7.27094 44L42.4379 44Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">AI Music Studio</h2>
+</div>
+<nav class="hidden md:flex items-center gap-9">
+<a class="text-slate-600 dark:text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">My Library</a>
+<a class="text-slate-600 dark:text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Explore</a>
+<a class="text-slate-600 dark:text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Subscriptions</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<label class="flex flex-col min-w-40 !h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full bg-slate-100 dark:bg-[#493922]">
+<div class="text-slate-400 dark:text-[#cbb290] flex items-center justify-center pl-4">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-transparent focus:outline-0 focus:ring-0 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-[#cbb290] px-4 pl-2 text-sm font-normal" placeholder="Search tracks..."/>
+</div>
+</label>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/20" data-alt="User profile avatar with subtle glow" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCmaC0qaYGcKQGRwTA9TwQvotv2Mm9Ugbqd9tWFT7R_99_w9KMdjf57BqOYlHC5oKLoU8OWUUe1TpywkGQoCEg-noKKdDuejz3AzDeUa6LQIGjWOzNy4xS1pjx8cfgcU2TkYWsdrdA_eNJvC2Gs4NHH5ge2cke6c2A9vaYc2JsfUI5JlZXUXhvC-L7xCfT_YLBVBmj6Zdmi0RRpK0E4JLPXbkIyQ7iMgCY0o7DzpuxsH_vY1k0fQviOYbdizRg3qjeJvtW3gZ_ZadkP");'></div>
+</div>
+</header>
+<main class="max-w-[1000px] mx-auto px-6 py-12">
+<!-- Headline & Metadata -->
+<div class="text-center mb-10">
+<span class="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase rounded mb-4">Song Style: Synthwave Pop</span>
+<h1 class="text-slate-900 dark:text-white tracking-tight text-4xl md:text-5xl font-bold leading-tight mb-2">Neon Dreams</h1>
+<p class="text-slate-500 dark:text-[#cbb290] text-base font-normal">Produced by You • Created on Oct 24, 2023</p>
+</div>
+<!-- Media Player Component -->
+<div class="glass-panel rounded-xl p-8 mb-8 shadow-2xl">
+<div class="flex flex-col md:flex-row gap-8 items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-48 md:size-64 shadow-lg shrink-0" data-alt="Retro synthwave album art with neon grid" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCAJrssSk2wHVaUup9V5VcozixDS9Sb85-QbaJsmXtmMGnzO3RruWDp_FAG2t_NXZqCPjZiENU7Thvs23nrfmYmbUh_Qo1E0JbB925jNvKh6XSfo9V8avu-jMC9sAF78DIjFT_p4RvBd-HEPcLx4MCmPe6J4Inwk8rjRxRw7cG6gS2EiRgAEg5TBZ9bSovQC8W1cJgH4tdVZCGzL-LVVXNv_Uaf16WAzplmDdgx5cRsK-2Icni5baNlXezPggHTT4UNyzgxBh2cVP7W");'></div>
+<div class="flex-1 w-full flex flex-col justify-center">
+<div class="mb-6">
+<div class="flex justify-between items-end mb-4">
+<div>
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">Neon Dreams</h3>
+<p class="text-primary font-medium">AI Masterpiece v2.4</p>
+</div>
+<div class="flex gap-2">
+<button class="p-2 hover:bg-white/5 rounded-full transition-colors text-slate-400 dark:text-[#cbb290]">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<button class="p-2 hover:bg-white/5 rounded-full transition-colors text-slate-400 dark:text-[#cbb290]">
+<span class="material-symbols-outlined">download</span>
+</button>
+</div>
+</div>
+<!-- Custom Waveform Mockup -->
+<div class="flex items-center gap-1 h-12 mb-2">
+<div class="h-4 w-1 bg-primary rounded-full"></div>
+<div class="h-8 w-1 bg-primary rounded-full"></div>
+<div class="h-10 w-1 bg-primary rounded-full"></div>
+<div class="h-6 w-1 bg-primary rounded-full"></div>
+<div class="h-12 w-1 bg-primary rounded-full"></div>
+<div class="h-8 w-1 bg-primary rounded-full"></div>
+<div class="h-4 w-1 bg-primary rounded-full"></div>
+<div class="h-10 w-1 bg-primary/30 dark:bg-[#493922] rounded-full"></div>
+<div class="h-6 w-1 bg-primary/30 dark:bg-[#493922] rounded-full"></div>
+<div class="h-12 w-1 bg-primary/30 dark:bg-[#493922] rounded-full"></div>
+<div class="h-8 w-1 bg-primary/30 dark:bg-[#493922] rounded-full"></div>
+<div class="h-4 w-1 bg-primary/30 dark:bg-[#493922] rounded-full"></div>
+<div class="h-9 w-1 bg-primary/30 dark:bg-[#493922] rounded-full"></div>
+<div class="h-5 w-1 bg-primary/30 dark:bg-[#493922] rounded-full"></div>
+<div class="h-7 w-1 bg-primary/30 dark:bg-[#493922] rounded-full"></div>
+<div class="h-11 w-1 bg-primary/30 dark:bg-[#493922] rounded-full"></div>
+<div class="h-6 w-1 bg-primary/30 dark:bg-[#493922] rounded-full"></div>
+<div class="h-3 w-1 bg-primary/30 dark:bg-[#493922] rounded-full"></div>
+<div class="flex-1 h-1 bg-primary/20 rounded-full"></div>
+</div>
+<div class="flex items-center justify-between text-xs font-medium text-slate-400 dark:text-[#cbb290]">
+<span>1:17</span>
+<span>3:42</span>
+</div>
+</div>
+<div class="flex items-center justify-center md:justify-start gap-6">
+<button class="text-slate-400 dark:text-[#cbb290] hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-3xl">skip_previous</span>
+</button>
+<button class="size-16 primary-gradient rounded-full flex items-center justify-center text-background-dark shadow-lg shadow-primary/20 hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-4xl leading-none ml-1">play_arrow</span>
+</button>
+<button class="text-slate-400 dark:text-[#cbb290] hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-3xl">skip_next</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Version Toggle -->
+<div class="flex justify-center mb-12">
+<div class="flex h-12 w-full max-w-md items-center justify-center rounded-xl bg-slate-100 dark:bg-[#493922] p-1.5">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-[#231b10] has-[:checked]:shadow-sm text-slate-500 dark:text-[#cbb290] has-[:checked]:text-primary text-sm font-semibold transition-all">
+<span class="truncate uppercase tracking-wider">Version 1</span>
+<input class="hidden" name="song-version" type="radio" value="v1"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-[#231b10] has-[:checked]:shadow-sm text-slate-500 dark:text-[#cbb290] has-[:checked]:text-primary text-sm font-semibold transition-all">
+<span class="truncate uppercase tracking-wider">Version 2</span>
+<input checked="" class="hidden" name="song-version" type="radio" value="v2"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-[#231b10] has-[:checked]:shadow-sm text-slate-500 dark:text-[#cbb290] has-[:checked]:text-primary text-sm font-semibold transition-all">
+<span class="truncate uppercase tracking-wider">Version 3</span>
+<input class="hidden" name="song-version" type="radio" value="v3"/>
+</label>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+<!-- Share Section -->
+<div class="flex flex-col gap-6">
+<h3 class="text-xl font-bold text-slate-900 dark:text-white px-1">Share your masterpiece</h3>
+<div class="grid grid-cols-3 gap-4">
+<button class="flex flex-col items-center gap-3 p-6 glass-panel rounded-xl hover:bg-primary/5 transition-all group">
+<div class="size-12 bg-[#25D366]/20 rounded-full flex items-center justify-center text-[#25D366] group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">chat_bubble</span>
+</div>
+<span class="text-xs font-semibold text-slate-500 dark:text-[#cbb290] uppercase tracking-tighter">WhatsApp</span>
+</button>
+<button class="flex flex-col items-center gap-3 p-6 glass-panel rounded-xl hover:bg-primary/5 transition-all group">
+<div class="size-12 bg-[#E4405F]/20 rounded-full flex items-center justify-center text-[#E4405F] group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">photo_camera</span>
+</div>
+<span class="text-xs font-semibold text-slate-500 dark:text-[#cbb290] uppercase tracking-tighter">Stories</span>
+</button>
+<button class="flex flex-col items-center gap-3 p-6 glass-panel rounded-xl hover:bg-primary/5 transition-all group">
+<div class="size-12 bg-[#1877F2]/20 rounded-full flex items-center justify-center text-[#1877F2] group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">social_leaderboard</span>
+</div>
+<span class="text-xs font-semibold text-slate-500 dark:text-[#cbb290] uppercase tracking-tighter">Feed</span>
+</button>
+</div>
+<div class="glass-panel p-4 rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-3 overflow-hidden">
+<span class="material-symbols-outlined text-primary">link</span>
+<span class="text-sm text-slate-400 truncate">https://aimusic.studio/share/neon-dreams-492k</span>
+</div>
+<button class="px-4 py-2 bg-primary/20 text-primary text-xs font-bold rounded-lg hover:bg-primary hover:text-white transition-all">COPY</button>
+</div>
+</div>
+<!-- How It Was Made Card -->
+<div class="glass-panel rounded-xl p-8 flex flex-col gap-6">
+<div class="flex items-center gap-3 border-b border-white/10 pb-4">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white">How it was made</h3>
+</div>
+<div class="flex flex-col gap-4">
+<div>
+<p class="text-xs font-bold text-slate-500 dark:text-[#cbb290] uppercase tracking-widest mb-2">Lyrics Snippet</p>
+<div class="p-4 bg-black/20 rounded-lg border border-white/5 max-h-32 overflow-y-auto">
+<p class="text-sm leading-relaxed text-slate-600 dark:text-slate-300 italic">
+                                "Neon lights reflecting in your eyes,<br/>
+                                Electric pulses beneath the velvet skies.<br/>
+                                We're driving fast where the circuit ends,<br/>
+                                Caught in the loop where the future bends..."
+                            </p>
+</div>
+</div>
+<div>
+<p class="text-xs font-bold text-slate-500 dark:text-[#cbb290] uppercase tracking-widest mb-2">Style Tags</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-white/5 text-xs text-slate-400 dark:text-[#cbb290] border border-white/10 rounded-full">#80sRetro</span>
+<span class="px-3 py-1 bg-white/5 text-xs text-slate-400 dark:text-[#cbb290] border border-white/10 rounded-full">#Synthwave</span>
+<span class="px-3 py-1 bg-white/5 text-xs text-slate-400 dark:text-[#cbb290] border border-white/10 rounded-full">#Energetic</span>
+<span class="px-3 py-1 bg-white/5 text-xs text-slate-400 dark:text-[#cbb290] border border-white/10 rounded-full">#Nostalgic</span>
+<span class="px-3 py-1 bg-white/5 text-xs text-slate-400 dark:text-[#cbb290] border border-white/10 rounded-full">#MaleVocals</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer CTA -->
+<div class="flex justify-center">
+<button class="primary-gradient text-background-dark font-bold text-lg px-12 py-5 rounded-full shadow-2xl shadow-primary/30 flex items-center gap-3 hover:scale-105 transition-transform">
+<span class="material-symbols-outlined font-bold">add_circle</span>
+                CREATE ANOTHER TRACK
+            </button>
+</div>
+</main>
+<footer class="py-12 border-t border-slate-200 dark:border-white/5 text-center">
+<p class="text-slate-400 dark:text-[#cbb290]/50 text-xs">© 2023 AI Music Studio. Built with artificial intelligence, played with soul.</p>
+</footer>
+</body></html>

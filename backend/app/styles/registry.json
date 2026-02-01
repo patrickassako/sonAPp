@@ -1,0 +1,407 @@
+{
+    "styles": [
+        {
+            "id": "pop",
+            "label": "Pop",
+            "category": "UNIVERSAL",
+            "bpm_range": [
+                100,
+                130
+            ],
+            "energy": "medium",
+            "instrumentation": [
+                "synth",
+                "drums",
+                "bass"
+            ],
+            "prompt_template_fr": "Chanson pop moderne, mélodie accrocheuse, arrangements légers, ambiance positive",
+            "prompt_template_en": "Modern pop song, catchy melody, light arrangement, positive vibe",
+            "negative_tags": [
+                "heavy metal",
+                "screaming"
+            ],
+            "style_weight": 0.7
+        },
+        {
+            "id": "makossa",
+            "label": "Makossa 🇨🇲",
+            "category": "AFRICAN",
+            "bpm_range": [
+                110,
+                125
+            ],
+            "energy": "high",
+            "instrumentation": [
+                "syncopated bass",
+                "electric guitar",
+                "warm percussion",
+                "brass section"
+            ],
+            "prompt_template_fr": "Chanson Makossa camerounaise authentique, groove dansant, guitare rythmique syncopée, cuivres chaleureux, percussion africaine festive, basse groovy",
+            "prompt_template_en": "Authentic Cameroonian Makossa song, dance groove, syncopated rhythmic guitar, warm brass section, festive African percussion, groovy bass",
+            "negative_tags": [
+                "trap hi-hats",
+                "dubstep",
+                "EDM drop",
+                "autotune heavy"
+            ],
+            "style_weight": 0.85
+        },
+        {
+            "id": "amapiano",
+            "label": "Amapiano",
+            "category": "AFRICAN",
+            "bpm_range": [
+                110,
+                120
+            ],
+            "energy": "medium-high",
+            "instrumentation": [
+                "log drum",
+                "deep bass",
+                "piano chords",
+                "percussive synth"
+            ],
+            "prompt_template_fr": "Chanson Amapiano sud-africaine, piano mélodique, basse profonde, log drum distinctif, groove lent et chaleureux",
+            "prompt_template_en": "South African Amapiano song, melodic piano, deep bass, distinctive log drum, slow warm groove",
+            "negative_tags": [
+                "rock guitar",
+                "metal",
+                "screaming"
+            ],
+            "style_weight": 0.8
+        },
+        {
+            "id": "afrobeats",
+            "label": "Afrobeats",
+            "category": "AFRICAN",
+            "bpm_range": [
+                100,
+                128
+            ],
+            "energy": "high",
+            "instrumentation": [
+                "shekere",
+                "talking drum",
+                "synth",
+                "bass"
+            ],
+            "prompt_template_fr": "Chanson Afrobeats moderne, percussions africaines authentiques, shekere, talking drum, basse puissante, synthés modernes",
+            "prompt_template_en": "Modern Afrobeats song, authentic African percussion, shekere, talking drum, powerful bass, modern synths",
+            "negative_tags": [
+                "country",
+                "folk acoustic"
+            ],
+            "style_weight": 0.8
+        },
+        {
+            "id": "coupe_decale",
+            "label": "Coupé-Décalé 🇨🇮",
+            "category": "AFRICAN",
+            "bpm_range": [
+                130,
+                145
+            ],
+            "energy": "very-high",
+            "instrumentation": [
+                "electronic percussion",
+                "synth stabs",
+                "heavy bass"
+            ],
+            "prompt_template_fr": "Chanson Coupé-Décalé ivoirienne énergique, rythme rapide et dansant, percussions électroniques, basse lourde, ambiance festive",
+            "prompt_template_en": "Energetic Ivorian Coupé-Décalé song, fast dance rhythm, electronic percussion, heavy bass, festive atmosphere",
+            "negative_tags": [
+                "slow ballad",
+                "classical"
+            ],
+            "style_weight": 0.85
+        },
+        {
+            "id": "bikutsi",
+            "label": "Bikutsi 🇨🇲",
+            "category": "AFRICAN",
+            "bpm_range": [
+                140,
+                160
+            ],
+            "energy": "very-high",
+            "instrumentation": [
+                "balafon",
+                "rapid percussion",
+                "electric guitar",
+                "bass"
+            ],
+            "prompt_template_fr": "Chanson Bikutsi camerounaise traditionnelle moderne, rythme rapide et énergique, balafon, percussions intenses, guitare électrique rythmée",
+            "prompt_template_en": "Modern traditional Cameroonian Bikutsi song, fast energetic rhythm, balafon, intense percussion, rhythmic electric guitar",
+            "negative_tags": [
+                "slow tempo",
+                "ambient",
+                "chill"
+            ],
+            "style_weight": 0.85
+        },
+        {
+            "id": "rap",
+            "label": "Rap",
+            "category": "URBAN",
+            "bpm_range": [
+                80,
+                100
+            ],
+            "energy": "medium",
+            "instrumentation": [
+                "Rap vocals",
+                "Hip Hop",
+                "Flow",
+                "808 bass",
+                "hi-hats",
+                "snare"
+            ],
+            "prompt_template_fr": "Beat rap moderne, voix rap, 808 bass puissante, hi-hats rapides, snare claquant",
+            "prompt_template_en": "Modern rap beat, rap vocals, powerful 808 bass, fast hi-hats, snappy snare",
+            "negative_tags": [
+                "female vocals",
+                "singing",
+                "rock",
+                "guitar solo",
+                "R&B",
+                "Pop",
+                "Melodic"
+            ],
+            "style_weight": 0.85
+        },
+        {
+            "id": "drill",
+            "label": "Drill",
+            "category": "URBAN",
+            "bpm_range": [
+                140,
+                145
+            ],
+            "energy": "high",
+            "instrumentation": [
+                "Rap vocals",
+                "Male vocals",
+                "sliding 808",
+                "dark piano",
+                "hi-hats",
+                "snare rolls"
+            ],
+            "prompt_template_fr": "Beat drill sombre et agressif, voix rap, 808 glissantes, piano mélancolique, hi-hats rapides, flow percutant",
+            "prompt_template_en": "Dark aggressive drill beat, rap vocals, sliding 808s, melancholic piano, fast hi-hats, hard-hitting flow",
+            "negative_tags": [
+                "female vocals",
+                "singing",
+                "happy",
+                "upbeat",
+                "acoustic"
+            ],
+            "style_weight": 0.8
+        },
+        {
+            "id": "afrotrap",
+            "label": "Afro Trap",
+            "category": "URBAN",
+            "bpm_range": [
+                130,
+                150
+            ],
+            "energy": "high",
+            "instrumentation": [
+                "Rap vocals",
+                "trap hi-hats",
+                "808",
+                "african percussion",
+                "flute"
+            ],
+            "prompt_template_fr": "Afro Trap moderne, voix rap, fusion trap et percussion africaine, 808 puissante, hi-hats rapides, flûte mélodique",
+            "prompt_template_en": "Modern Afro Trap, rap vocals, fusion of trap and African percussion, powerful 808, fast hi-hats, melodic flute",
+            "negative_tags": [
+                "opera",
+                "country",
+                "classical"
+            ],
+            "style_weight": 0.8
+        },
+        {
+            "id": "acoustic",
+            "label": "Acoustic / Folk",
+            "category": "UNIVERSAL",
+            "bpm_range": [
+                70,
+                100
+            ],
+            "energy": "low",
+            "instrumentation": [
+                "acoustic guitar",
+                "light percussion"
+            ],
+            "prompt_template_fr": "Chanson acoustique intimiste, guitare folk, arrangements simples et chaleureux",
+            "prompt_template_en": "Intimate acoustic song, folk guitar, simple warm arrangements",
+            "negative_tags": [
+                "heavy bass",
+                "electronic"
+            ],
+            "style_weight": 0.7
+        },
+        {
+            "id": "gospel",
+            "label": "Gospel",
+            "category": "UNIVERSAL",
+            "bpm_range": [
+                60,
+                110
+            ],
+            "energy": "medium",
+            "instrumentation": [
+                "piano",
+                "organ",
+                "choir",
+                "drums"
+            ],
+            "prompt_template_fr": "Chanson gospel spirituelle, piano émotionnel, orgue, chœurs puissants, message d'espoir",
+            "prompt_template_en": "Spiritual gospel song, emotional piano, organ, powerful choir, message of hope",
+            "negative_tags": [
+                "dark",
+                "aggressive"
+            ],
+            "style_weight": 0.75
+        },
+        {
+            "id": "zouk",
+            "label": "Zouk 🌴",
+            "category": "AFRICAN",
+            "bpm_range": [
+                80,
+                110
+            ],
+            "energy": "medium",
+            "instrumentation": [
+                "synthesizer",
+                "zouk rhythm",
+                "slap bass",
+                "electric guitar"
+            ],
+            "prompt_template_fr": "Chanson Zouk Love antillaise, rythme zouk romantique, mélodie douce au synthé, basse slap légère, ambiance tropicale et sensuelle",
+            "prompt_template_en": "Antillean Zouk Love song, romantic zouk rhythm, soft synth melody, light slap bass, tropical and sensual atmosphere",
+            "negative_tags": [
+                "aggressive",
+                "fast techno",
+                "heavy metal"
+            ],
+            "style_weight": 0.8
+        },
+        {
+            "id": "salsa",
+            "label": "Salsa 💃",
+            "category": "UNIVERSAL",
+            "bpm_range": [
+                160,
+                200
+            ],
+            "energy": "high",
+            "instrumentation": [
+                "congas",
+                "piano montuno",
+                "brass section",
+                "timbales"
+            ],
+            "prompt_template_fr": "Chanson Salsa latine énergique, piano montuno, section de cuivres dynamique, percussions congas et timbales, rythme dansant",
+            "prompt_template_en": "Energetic Latin Salsa song, montuno piano, dynamic brass section, congas and timbales percussion, dance rhythm",
+            "negative_tags": [
+                "electronic",
+                "slow ballad",
+                "heavy guitar"
+            ],
+            "style_weight": 0.8
+        },
+        {
+            "id": "rnb",
+            "label": "R&B 💙",
+            "category": "URBAN",
+            "bpm_range": [
+                60,
+                90
+            ],
+            "energy": "medium-low",
+            "instrumentation": [
+                "smooth synth",
+                "finger snaps",
+                "deep bass",
+                "piano"
+            ],
+            "prompt_template_fr": "Chanson R&B contemporaine douce, voix soulful, synthés nappants, claquements de doigts, basse profonde, ambiance romantique",
+            "prompt_template_en": "Smooth contemporary R&B song, soulful vocals, lush synths, finger snaps, deep bass, romantic atmosphere",
+            "negative_tags": [
+                "aggressive",
+                "screaming",
+                "fast techno"
+            ],
+            "style_weight": 0.75
+        },
+        {
+            "id": "jazz",
+            "label": "Jazz 🎷",
+            "category": "UNIVERSAL",
+            "bpm_range": [
+                80,
+                140
+            ],
+            "energy": "medium",
+            "instrumentation": [
+                "saxophone",
+                "double bass",
+                "piano",
+                "brush drums"
+            ],
+            "prompt_template_fr": "Chanson Jazz classique, saxophone mélodieux, contrebasse walking, piano swing, batterie aux balais",
+            "prompt_template_en": "Classic Jazz song, melodic saxophone, walking double bass, swing piano, brush drums",
+            "negative_tags": [
+                "electronic",
+                "autotune",
+                "distorted guitar"
+            ],
+            "style_weight": 0.7
+        },
+        {
+            "id": "fusion",
+            "label": "Fusion (Mixt) 🌐",
+            "category": "UNIVERSAL",
+            "bpm_range": [
+                100,
+                130
+            ],
+            "energy": "medium-high",
+            "instrumentation": [
+                "mixed percussion",
+                "hybrid synth",
+                "acoustic and electric",
+                "world instruments"
+            ],
+            "prompt_template_fr": "Fusion musicale éclectique, mélange d'instruments traditionnels et électroniques, rythme hybride, sonorités mondiales uniques",
+            "prompt_template_en": "Eclectic music fusion, blend of traditional and electronic instruments, hybrid rhythm, unique world sounds",
+            "negative_tags": [
+                "generic",
+                "boring"
+            ],
+            "style_weight": 0.6
+        }
+    ],
+    "categories": [
+        {
+            "id": "UNIVERSAL",
+            "label_fr": "Universels",
+            "label_en": "Universal"
+        },
+        {
+            "id": "URBAN",
+            "label_fr": "Urbains",
+            "label_en": "Urban"
+        },
+        {
+            "id": "AFRICAN",
+            "label_fr": "Africains 🌍",
+            "label_en": "African 🌍"
+        }
+    ]
+}
