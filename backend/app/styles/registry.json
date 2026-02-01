@@ -9,18 +9,29 @@
                 130
             ],
             "energy": "medium",
+            "voice_profile": {
+                "type": "mixed",
+                "tone": "bright",
+                "delivery": "sung",
+                "variation": "high"
+            },
             "instrumentation": [
                 "synth",
                 "drums",
-                "bass"
+                "bass",
+                "backing vocals",
+                "clean electric guitar"
             ],
-            "prompt_template_fr": "Chanson pop moderne, mélodie accrocheuse, arrangements légers, ambiance positive",
-            "prompt_template_en": "Modern pop song, catchy melody, light arrangement, positive vibe",
+            "prompt_template_fr": "Chanson pop moderne production radio, mélodie accrocheuse et cristalline, arrangements légers, voix claires et brillantes, refrains hymniques, ambiance positive",
+            "prompt_template_en": "Modern radio-ready pop song, catchy crystalline melody, light arrangement, clear bright vocals, anthemic choruses, positive vibe",
             "negative_tags": [
                 "heavy metal",
-                "screaming"
+                "screaming",
+                "lo-fi",
+                "monotone",
+                "distortion"
             ],
-            "style_weight": 0.7
+            "style_weight": 0.75
         },
         {
             "id": "makossa",
@@ -31,45 +42,65 @@
                 125
             ],
             "energy": "high",
+            "voice_profile": {
+                "type": "male",
+                "tone": "warm",
+                "delivery": "sung",
+                "variation": "medium"
+            },
             "instrumentation": [
                 "syncopated bass",
                 "electric guitar",
                 "warm percussion",
-                "brass section"
+                "brass section",
+                "shakers",
+                "bottle percussion"
             ],
-            "prompt_template_fr": "Chanson Makossa camerounaise authentique, groove dansant, guitare rythmique syncopée, cuivres chaleureux, percussion africaine festive, basse groovy",
-            "prompt_template_en": "Authentic Cameroonian Makossa song, dance groove, syncopated rhythmic guitar, warm brass section, festive African percussion, groovy bass",
+            "prompt_template_fr": "Chanson Makossa camerounaise authentique style Douala, groove dansant irrésistible, guitare rythmique syncopée (cocotte), section de cuivres jazz-funk, basse slappée bondissante, percussion festive",
+            "prompt_template_en": "Authentic Cameroonian Makossa song Douala style, irresistible dance groove, syncopated rhythmic guitar, jazz-funk brass section, bouncy slap bass, festive percussion",
             "negative_tags": [
                 "trap hi-hats",
                 "dubstep",
                 "EDM drop",
-                "autotune heavy"
+                "autotune heavy",
+                "dark",
+                "sad"
             ],
-            "style_weight": 0.85
+            "style_weight": 0.88
         },
         {
             "id": "amapiano",
             "label": "Amapiano",
             "category": "AFRICAN",
             "bpm_range": [
-                110,
-                120
+                111,
+                113
             ],
             "energy": "medium-high",
+            "voice_profile": {
+                "type": "female",
+                "tone": "soft",
+                "delivery": "melodic",
+                "variation": "medium"
+            },
             "instrumentation": [
                 "log drum",
                 "deep bass",
                 "piano chords",
-                "percussive synth"
+                "percussive synth",
+                "shakers",
+                "dusty texture"
             ],
-            "prompt_template_fr": "Chanson Amapiano sud-africaine, piano mélodique, basse profonde, log drum distinctif, groove lent et chaleureux",
-            "prompt_template_en": "South African Amapiano song, melodic piano, deep bass, distinctive log drum, slow warm groove",
+            "prompt_template_fr": "Chanson Amapiano sud-africaine deep, piano jazzy mélodique, basse Log Drum vrombissante et résonnante, nappe atmosphérique, groove lent hypnotique et chaleureux",
+            "prompt_template_en": "Deep South African Amapiano song, melodic jazzy piano, booming resonant Log Drum bass, atmospheric pad, hypnotic slow warm groove",
             "negative_tags": [
                 "rock guitar",
                 "metal",
-                "screaming"
+                "screaming",
+                "fast techno",
+                "aggressive rap"
             ],
-            "style_weight": 0.8
+            "style_weight": 0.82
         },
         {
             "id": "afrobeats",
@@ -77,20 +108,31 @@
             "category": "AFRICAN",
             "bpm_range": [
                 100,
-                128
+                120
             ],
             "energy": "high",
+            "voice_profile": {
+                "type": "mixed",
+                "tone": "smooth",
+                "delivery": "melodic",
+                "variation": "high"
+            },
             "instrumentation": [
                 "shekere",
                 "talking drum",
                 "synth",
-                "bass"
+                "bass",
+                "muted guitar",
+                "rimshot"
             ],
-            "prompt_template_fr": "Chanson Afrobeats moderne, percussions africaines authentiques, shekere, talking drum, basse puissante, synthés modernes",
-            "prompt_template_en": "Modern Afrobeats song, authentic African percussion, shekere, talking drum, powerful bass, modern synths",
+            "prompt_template_fr": "Chanson Afrobeats moderne Naija style, percussions africaines complexes, shekere, talking drum subtil, basse ronde puissante, mélodie vocale autotunée douce, production clean",
+            "prompt_template_en": "Modern Naija style Afrobeats song, complex African percussion, shekere, subtle talking drum, powerful round bass, smooth autotuned vocal melody, clean production",
             "negative_tags": [
                 "country",
-                "folk acoustic"
+                "folk acoustic",
+                "heavy rock",
+                "noise",
+                "operatic"
             ],
             "style_weight": 0.8
         },
@@ -103,18 +145,29 @@
                 145
             ],
             "energy": "very-high",
+            "voice_profile": {
+                "type": "male",
+                "tone": "energetic",
+                "delivery": "shouted",
+                "variation": "medium"
+            },
             "instrumentation": [
                 "electronic percussion",
                 "synth stabs",
-                "heavy bass"
+                "heavy bass",
+                "drum machine",
+                "whistle"
             ],
-            "prompt_template_fr": "Chanson Coupé-Décalé ivoirienne énergique, rythme rapide et dansant, percussions électroniques, basse lourde, ambiance festive",
-            "prompt_template_en": "Energetic Ivorian Coupé-Décalé song, fast dance rhythm, electronic percussion, heavy bass, festive atmosphere",
+            "prompt_template_fr": "Chanson Coupé-Décalé ivoirienne explosive, animation Atalaku, rythme rapide électronique et répétitif, basse lourde, synthés percutants, ambiance de maquis festive",
+            "prompt_template_en": "Explosive Ivorian Coupé-Décalé song, Atalaku animation, fast repetitive electronic rhythm, heavy bass, punchy synths, festive maquis atmosphere",
             "negative_tags": [
                 "slow ballad",
-                "classical"
+                "classical",
+                "acoustic",
+                "chill",
+                "jazz"
             ],
-            "style_weight": 0.85
+            "style_weight": 0.88
         },
         {
             "id": "bikutsi",
@@ -125,20 +178,29 @@
                 160
             ],
             "energy": "very-high",
+            "voice_profile": {
+                "type": "female",
+                "tone": "raw",
+                "delivery": "sung",
+                "variation": "high"
+            },
             "instrumentation": [
                 "balafon",
                 "rapid percussion",
                 "electric guitar",
-                "bass"
+                "bass",
+                "clapping"
             ],
-            "prompt_template_fr": "Chanson Bikutsi camerounaise traditionnelle moderne, rythme rapide et énergique, balafon, percussions intenses, guitare électrique rythmée",
-            "prompt_template_en": "Modern traditional Cameroonian Bikutsi song, fast energetic rhythm, balafon, intense percussion, rhythmic electric guitar",
+            "prompt_template_fr": "Chanson Bikutsi camerounaise frénétique, rythme 6/8 rapide, simulation balafon à la guitare électrique, percussions tribales intenses, chant énergique et répétitif",
+            "prompt_template_en": "Frenetic Cameroonian Bikutsi song, fast 6/8 rhythm, balafon simulation on electric guitar, intense tribal percussion, energetic repetitive singing",
             "negative_tags": [
                 "slow tempo",
                 "ambient",
-                "chill"
+                "chill",
+                "trap beat",
+                "synthesizer loop"
             ],
-            "style_weight": 0.85
+            "style_weight": 0.9
         },
         {
             "id": "rap",
@@ -149,16 +211,23 @@
                 100
             ],
             "energy": "medium",
+            "voice_profile": {
+                "type": "male",
+                "tone": "gritty",
+                "delivery": "rap",
+                "variation": "low"
+            },
             "instrumentation": [
                 "Rap vocals",
                 "Hip Hop",
                 "Flow",
                 "808 bass",
                 "hi-hats",
-                "snare"
+                "snare",
+                "sampled loop"
             ],
-            "prompt_template_fr": "Beat rap moderne, voix rap, 808 bass puissante, hi-hats rapides, snare claquant",
-            "prompt_template_en": "Modern rap beat, rap vocals, powerful 808 bass, fast hi-hats, snappy snare",
+            "prompt_template_fr": "Beat rap moderne boom-bap ou trap, flow rap technique et précis, 808 bass puissante, hi-hats rapides, snare claquant, atmosphère urbaine",
+            "prompt_template_en": "Modern boom-bap or trap rap beat, technical precise rap flow, powerful 808 bass, fast hi-hats, snappy snare, urban atmosphere",
             "negative_tags": [
                 "female vocals",
                 "singing",
@@ -166,9 +235,11 @@
                 "guitar solo",
                 "R&B",
                 "Pop",
-                "Melodic"
+                "Melodic",
+                "Opera",
+                "Country"
             ],
-            "style_weight": 0.85
+            "style_weight": 0.9
         },
         {
             "id": "drill",
@@ -179,24 +250,32 @@
                 145
             ],
             "energy": "high",
+            "voice_profile": {
+                "type": "male",
+                "tone": "deep",
+                "delivery": "rap",
+                "variation": "low"
+            },
             "instrumentation": [
                 "Rap vocals",
                 "Male vocals",
                 "sliding 808",
                 "dark piano",
                 "hi-hats",
-                "snare rolls"
+                "snare rolls",
+                "grime bass"
             ],
-            "prompt_template_fr": "Beat drill sombre et agressif, voix rap, 808 glissantes, piano mélancolique, hi-hats rapides, flow percutant",
-            "prompt_template_en": "Dark aggressive drill beat, rap vocals, sliding 808s, melancholic piano, fast hi-hats, hard-hitting flow",
+            "prompt_template_fr": "Beat drill UK/NY sombre et menaçant, voix rap grave et agressive, 808 slides glissantes, piano mineur hanté, hi-hats triplets complexes",
+            "prompt_template_en": "Dark menacing UK/NY drill beat, deep aggressive rap vocals, sliding 808s, haunted minor piano, complex triplet hi-hats",
             "negative_tags": [
                 "female vocals",
                 "singing",
                 "happy",
                 "upbeat",
-                "acoustic"
+                "acoustic",
+                "major key"
             ],
-            "style_weight": 0.8
+            "style_weight": 0.85
         },
         {
             "id": "afrotrap",
@@ -204,24 +283,33 @@
             "category": "URBAN",
             "bpm_range": [
                 130,
-                150
+                145
             ],
             "energy": "high",
+            "voice_profile": {
+                "type": "male",
+                "tone": "autotune",
+                "delivery": "melodic_rap",
+                "variation": "medium"
+            },
             "instrumentation": [
                 "Rap vocals",
                 "trap hi-hats",
                 "808",
                 "african percussion",
-                "flute"
+                "flute",
+                "kora sample"
             ],
-            "prompt_template_fr": "Afro Trap moderne, voix rap, fusion trap et percussion africaine, 808 puissante, hi-hats rapides, flûte mélodique",
-            "prompt_template_en": "Modern Afro Trap, rap vocals, fusion of trap and African percussion, powerful 808, fast hi-hats, melodic flute",
+            "prompt_template_fr": "Afro Trap festif MHD style, voix rap mélodique autotunée, fusion rythmique trap et percussions africaines, 808 bondissante, melody loop entraînante",
+            "prompt_template_en": "Festive MHD style Afro Trap, melodic autotuned rap vocals, rhythmic fusion of trap and African percussion, bouncy 808, catchy melody loop",
             "negative_tags": [
                 "opera",
                 "country",
-                "classical"
+                "classical",
+                "slow ballad",
+                "rock"
             ],
-            "style_weight": 0.8
+            "style_weight": 0.85
         },
         {
             "id": "acoustic",
@@ -232,17 +320,27 @@
                 100
             ],
             "energy": "low",
+            "voice_profile": {
+                "type": "mixed",
+                "tone": "soft",
+                "delivery": "sung",
+                "variation": "high"
+            },
             "instrumentation": [
                 "acoustic guitar",
-                "light percussion"
+                "light percussion",
+                "cello",
+                "shakers"
             ],
-            "prompt_template_fr": "Chanson acoustique intimiste, guitare folk, arrangements simples et chaleureux",
-            "prompt_template_en": "Intimate acoustic song, folk guitar, simple warm arrangements",
+            "prompt_template_fr": "Chanson acoustique intimiste brute, guitare folk en fingerpicking, arrangements minimalistes boisés, voix proche et émotionnelle, ambiance feu de camp",
+            "prompt_template_en": "Raw intimate acoustic song, fingerpicking folk guitar, minimalist woody arrangements, close emotional vocals, campfire atmosphere",
             "negative_tags": [
                 "heavy bass",
-                "electronic"
+                "electronic",
+                "synthesizer",
+                "autotune"
             ],
-            "style_weight": 0.7
+            "style_weight": 0.75
         },
         {
             "id": "gospel",
@@ -253,43 +351,62 @@
                 110
             ],
             "energy": "medium",
+            "voice_profile": {
+                "type": "mixed",
+                "tone": "powerful",
+                "delivery": "sung",
+                "variation": "high"
+            },
             "instrumentation": [
                 "piano",
                 "organ",
                 "choir",
-                "drums"
+                "drums",
+                "tambourine",
+                "clapping"
             ],
-            "prompt_template_fr": "Chanson gospel spirituelle, piano émotionnel, orgue, chœurs puissants, message d'espoir",
-            "prompt_template_en": "Spiritual gospel song, emotional piano, organ, powerful choir, message of hope",
+            "prompt_template_fr": "Chanson gospel spirituelle intense, piano queue émotionnel, orgue Hammond B3, chœurs massifs et harmonies riches, climax vocal puissant",
+            "prompt_template_en": "Intense spiritual gospel song, emotional grand piano, Hammond B3 organ, massive choir and rich harmonies, powerful vocal climax",
             "negative_tags": [
                 "dark",
-                "aggressive"
+                "aggressive",
+                "techno",
+                "secular"
             ],
-            "style_weight": 0.75
+            "style_weight": 0.8
         },
         {
             "id": "zouk",
             "label": "Zouk 🌴",
             "category": "AFRICAN",
             "bpm_range": [
-                80,
-                110
+                85,
+                105
             ],
             "energy": "medium",
+            "voice_profile": {
+                "type": "female",
+                "tone": "sweet",
+                "delivery": "sung",
+                "variation": "medium"
+            },
             "instrumentation": [
                 "synthesizer",
                 "zouk rhythm",
                 "slap bass",
-                "electric guitar"
+                "electric guitar",
+                "chimes"
             ],
-            "prompt_template_fr": "Chanson Zouk Love antillaise, rythme zouk romantique, mélodie douce au synthé, basse slap légère, ambiance tropicale et sensuelle",
-            "prompt_template_en": "Antillean Zouk Love song, romantic zouk rhythm, soft synth melody, light slap bass, tropical and sensual atmosphere",
+            "prompt_template_fr": "Chanson Zouk Love antillaise langoureuse, rythme zouk romantique, mélodie synthé crystal, basse slap légère et mélodique, voix sensuelle, ambiance tropicale",
+            "prompt_template_en": "Languid Antillean Zouk Love song, romantic zouk rhythm, crystal synth melody, light melodic slap bass, sensual vocals, tropical atmosphere",
             "negative_tags": [
                 "aggressive",
                 "fast techno",
-                "heavy metal"
+                "heavy metal",
+                "trap",
+                "screaming"
             ],
-            "style_weight": 0.8
+            "style_weight": 0.85
         },
         {
             "id": "salsa",
@@ -300,20 +417,29 @@
                 200
             ],
             "energy": "high",
+            "voice_profile": {
+                "type": "male",
+                "tone": "bright",
+                "delivery": "sung",
+                "variation": "high"
+            },
             "instrumentation": [
                 "congas",
                 "piano montuno",
                 "brass section",
-                "timbales"
+                "timbales",
+                "cowbell",
+                "trumpet"
             ],
-            "prompt_template_fr": "Chanson Salsa latine énergique, piano montuno, section de cuivres dynamique, percussions congas et timbales, rythme dansant",
-            "prompt_template_en": "Energetic Latin Salsa song, montuno piano, dynamic brass section, congas and timbales percussion, dance rhythm",
+            "prompt_template_fr": "Chanson Salsa dura latine, piano montuno rythmique, section de cuivres perçante, percussions congas et timbales frenétiques, rythme clave dansant",
+            "prompt_template_en": "Latin Salsa dura song, rhythmic montuno piano, piercing brass section, frenetic congas and timbales, dancing clave rhythm",
             "negative_tags": [
                 "electronic",
                 "slow ballad",
-                "heavy guitar"
+                "heavy guitar",
+                "drum machine"
             ],
-            "style_weight": 0.8
+            "style_weight": 0.82
         },
         {
             "id": "rnb",
@@ -324,20 +450,29 @@
                 90
             ],
             "energy": "medium-low",
+            "voice_profile": {
+                "type": "female",
+                "tone": "breathy",
+                "delivery": "sung",
+                "variation": "high"
+            },
             "instrumentation": [
                 "smooth synth",
                 "finger snaps",
                 "deep bass",
-                "piano"
+                "piano",
+                "vocal chops"
             ],
-            "prompt_template_fr": "Chanson R&B contemporaine douce, voix soulful, synthés nappants, claquements de doigts, basse profonde, ambiance romantique",
-            "prompt_template_en": "Smooth contemporary R&B song, soulful vocals, lush synths, finger snaps, deep bass, romantic atmosphere",
+            "prompt_template_fr": "Chanson R&B soul contemporaine an 2000, voix melismatique, nappes de synthés soyeux, claquements de doigts, basse sub profonde, ambiance sexy et smooth",
+            "prompt_template_en": "Contemporary 2000s soul R&B song, melismatic vocals, silky synth pads, finger snaps, deep sub bass, sexy smooth atmosphere",
             "negative_tags": [
                 "aggressive",
                 "screaming",
-                "fast techno"
+                "fast techno",
+                "rock",
+                "country"
             ],
-            "style_weight": 0.75
+            "style_weight": 0.8
         },
         {
             "id": "jazz",
@@ -348,20 +483,28 @@
                 140
             ],
             "energy": "medium",
+            "voice_profile": {
+                "type": "mixed",
+                "tone": "smoky",
+                "delivery": "sung",
+                "variation": "high"
+            },
             "instrumentation": [
                 "saxophone",
                 "double bass",
                 "piano",
-                "brush drums"
+                "brush drums",
+                "trumpet solo"
             ],
-            "prompt_template_fr": "Chanson Jazz classique, saxophone mélodieux, contrebasse walking, piano swing, batterie aux balais",
-            "prompt_template_en": "Classic Jazz song, melodic saxophone, walking double bass, swing piano, brush drums",
+            "prompt_template_fr": "Chanson Jazz club fumeux, saxophone ténor mélodieux, contrebasse walking, piano swing sophistiqué, batterie aux balais subtile, voix crooner ou diva",
+            "prompt_template_en": "Smoky Jazz club song, melodious tenor saxophone, walking double bass, sophisticated swing piano, subtle brush drums, crooner or diva vocals",
             "negative_tags": [
                 "electronic",
                 "autotune",
-                "distorted guitar"
+                "distorted guitar",
+                "pop synth"
             ],
-            "style_weight": 0.7
+            "style_weight": 0.75
         },
         {
             "id": "fusion",
@@ -372,19 +515,28 @@
                 130
             ],
             "energy": "medium-high",
+            "voice_profile": {
+                "type": "mixed",
+                "tone": "unique",
+                "delivery": "melodic",
+                "variation": "high"
+            },
             "instrumentation": [
                 "mixed percussion",
                 "hybrid synth",
                 "acoustic and electric",
-                "world instruments"
+                "world instruments",
+                "orchestra hits"
             ],
-            "prompt_template_fr": "Fusion musicale éclectique, mélange d'instruments traditionnels et électroniques, rythme hybride, sonorités mondiales uniques",
-            "prompt_template_en": "Eclectic music fusion, blend of traditional and electronic instruments, hybrid rhythm, unique world sounds",
+            "prompt_template_fr": "Fusion musicale expérimentale et cinématique, mélange audacieux d'instruments traditionnels et électroniques, rythme hybride complexe, texture sonore riche",
+            "prompt_template_en": "Experimental cinematic music fusion, bold blend of traditional and electronic instruments, complex hybrid rhythm, rich textured sound",
             "negative_tags": [
                 "generic",
-                "boring"
+                "boring",
+                "simple",
+                "repetitive"
             ],
-            "style_weight": 0.6
+            "style_weight": 0.65
         }
     ],
     "categories": [
