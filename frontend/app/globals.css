@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme {
+  /* CORRECTED Color palette - Yellow/Gold theme */
+  --color-primary: #f4c025;
+  --color-accent-gold: #ffd700;
+  --color-background-light: #f8f8f5;
+  --color-background-dark: #121212;
+  --color-surface-dark: #1e1e1e;
+  --color-border-dark: #2e2e2e;
+
+  /* Typography */
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Noto Sans', sans-serif;
+
+  /* Border radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+}
+
+/* Global base styles */
+body {
+  background: var(--color-background-light);
+  color: rgb(15 23 42);
+  /* slate-900 - dark text on light background */
+  font-family: var(--font-display);
+}
+
+/* Dark mode - must use :root.dark or html.dark for Tailwind v4 */
+:root.dark body,
+html.dark body {
+  background: var(--color-background-dark);
+  color: rgb(255 255 255);
+  /* white text on dark background */
+}
+
+/* Custom utilities */
+.glass-effect {
+  backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dark .glass-effect {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.glass-card {
+  backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .glass-card {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.text-gradient {
+  background: linear-gradient(to right, var(--color-primary), var(--color-accent-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Hero gradient with yellow accent */
+.hero-gradient {
+  background: linear-gradient(135deg, #6d28d9 0%, #f4c025 100%);
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-border-dark);
+  border-radius: 10px;
+}
