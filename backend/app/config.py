@@ -15,9 +15,9 @@ class Settings(BaseSettings):
     VERSION: str = "1.0.0"
     ENVIRONMENT: str = "development"
     DEBUG: bool = False
-    
-    # Database
-    DATABASE_URL: str
+
+    # Database (optional - we use Supabase REST API)
+    DATABASE_URL: str | None = None
     
     # Supabase
     SUPABASE_URL: str
