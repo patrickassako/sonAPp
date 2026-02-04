@@ -25,13 +25,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-# Create non-root user for security
-RUN useradd --create-home --shell /bin/bash appuser && \
-    chown -R appuser:appuser /app
-USER appuser
-
 # Expose port (Railway uses dynamic PORT)
-EXPOSE ${PORT:-8000}
+EXPOSE 8000
 
-# Default command - uses PORT env variable from Railway
-CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
+# Default command - uses shell to expand PORT variable
+CMD ["/bin/sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
