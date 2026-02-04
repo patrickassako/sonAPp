@@ -1,12 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Loader2, CheckCircle, XCircle, Music, Download, Share2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { API_BASE_URL } from "@/lib/api/client";
 
 export default function GeneratingPage() {
+    return (
+        <Suspense fallback={<div className="flex items-center justify-center min-h-[80vh]"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>}>
+            <GeneratingContent />
+        </Suspense>
+    );
+}
+
+function GeneratingContent() {
     const searchParams = useSearchParams();
     const jobId = searchParams.get("job");
 
@@ -18,15 +27,29 @@ export default function GeneratingPage() {
     useEffect(() => {
         if (!jobId) return;
 
+        let attempts = 0;
+        const maxAttempts = 80; // ~5 minutes with backoff
+        let delay = 3000;
+        let timeoutId: NodeJS.Timeout;
+        const controller = new AbortController();
+
         const checkStatus = async () => {
+            attempts++;
+            if (attempts > maxAttempts) {
+                setStatus("failed");
+                setError("La génération a pris trop de temps. Veuillez réessayer.");
+                return;
+            }
+
             try {
                 const supabase = createClient();
                 const { data: { session } } = await supabase.auth.getSession();
 
-                const response = await fetch(`http://localhost:8000/api/v1/generate/jobs/${jobId}`, {
+                const response = await fetch(`${API_BASE_URL}/api/v1/generate/jobs/${jobId}`, {
                     headers: {
                         Authorization: `Bearer ${session?.access_token}`
-                    }
+                    },
+                    signal: controller.signal,
                 });
 
                 const data = await response.json();
@@ -34,30 +57,36 @@ export default function GeneratingPage() {
                 if (data.status === "completed") {
                     setStatus("completed");
                     setProgress(100);
-                    // Redirect to result page
                     setTimeout(() => {
                         window.location.href = `/projects/${data.project_id}`;
                     }, 1000);
+                    return;
                 } else if (data.status === "failed") {
                     setStatus("failed");
                     setError(data.error || "La génération a échoué");
+                    return;
                 } else {
-                    // Still processing
-                    // Update progress more realistically based on time or API status
                     setProgress((prev) => {
                         if (prev >= 90) return 90;
-                        return prev + 5;
+                        return prev + 3;
                     });
                 }
-            } catch (error) {
+            } catch (error: any) {
+                if (error.name === "AbortError") return;
                 console.error("Error checking status:", error);
             }
+
+            // Schedule next poll with backoff (3s -> 4s -> 5s, max 8s)
+            delay = Math.min(delay * 1.15, 8000);
+            timeoutId = setTimeout(checkStatus, delay);
         };
 
-        const interval = setInterval(checkStatus, 3000);
         checkStatus();
 
-        return () => clearInterval(interval);
+        return () => {
+            controller.abort();
+            clearTimeout(timeoutId);
+        };
     }, [jobId]);
 
     return (

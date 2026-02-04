@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { taskId: string } }
+    { params }: { params: Promise<{ taskId: string }> }
 ) {
     try {
-        let { taskId } = params;
+        let { taskId } = await params;
 
         // Fallback: extract from URL if params is empty (sometimes happens in edge cases)
         if (!taskId) {
