@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/atoms/Button";
 import { Music2, Sparkles, Zap, Download, Radio, Shield, Play, Pause } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 const HERO_TRACK = {
     title: "Une demande de Saint-Valentin",
@@ -23,7 +24,17 @@ const PREVIEW_TRACKS = [
 
 export default function LandingPage() {
     const audioRef = useRef<HTMLAudioElement>(null);
+    const [user, setUser] = useState<any>(null);
     const [playingUrl, setPlayingUrl] = useState<string | null>(null);
+
+    useEffect(() => {
+        const supabase = createClient();
+        supabase.auth.getUser().then(({ data }) => setUser(data.user));
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+        });
+        return () => subscription.unsubscribe();
+    }, []);
     const [progress, setProgress] = useState(0);
     const [currentTime, setCurrentTime] = useState("00:00");
     const [duration, setDuration] = useState("00:00");
@@ -107,16 +118,26 @@ export default function LandingPage() {
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <Link href="/login">
-                            <button className="text-sm font-medium text-white/70 hover:text-white px-4">
-                                Connexion
-                            </button>
-                        </Link>
-                        <Link href="/signup">
-                            <button className="bg-gradient-to-r from-pink-500 to-red-500 text-white hover:opacity-90 px-5 py-2 rounded-full text-sm font-bold transition-all">
-                                💕 Offre St-Valentin
-                            </button>
-                        </Link>
+                        {user ? (
+                            <Link href="/dashboard">
+                                <button className="bg-gradient-to-r from-primary to-[#FFD700] text-white hover:opacity-90 px-5 py-2 rounded-full text-sm font-bold transition-all">
+                                    Dashboard
+                                </button>
+                            </Link>
+                        ) : (
+                            <>
+                                <Link href="/login">
+                                    <button className="text-sm font-medium text-white/70 hover:text-white px-4">
+                                        Connexion
+                                    </button>
+                                </Link>
+                                <Link href="/signup">
+                                    <button className="bg-gradient-to-r from-pink-500 to-red-500 text-white hover:opacity-90 px-5 py-2 rounded-full text-sm font-bold transition-all">
+                                        💕 Offre St-Valentin
+                                    </button>
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </nav>
@@ -159,7 +180,7 @@ export default function LandingPage() {
                             </p>
 
                             <div className="flex flex-col sm:flex-row items-center gap-4">
-                                <Link href="/signup" className="w-full sm:w-auto">
+                                <Link href={user ? "/create" : "/signup"} className="w-full sm:w-auto">
                                     <button className="w-full cta-gradient text-white px-8 py-4 rounded-full text-lg font-bold transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2 hover:opacity-90">
                                         Créer ma chanson maintenant
                                         <Sparkles className="w-5 h-5" />
