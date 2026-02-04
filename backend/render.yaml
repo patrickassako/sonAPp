@@ -1,0 +1,69 @@
+# Render Blueprint - Infrastructure as Code
+# https://render.com/docs/blueprint-spec
+
+services:
+  # FastAPI Web Service
+  - type: web
+    name: musicapp-api
+    env: docker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: musicapp-redis
+          property: connectionString
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: SUNO_API_KEY
+        sync: false
+      - key: FLUTTERWAVE_SECRET_KEY
+        sync: false
+      - key: FLUTTERWAVE_PUBLIC_KEY
+        sync: false
+      - key: FLUTTERWAVE_WEBHOOK_SECRET
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: ENVIRONMENT
+        value: production
+
+  # RQ Worker (Background Jobs)
+  - type: worker
+    name: musicapp-worker
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerCommand: rq worker music_generation --url $REDIS_URL
+    envVars:
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: musicapp-redis
+          property: connectionString
+      - key: OBJC_DISABLE_INITIALIZE_FORK_SAFETY
+        value: "YES"
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: SUNO_API_KEY
+        sync: false
+      - key: ENVIRONMENT
+        value: production
+
+  # Redis
+  - type: redis
+    name: musicapp-redis
+    plan: starter  # Upgrade for production
+    maxmemoryPolicy: allkeys-lru

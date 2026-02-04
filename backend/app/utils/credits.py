@@ -65,30 +65,55 @@ def reserve_credits_supabase(client, user_id: str, amount: int) -> dict:
     return transaction
 
 
-def debit_credits_supabase(client, user_id: str, amount: int, job_id: str = None, metadata: dict = None) -> dict:
+def debit_credits_supabase(client, user_id: str, amount: int, job_id: str = None, metadata: dict = None, from_reserved: bool = True) -> dict:
     """
-    Finalize credit expense after successful generation (Supabase version).
-    
-    Moves credits from reserved to spent.
+    Debit credits from user account (Supabase version).
+
+    Args:
+        client: SupabaseClient instance
+        user_id: User UUID
+        amount: Credits to debit
+        job_id: Optional job ID (unused)
+        metadata: Optional metadata dict
+        from_reserved: If True, debit from reserved credits (for completing generation jobs).
+                       If False, debit directly from available credits (for instant operations like lyrics).
+
+    Returns:
+        Transaction record (dict)
+
+    Raises:
+        ValueError: If insufficient credits
     """
     # Get profile
     profiles = client.select("profiles", filters={"id": user_id}, limit=1)
-    
+
     if not profiles:
         raise ValueError("Profile not found")
-    
+
     profile = profiles[0]
-    
-    if profile["credits_reserved"] < amount:
-        raise ValueError(
-            f"Insufficient reserved credits. Reserved: {profile['credits_reserved']}, Required: {amount}"
-        )
-    
-    # Update profile: reduce credits and reserved
-    new_credits = profile["credits"] - amount
-    new_reserved = profile["credits_reserved"] - amount
+
+    if from_reserved:
+        # Debit from reserved credits (after reservation)
+        if profile["credits_reserved"] < amount:
+            raise ValueError(
+                f"Insufficient reserved credits. Reserved: {profile['credits_reserved']}, Required: {amount}"
+            )
+
+        new_credits = profile["credits"] - amount
+        new_reserved = profile["credits_reserved"] - amount
+    else:
+        # Direct debit from available credits (no prior reservation)
+        available = profile["credits"] - profile["credits_reserved"]
+        if available < amount:
+            raise ValueError(
+                f"Insufficient credits. Available: {available}, Required: {amount}"
+            )
+
+        new_credits = profile["credits"] - amount
+        new_reserved = profile["credits_reserved"]  # unchanged
+
     new_total_spent = profile["total_credits_spent"] + amount
-    
+
     client.update(
         "profiles",
         {
@@ -98,18 +123,17 @@ def debit_credits_supabase(client, user_id: str, amount: int, job_id: str = None
         },
         {"id": user_id}
     )
-    
+
     # Create transaction record
     transaction = client.insert("transactions", {
         "id": str(uuid.uuid4()),
         "user_id": user_id,
         "type": "debit",
-        # "job_id": job_id,  # Removed as job_id column is not in the provided schema for transactions table
         "amount": amount,
         "status": "completed",
         "metadata": metadata or {}
     })
-    
+
     return transaction
 
 

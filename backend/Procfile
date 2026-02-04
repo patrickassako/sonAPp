@@ -1,0 +1,8 @@
+# Procfile for Railway / Render / Heroku
+# Each line defines a process type
+
+# Web server (FastAPI)
+web: uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
+
+# Background worker (RQ) - Scale this for more concurrent generations
+worker: OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES rq worker music_generation --url $REDIS_URL

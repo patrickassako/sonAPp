@@ -57,20 +57,27 @@ async def create_project(
 
 @router.get("/", response_model=List[ProjectResponse])
 async def list_projects(
-    user_id: str = Depends(get_current_user)
+    user_id: str = Depends(get_current_user),
+    limit: int = 50,
+    offset: int = 0
 ):
     """
-    List all projects for the current user.
-    
+    List projects for the current user with pagination.
+
     Returns projects ordered by creation date (newest first).
     """
+    # Cap limit to prevent abuse
+    limit = min(limit, 100)
+
     client = get_supabase_client()
     projects = client.select(
-        "projects", 
+        "projects",
         filters={"user_id": user_id},
-        order="created_at.desc"
+        order="created_at.desc",
+        limit=limit,
+        offset=offset
     )
-    
+
     return projects
 
 

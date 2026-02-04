@@ -93,15 +93,14 @@ async def _generate_music_impl(job_id: str, project_id: str):
         
         print(f"🎶 Provider job created: {provider_job_id}")
         
-        # Poll for completion
-        max_attempts = 30
-        poll_interval = 10  # seconds
-        
+        # Poll for completion with exponential backoff
+        max_attempts = 24
+        poll_interval = 5  # initial seconds
+
         for attempt in range(max_attempts):
-            # Synchronous call
             status_response = suno.get_status(provider_job_id)
             status = status_response["status"]
-            
+
             print(f"[{attempt+1}/{max_attempts}] Status: {status}")
             
             if status == "completed":
@@ -193,10 +192,10 @@ async def _generate_music_impl(job_id: str, project_id: str):
                 print(f"❌ Generation failed: {error_message}")
                 return
             
-            # Still processing, wait and retry
+            # Still processing, wait with backoff and retry
             if attempt < max_attempts - 1:
-                # Use asyncio sleep for async func
                 await asyncio.sleep(poll_interval)
+                poll_interval = min(poll_interval * 1.3, 20)  # backoff up to 20s
         
         # Timeout - refund credits
         refund_credits_supabase(

@@ -1,0 +1,54 @@
+# MusicApp Backend - Docker Compose for Local Development & Testing
+version: '3.8'
+
+services:
+  # FastAPI Backend
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # RQ Workers (scale with --scale worker=N)
+  worker:
+    build: .
+    command: rq worker music_generation --url redis://redis:6379/0 --with-scheduler
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    restart: unless-stopped
+    deploy:
+      replicas: 3  # Default 3 workers
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  redis_data:

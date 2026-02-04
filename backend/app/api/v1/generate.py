@@ -4,10 +4,11 @@ Generation API routes - Migrated to Supabase REST API.
 
 from fastapi import APIRouter, Depends, HTTPException
 from rq import Queue
-from redis import Redis
+from redis import Redis, ConnectionPool
 import logging
 import uuid
 import asyncio
+from functools import partial
 
 from app.supabase_client import get_supabase_client
 from app.auth import get_current_user
@@ -20,8 +21,9 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-# Initialize Redis and RQ
-redis_conn = Redis.from_url(settings.REDIS_URL)
+# Initialize Redis with connection pool and RQ
+redis_pool = ConnectionPool.from_url(settings.REDIS_URL, max_connections=20)
+redis_conn = Redis(connection_pool=redis_pool)
 job_queue = Queue("music_generation", connection=redis_conn)
 
 
@@ -38,29 +40,37 @@ async def generate_lyrics(
     try:
         client = get_supabase_client()
         
-        # 1. Debit 1 credit immediately
+        # 1. Debit 1 credit immediately (direct debit, no prior reservation)
         try:
-            debit_credits_supabase(client, user_id, 1, metadata={"action": "generate_lyrics"})
+            debit_credits_supabase(client, user_id, 1, metadata={"action": "generate_lyrics"}, from_reserved=False)
         except ValueError as e:
-             raise HTTPException(status_code=402, detail=str(e))
+            raise HTTPException(status_code=402, detail=str(e))
 
         suno = get_suno_provider()
-        
-        # Build prompt
+
+        # Build prompt (SunoAPI limit: 200 characters)
         full_prompt = f"{request.description}"
         if request.style:
             full_prompt += f" Style: {request.style}."
         if request.language == "fr":
-            full_prompt += " Language: French."
+            full_prompt += " French."
         else:
-            full_prompt += " Language: English."
-            
-        task_id = suno.generate_lyrics(full_prompt)
+            full_prompt += " English."
 
-        # Poll for result (max 40s)
-        for _ in range(20):
-            await asyncio.sleep(2)
-            status = suno.get_lyrics_status(task_id)
+        # Truncate to 200 characters if needed
+        if len(full_prompt) > 200:
+            full_prompt = full_prompt[:197] + "..."
+            logger.warning(f"Prompt truncated to 200 chars for SunoAPI")
+            
+        # Run sync Suno call in thread executor to avoid blocking event loop
+        loop = asyncio.get_event_loop()
+        task_id = await loop.run_in_executor(None, partial(suno.generate_lyrics, full_prompt))
+
+        # Poll with exponential backoff (2s, 3s, 4s, ...) max ~50s total
+        delay = 2.0
+        for _ in range(15):
+            await asyncio.sleep(delay)
+            status = await loop.run_in_executor(None, partial(suno.get_lyrics_status, task_id))
             if status["status"] == "completed":
                 texts = status["lyrics"]
                 return LyricsResponse(
@@ -69,6 +79,7 @@ async def generate_lyrics(
                 )
             if status["status"] == "failed":
                 raise HTTPException(status_code=500, detail="Lyrics generation failed")
+            delay = min(delay * 1.3, 6.0)  # backoff up to 6s max
 
         raise HTTPException(status_code=504, detail="Lyrics generation timed out")
 
@@ -162,7 +173,7 @@ async def start_generation(
             'app.workers.music_worker.generate_music',
             job_id,
             request.project_id,
-            job_timeout='30m'
+            job_timeout='7m'
         )
         
         return job

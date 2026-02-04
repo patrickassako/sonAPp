@@ -11,10 +11,11 @@ class FlutterwaveService:
     """
     Service to handle Flutterwave payment integrations.
     Docs: https://developer.flutterwave.com/docs/collecting-payments/standard/
+    Uses a persistent AsyncClient to reuse connections and avoid TLS handshake overhead.
     """
-    
+
     BASE_URL = "https://api.flutterwave.com/v3"
-    
+
     def __init__(self):
         self.secret_key = settings.FLUTTERWAVE_SECRET_KEY
         self.public_key = settings.FLUTTERWAVE_PUBLIC_KEY
@@ -23,6 +24,16 @@ class FlutterwaveService:
             "Authorization": f"Bearer {self.secret_key}",
             "Content-Type": "application/json"
         }
+        self._client: httpx.AsyncClient | None = None
+
+    async def _get_client(self) -> httpx.AsyncClient:
+        """Get or create the persistent HTTP client."""
+        if self._client is None or self._client.is_closed:
+            self._client = httpx.AsyncClient(
+                headers=self.headers,
+                timeout=httpx.Timeout(30.0, connect=10.0),
+            )
+        return self._client
 
     async def initiate_payment(
         self, 
@@ -57,21 +68,20 @@ class FlutterwaveService:
             "meta": meta or {}
         }
 
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
-                f"{self.BASE_URL}/payments",
-                json=payload,
-                headers=self.headers
-            )
-            data = response.json()
+        client = await self._get_client()
+        response = await client.post(
+            f"{self.BASE_URL}/payments",
+            json=payload,
+        )
+        data = response.json()
             
-            if data.get("status") != "success":
-                raise Exception(f"Flutterwave Error: {data.get('message')}")
-                
-            return {
-                "payment_link": data["data"]["link"],
-                "tx_ref": tx_ref
-            }
+        if data.get("status") != "success":
+            raise Exception(f"Flutterwave Error: {data.get('message')}")
+
+        return {
+            "payment_link": data["data"]["link"],
+            "tx_ref": tx_ref
+        }
 
     async def verify_transaction(self, transaction_id: str = None, tx_ref: str = None) -> Dict[str, Any]:
         """
@@ -80,40 +90,28 @@ class FlutterwaveService:
         if not transaction_id and not tx_ref:
              raise ValueError("Must provide either transaction_id or tx_ref")
 
-        async with httpx.AsyncClient() as client:
-            endpoint = ""
-            if transaction_id and str(transaction_id) != str(tx_ref): 
-                # Be careful: sometimes callers pass tx_ref as transaction_id if id is missing.
-                # If it looks like a UUID (my tx_ref), it's probably NOT a FW ID (INT).
-                # FW IDs are usually integers. UUIDs are usually TxRefs.
-                # But safer to specific arg.
-                endpoint = f"{self.BASE_URL}/transactions/{transaction_id}/verify"
-            else:
-                # Use tx_ref lookup
-                # API: GET /transactions?tx_ref=...
-                # Docs: https://developer.flutterwave.com/reference/endpoints/transactions#get-transactions
-                endpoint = f"{self.BASE_URL}/transactions?tx_ref={tx_ref or transaction_id}"
+        client = await self._get_client()
+        if transaction_id and str(transaction_id) != str(tx_ref):
+            endpoint = f"{self.BASE_URL}/transactions/{transaction_id}/verify"
+        else:
+            endpoint = f"{self.BASE_URL}/transactions?tx_ref={tx_ref or transaction_id}"
 
-            response = await client.get(
-                endpoint,
-                headers=self.headers
-            )
-            data = response.json()
-            
-            if data.get("status") != "success":
-                raise Exception(f"Verification Failed: {data.get('message')}")
-            
-            # If using ?tx_ref, result is a LIST in data['data']
-            if "transactions" in endpoint or "?tx_ref" in endpoint:
-                 if isinstance(data["data"], list) and len(data["data"]) > 0:
-                     return data["data"][0]
-                 elif isinstance(data["data"], list) and len(data["data"]) == 0:
-                      raise Exception("Transaction not found for this Ref")
-                 else:
-                      # Sometimes it returns single obj?
-                      return data["data"]
-            
-            return data["data"]
+        response = await client.get(endpoint)
+        data = response.json()
+
+        if data.get("status") != "success":
+            raise Exception(f"Verification Failed: {data.get('message')}")
+
+        # If using ?tx_ref, result is a LIST in data['data']
+        if "?tx_ref" in endpoint:
+            if isinstance(data["data"], list) and len(data["data"]) > 0:
+                return data["data"][0]
+            elif isinstance(data["data"], list) and len(data["data"]) == 0:
+                raise Exception("Transaction not found for this Ref")
+            else:
+                return data["data"]
+
+        return data["data"]
 
     def verify_webhook_signature(self, signature: str) -> bool:
         """
@@ -188,35 +186,32 @@ class FlutterwaveService:
 
         logger.debug("Mobile Money charge initiated for type: %s", flw_type)
 
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
-                f"{self.BASE_URL}/charges?type={flw_type}",
-                json=payload,
-                headers=self.headers,
-                timeout=30.0
-            )
-            data = response.json()
+        client = await self._get_client()
+        response = await client.post(
+            f"{self.BASE_URL}/charges?type={flw_type}",
+            json=payload,
+        )
+        data = response.json()
 
-            logger.debug("Flutterwave charge response status: %s", data.get("status"))
+        logger.debug("Flutterwave charge response status: %s", data.get("status"))
 
-            if data.get("status") == "error":
-                return {
-                    "status": "failed",
-                    "message": data.get("message", "Unknown error"),
-                    "tx_ref": tx_ref,
-                    "flw_ref": None,
-                    "instructions": None
-                }
-
-            # Success or pending (user needs to validate on phone)
-            charge_data = data.get("data", {})
+        if data.get("status") == "error":
             return {
-                "status": charge_data.get("status", "pending"),
-                "message": data.get("message", "Charge initiated"),
+                "status": "failed",
+                "message": data.get("message", "Unknown error"),
                 "tx_ref": tx_ref,
-                "flw_ref": charge_data.get("flw_ref"),
-                "instructions": self._get_instructions(flw_type, network)
+                "flw_ref": None,
+                "instructions": None
             }
+
+        charge_data = data.get("data", {})
+        return {
+            "status": charge_data.get("status", "pending"),
+            "message": data.get("message", "Charge initiated"),
+            "tx_ref": tx_ref,
+            "flw_ref": charge_data.get("flw_ref"),
+            "instructions": self._get_instructions(flw_type, network)
+        }
 
     def _get_instructions(self, flw_type: str, network: str) -> str:
         """Get user-friendly instructions for Mobile Money validation."""
@@ -255,19 +250,48 @@ class FlutterwaveService:
         Returns:
             Dict with status (pending, successful, failed)
         """
-        async with httpx.AsyncClient() as client:
-            # Method 1: Try verify by reference endpoint first
-            try:
-                verify_response = await client.get(
-                    f"{self.BASE_URL}/transactions/verify_by_reference?tx_ref={tx_ref}",
-                    headers=self.headers,
-                    timeout=15.0
-                )
-                verify_data = verify_response.json()
-                logger.debug("Verify by reference status: %s", verify_data.get("status"))
+        client = await self._get_client()
+        # Method 1: Try verify by reference endpoint first
+        try:
+            verify_response = await client.get(
+                f"{self.BASE_URL}/transactions/verify_by_reference?tx_ref={tx_ref}",
+            )
+            verify_data = verify_response.json()
+            logger.debug("Verify by reference status: %s", verify_data.get("status"))
 
-                if verify_data.get("status") == "success":
-                    tx = verify_data.get("data", {})
+            if verify_data.get("status") == "success":
+                tx = verify_data.get("data", {})
+                tx_status = tx.get("status", "pending").lower()
+
+                if tx_status == "successful":
+                    return {
+                        "status": "successful",
+                        "message": "Payment successful",
+                        "tx_ref": tx_ref,
+                        "flw_id": tx.get("id")
+                    }
+                elif tx_status in ["failed", "cancelled"]:
+                    return {
+                        "status": "failed",
+                        "message": tx.get("processor_response", "Payment failed"),
+                        "tx_ref": tx_ref,
+                        "flw_id": tx.get("id")
+                    }
+        except Exception as e:
+            logger.debug("Verify by reference failed: %s", e)
+
+        # Method 2: Try transactions list endpoint
+        try:
+            response = await client.get(
+                f"{self.BASE_URL}/transactions?tx_ref={tx_ref}",
+            )
+            data = response.json()
+            logger.debug("Transactions list status: %s", data.get("status"))
+
+            if data.get("status") == "success":
+                transactions = data.get("data", [])
+                if transactions and len(transactions) > 0:
+                    tx = transactions[0] if isinstance(transactions, list) else transactions
                     tx_status = tx.get("status", "pending").lower()
 
                     if tx_status == "successful":
@@ -284,45 +308,12 @@ class FlutterwaveService:
                             "tx_ref": tx_ref,
                             "flw_id": tx.get("id")
                         }
-            except Exception as e:
-                logger.debug("Verify by reference failed: %s", e)
+        except Exception as e:
+            logger.debug("Transactions list lookup failed: %s", e)
 
-            # Method 2: Try transactions list endpoint
-            try:
-                response = await client.get(
-                    f"{self.BASE_URL}/transactions?tx_ref={tx_ref}",
-                    headers=self.headers,
-                    timeout=15.0
-                )
-                data = response.json()
-                logger.debug("Transactions list status: %s", data.get("status"))
-
-                if data.get("status") == "success":
-                    transactions = data.get("data", [])
-                    if transactions and len(transactions) > 0:
-                        tx = transactions[0] if isinstance(transactions, list) else transactions
-                        tx_status = tx.get("status", "pending").lower()
-
-                        if tx_status == "successful":
-                            return {
-                                "status": "successful",
-                                "message": "Payment successful",
-                                "tx_ref": tx_ref,
-                                "flw_id": tx.get("id")
-                            }
-                        elif tx_status in ["failed", "cancelled"]:
-                            return {
-                                "status": "failed",
-                                "message": tx.get("processor_response", "Payment failed"),
-                                "tx_ref": tx_ref,
-                                "flw_id": tx.get("id")
-                            }
-            except Exception as e:
-                logger.debug("Transactions list lookup failed: %s", e)
-
-            # Still pending
-            return {
-                "status": "pending",
-                "message": "Payment is being processed",
-                "tx_ref": tx_ref
-            } 
+        # Still pending
+        return {
+            "status": "pending",
+            "message": "Payment is being processed",
+            "tx_ref": tx_ref
+        }

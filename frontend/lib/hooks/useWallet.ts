@@ -1,8 +1,9 @@
 import useSWR from 'swr';
 import { api } from '@/lib/api/client';
-import { supabase } from '@/lib/auth/supabase';
+import { createClient } from '@/lib/supabase/client';
 
 async function fetchWallet() {
+    const supabase = createClient();
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.access_token) {
         return { credits: 0 };
@@ -17,6 +18,7 @@ export function useWallet() {
         fetchWallet,
         {
             revalidateOnFocus: true,
+            dedupingInterval: 30000,
         }
     );
 

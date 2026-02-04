@@ -53,6 +53,39 @@ async def health_check():
     }
 
 
+@app.get("/health/queue")
+async def queue_health():
+    """Queue health check - shows worker and job status."""
+    try:
+        from redis import Redis
+        from rq import Queue
+        from rq.worker import Worker
+
+        redis_conn = Redis.from_url(settings.REDIS_URL)
+        queue = Queue("music_generation", connection=redis_conn)
+        workers = Worker.all(connection=redis_conn)
+
+        return {
+            "status": "healthy",
+            "queue": {
+                "name": "music_generation",
+                "jobs_queued": queue.count,
+                "jobs_failed": queue.failed_job_registry.count,
+                "jobs_finished": queue.finished_job_registry.count,
+            },
+            "workers": {
+                "count": len(workers),
+                "active": sum(1 for w in workers if w.get_state() == "busy"),
+                "idle": sum(1 for w in workers if w.get_state() == "idle"),
+            }
+        }
+    except Exception as e:
+        return {
+            "status": "unhealthy",
+            "error": str(e)
+        }
+
+
 # ============================================================================
 # API ROUTES
 # ============================================================================

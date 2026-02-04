@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { API_BASE_URL } from "@/lib/api/client";
 
 interface Project {
     id: string;
@@ -20,27 +21,36 @@ export default function DashboardPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchProjects();
-    }, []);
+        const controller = new AbortController();
 
-    const fetchProjects = async () => {
-        try {
-            const supabase = createClient();
-            const { data: { session } } = await supabase.auth.getSession();
+        const fetchProjects = async () => {
+            try {
+                const supabase = createClient();
+                const { data: { session } } = await supabase.auth.getSession();
 
-            if (session) {
-                const response = await fetch("http://localhost:8000/api/v1/projects/", {
-                    headers: { Authorization: `Bearer ${session.access_token}` }
-                });
-                const data = await response.json();
-                setProjects(data.projects || data || []);
+                if (session) {
+                    const response = await fetch(`${API_BASE_URL}/api/v1/projects/`, {
+                        headers: { Authorization: `Bearer ${session.access_token}` },
+                        signal: controller.signal,
+                    });
+                    const data = await response.json();
+                    // Handle both array and object responses
+                    const projectList = Array.isArray(data) ? data : (Array.isArray(data.projects) ? data.projects : []);
+                    setProjects(projectList);
+                }
+            } catch (error: any) {
+                if (error.name !== "AbortError") {
+                    console.error("Error fetching projects:", error);
+                }
+            } finally {
+                setLoading(false);
             }
-        } catch (error) {
-            console.error("Error fetching projects:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+        };
+
+        fetchProjects();
+
+        return () => controller.abort();
+    }, []);
 
     const getStatusBadge = (status: string) => {
         if (status === "completed") {

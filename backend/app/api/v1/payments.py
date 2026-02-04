@@ -35,6 +35,7 @@ def _complete_transaction_and_credit(tx_ref: str, payment_id: str) -> bool:
     """
     Atomically mark a transaction as completed and add credits.
     Uses status=pending filter to prevent double-credit race condition.
+    Uses Supabase RPC for atomic credit increment (no read-then-write race).
 
     Returns True if credits were added, False if already processed.
     """
@@ -46,24 +47,32 @@ def _complete_transaction_and_credit(tx_ref: str, payment_id: str) -> bool:
     )
 
     if not updated:
-        # Transaction was already completed by another path (webhook/verify/poll)
         logger.info("Transaction %s already completed, skipping credit update", tx_ref)
         return False
 
     transaction = updated[0]
 
-    # Update user credits
-    profiles = supabase.select("profiles", filters={"id": transaction["user_id"]})
-    if profiles:
-        profile = profiles[0]
-        new_credits = profile["credits"] + transaction["amount"]
-        new_spent = float(profile["total_spent_money"]) + float(transaction["price"])
-
-        supabase.update(
-            "profiles",
-            {"credits": new_credits, "total_spent_money": new_spent},
-            {"id": transaction["user_id"]}
-        )
+    # Atomic credit increment via Supabase RPC (no read-then-write race)
+    try:
+        supabase.rpc("add_credits_atomic", {
+            "p_user_id": transaction["user_id"],
+            "p_credits": transaction["amount"],
+            "p_money": float(transaction["price"] or 0)
+        })
+    except Exception as e:
+        logger.error("RPC add_credits_atomic failed for %s, falling back: %s", tx_ref, e)
+        # Fallback to direct update if RPC not deployed yet
+        profiles = supabase.select("profiles", filters={"id": transaction["user_id"]}, limit=1)
+        if profiles:
+            profile = profiles[0]
+            supabase.update(
+                "profiles",
+                {
+                    "credits": profile["credits"] + transaction["amount"],
+                    "total_spent_money": float(profile["total_spent_money"]) + float(transaction["price"] or 0)
+                },
+                {"id": transaction["user_id"]}
+            )
 
     logger.info("Credits added for transaction %s", tx_ref)
     return True
