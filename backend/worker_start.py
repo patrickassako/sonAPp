@@ -3,7 +3,7 @@ Worker starter with health check endpoint for Railway.
 Runs RQ worker + a minimal HTTP server on /health.
 """
 import os
-import sys
+import subprocess
 import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
@@ -34,6 +34,7 @@ if __name__ == "__main__":
     t = threading.Thread(target=start_health_server, daemon=True)
     t.start()
 
-    # Start RQ worker
+    # Start RQ worker as subprocess (not execvp, which would kill the health thread)
     redis_url = os.environ.get("REDIS_URL", "redis://localhost:6379/0")
-    os.execvp("rq", ["rq", "worker", "music_generation", "--url", redis_url])
+    proc = subprocess.Popen(["rq", "worker", "music_generation", "--url", redis_url])
+    proc.wait()
