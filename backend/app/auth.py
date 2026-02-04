@@ -6,7 +6,6 @@ from fastapi import HTTPException, Security, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import JWTError, jwt
 from typing import Optional
-import httpx
 
 from app.config import settings
 
@@ -15,40 +14,38 @@ security = HTTPBearer()
 
 async def verify_supabase_token(token: str) -> dict:
     """
-    Verify Supabase JWT token.
-    
+    Verify Supabase JWT token with full signature validation.
+
     Args:
         token: JWT token from Authorization header
-    
+
     Returns:
         Decoded token payload with user info
-    
+
     Raises:
-        HTTPException: If token is invalid
+        HTTPException: If token is invalid or signature verification fails
     """
     try:
-        # Get Supabase JWT secret from project settings
-        # For now, we'll validate using the public key from Supabase
-        # In production, fetch JWKS from: {SUPABASE_URL}/.well-known/jwks.json
-        
-        # Decode without verification first (Supabase handles verification)
-        # We trust Supabase's token if it's properly signed
         payload = jwt.decode(
             token,
-            settings.SUPABASE_KEY,
-            algorithms=["HS256"],
+            settings.JWT_SECRET,
+            algorithms=[settings.ALGORITHM],
             options={
-                "verify_signature": False,
-                "verify_aud": False
-            }  # Supabase already verified it
+                "verify_signature": True,
+                "verify_aud": False,
+                "verify_exp": True,
+            }
         )
-        
+
+        if not payload.get("sub"):
+            raise JWTError("Token missing 'sub' claim")
+
         return payload
-    
-    except JWTError as e:
+
+    except JWTError:
         raise HTTPException(
             status_code=401,
-            detail=f"Invalid authentication token: {str(e)}"
+            detail="Invalid or expired authentication token"
         )
 
 

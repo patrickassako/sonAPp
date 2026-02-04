@@ -2,7 +2,7 @@
 Pydantic schemas for API requests and responses.
 """
 
-from pydantic import BaseModel, EmailStr, UUID4
+from pydantic import BaseModel, EmailStr, UUID4, model_validator
 from typing import Optional, List, Union
 from datetime import datetime
 from decimal import Decimal
@@ -159,18 +159,81 @@ class CreditPackage(BaseModel):
     name: str
     credits: int
     price: Decimal
-    currency: str = "XAF"  # Central African Franc
+    currency: str = "XAF"
+    features: List[str] = []
+    is_popular: bool = False
+
+
+class CreditPackageResponse(CreditPackage):
+    """Response for credit package."""
+    pass
 
 
 class InitiatePaymentRequest(BaseModel):
     """Request to initiate payment."""
     package_id: str
+    customer_name: Optional[str] = None
+    phone_number: Optional[str] = None
+    country_code: Optional[str] = None
+    payment_method: Optional[str] = "card"  # "card" or "mobile_money"
+    network: Optional[str] = None  # MTN, ORANGE, MPESA, etc.
+
+    @model_validator(mode="after")
+    def validate_mobile_money_fields(self):
+        import re
+        if self.payment_method == "mobile_money":
+            if not self.phone_number:
+                raise ValueError("Phone number is required for Mobile Money")
+            # Allow digits, optional leading +, spaces/dashes stripped
+            cleaned = re.sub(r"[\s\-]", "", self.phone_number)
+            if not re.match(r"^\+?\d{7,15}$", cleaned):
+                raise ValueError("Invalid phone number format")
+            self.phone_number = cleaned
+            if not self.network:
+                raise ValueError("Network is required for Mobile Money")
+            if not self.country_code:
+                raise ValueError("Country code is required for Mobile Money")
+        return self
 
 
 class InitiatePaymentResponse(BaseModel):
     """Payment initialization response."""
-    payment_link: str
+    payment_link: Optional[str] = None
     transaction_id: str
+    payment_method: str = "card"
+    status: str = "pending"
+    instructions: Optional[str] = None  # For Mobile Money: "Enter your PIN on your phone"
+
+
+class MobileMoneyChargeResponse(BaseModel):
+    """Response for Mobile Money direct charge."""
+    status: str  # "pending", "successful", "failed"
+    message: str
+    tx_ref: str
+    flw_ref: Optional[str] = None
+    instructions: Optional[str] = None
+
+
+class CountryInfo(BaseModel):
+    """Country information with payment options."""
+    code: str
+    name: str
+    currency: str
+    dial_code: str
+    mobile_money: bool
+    networks: List[str]
+
+
+class CountriesListResponse(BaseModel):
+    """List of supported countries."""
+    countries: List[CountryInfo]
+
+
+class ChargeStatusResponse(BaseModel):
+    """Response for charge status check."""
+    status: str  # "pending", "successful", "failed"
+    message: str
+    tx_ref: str
 
 
 # ============================================================================

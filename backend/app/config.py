@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     APP_NAME: str = "MusicApp API"
     VERSION: str = "1.0.0"
     ENVIRONMENT: str = "development"
-    DEBUG: bool = True
+    DEBUG: bool = False
     
     # Database
     DATABASE_URL: str
@@ -63,3 +63,86 @@ class Settings(BaseSettings):
 
 # Singleton instance
 settings = Settings()
+
+
+# ============================================================================
+# SUPPORTED COUNTRIES CONFIGURATION
+# ============================================================================
+
+SUPPORTED_COUNTRIES = {
+    # Pays francophones avec Mobile Money
+    "CM": {
+        "name": "Cameroun",
+        "currency": "XAF",
+        "dial_code": "+237",
+        "mobile_money": True,
+        "networks": ["MTN", "ORANGE"],
+        "flw_type": "mobile_money_franco"
+    },
+    "CI": {
+        "name": "Côte d'Ivoire",
+        "currency": "XOF",
+        "dial_code": "+225",
+        "mobile_money": True,
+        "networks": ["MTN", "ORANGE", "MOOV"],
+        "flw_type": "mobile_money_franco"
+    },
+    "SN": {
+        "name": "Sénégal",
+        "currency": "XOF",
+        "dial_code": "+221",
+        "mobile_money": True,
+        "networks": ["ORANGE", "FREE"],
+        "flw_type": "mobile_money_franco"
+    },
+    # Pays anglophones avec Mobile Money
+    "GH": {
+        "name": "Ghana",
+        "currency": "GHS",
+        "dial_code": "+233",
+        "mobile_money": True,
+        "networks": ["MTN", "VODAFONE", "AIRTELTIGO"],
+        "flw_type": "mobile_money_ghana"
+    },
+    "KE": {
+        "name": "Kenya",
+        "currency": "KES",
+        "dial_code": "+254",
+        "mobile_money": True,
+        "networks": ["MPESA", "AIRTEL"],
+        "flw_type": "mpesa"
+    },
+    "UG": {
+        "name": "Uganda",
+        "currency": "UGX",
+        "dial_code": "+256",
+        "mobile_money": True,
+        "networks": ["MTN", "AIRTEL"],
+        "flw_type": "mobile_money_uganda"
+    },
+    # Pays avec carte uniquement
+    "NG": {
+        "name": "Nigeria",
+        "currency": "NGN",
+        "dial_code": "+234",
+        "mobile_money": False,
+        "networks": [],
+        "flw_type": "card"
+    },
+    "ZA": {
+        "name": "South Africa",
+        "currency": "ZAR",
+        "dial_code": "+27",
+        "mobile_money": False,
+        "networks": [],
+        "flw_type": "card"
+    },
+    "OTHER": {
+        "name": "Other / International",
+        "currency": "USD",
+        "dial_code": "",
+        "mobile_money": False,
+        "networks": [],
+        "flw_type": "card"
+    }
+}

@@ -5,15 +5,18 @@ Generation API routes - Migrated to Supabase REST API.
 from fastapi import APIRouter, Depends, HTTPException
 from rq import Queue
 from redis import Redis
+import logging
 import uuid
 import asyncio
 
 from app.supabase_client import get_supabase_client
 from app.auth import get_current_user
 from app.schemas import GenerateRequest, JobStatusResponse, GenerateLyricsRequest, LyricsResponse
-from app.utils.credits import reserve_credits_supabase
+from app.utils.credits import reserve_credits_supabase, debit_credits_supabase
 from app.config import settings
 from app.providers.suno import get_suno_provider
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -30,8 +33,17 @@ async def generate_lyrics(
 ):
     """
     Generate lyrics based on description and style using SunoAPI.
+    Cost: 1 Credit.
     """
     try:
+        client = get_supabase_client()
+        
+        # 1. Debit 1 credit immediately
+        try:
+            debit_credits_supabase(client, user_id, 1, metadata={"action": "generate_lyrics"})
+        except ValueError as e:
+             raise HTTPException(status_code=402, detail=str(e))
+
         suno = get_suno_provider()
         
         # Build prompt
@@ -43,30 +55,28 @@ async def generate_lyrics(
         else:
             full_prompt += " Language: English."
             
-        print(f"DEBUG: Generating lyrics with prompt: {full_prompt}")
         task_id = suno.generate_lyrics(full_prompt)
-        print(f"DEBUG: Lyrics Task ID: {task_id}")
-        
+
         # Poll for result (max 40s)
         for _ in range(20):
             await asyncio.sleep(2)
             status = suno.get_lyrics_status(task_id)
             if status["status"] == "completed":
-                print(f"DEBUG: Lyrics generated successfully")
                 texts = status["lyrics"]
                 return LyricsResponse(
-                    lyrics=texts[0] if texts else "", 
+                    lyrics=texts[0] if texts else "",
                     candidates=texts
                 )
             if status["status"] == "failed":
-                raise HTTPException(status_code=500, detail=f"Suno Error: {status.get('error')}")
-                
-        raise HTTPException(status_code=504, detail="Lyrics generation timed out (Suno API is slow)")
+                raise HTTPException(status_code=500, detail="Lyrics generation failed")
 
+        raise HTTPException(status_code=504, detail="Lyrics generation timed out")
+
+    except HTTPException:
+        raise
     except Exception as e:
-        import traceback
-        traceback.print_exc()
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error("Lyrics generation error: %s", e)
+        raise HTTPException(status_code=500, detail="Lyrics generation failed")
 
 
 @router.post("/", response_model=JobStatusResponse, status_code=202)
@@ -79,19 +89,18 @@ async def start_generation(
     
     Flow:
     1. Verify project ownership and status
-    2. Reserve credits (10 credits)
-    3. Create generation job
-    4. Queue async worker
-    5. Return job status
+    2. Calculate cost (Dynamic)
+    3. Reserve credits
+    4. Create generation job
+    5. Queue async worker
+    6. Return job status
     
     Returns 202 Accepted (async processing)
     """
-    print(f"DEBUG: Start generation for project {request.project_id}, user {user_id}")
     try:
         client = get_supabase_client()
-        
+
         # Verify project
-        print("DEBUG: Fetching project...")
         projects = client.select(
             "projects",
             filters={"id": request.project_id, "user_id": user_id},
@@ -102,7 +111,6 @@ async def start_generation(
             raise HTTPException(status_code=404, detail="Project not found")
         
         project = projects[0]
-        print(f"DEBUG: Project found: {project.get('id')}")
         
         if project.get("status") == "generating":
             raise HTTPException(status_code=400, detail="Generation already in progress")
@@ -110,17 +118,28 @@ async def start_generation(
         if project.get("mode") == "TEXT" and not project.get("lyrics_final"):
             raise HTTPException(status_code=400, detail="No lyrics found for TEXT mode")
         
-        # Reserve credits
-        credits_cost = 10  # TODO: Make configurable
+        # Calculate Credits Cost
+        # Base Cost = 4
+        # Context Mode Discount = -1 (Lyrics paid separately)
+        # Humming Surcharge = +1
+        # Singing Surcharge = +2
         
-        print("DEBUG: Reserving credits...")
+        credits_cost = 4
+
+        if project.get("mode") == "CONTEXT":
+            credits_cost -= 1
+
+        if project.get("audio_url"):
+            if project.get("lyrics_final"):
+                credits_cost += 1
+            else:
+                credits_cost += 2
         try:
             reserve_credits_supabase(client, user_id, credits_cost)
         except ValueError as e:
             raise HTTPException(status_code=402, detail=str(e))
         
         # Create generation job
-        print("DEBUG: Creating generation job...")
         job_id = str(uuid.uuid4())
         job = client.insert("generation_jobs", {
             "id": job_id,
@@ -132,7 +151,6 @@ async def start_generation(
         })
         
         # Update project status
-        print("DEBUG: Updating project status...")
         client.update(
             "projects",
             {"status": "generating"},
@@ -140,7 +158,6 @@ async def start_generation(
         )
         
         # Queue job for async processing
-        print("DEBUG: Enqueuing job...")
         job_queue.enqueue(
             'app.workers.music_worker.generate_music',
             job_id,
@@ -148,16 +165,13 @@ async def start_generation(
             job_timeout='30m'
         )
         
-        print("DEBUG: Generation started successfully")
         return job
 
     except HTTPException:
         raise
     except Exception as e:
-        import traceback
-        traceback.print_exc()
-        print(f"FAILED to start generation: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error("Failed to start generation: %s", e)
+        raise HTTPException(status_code=500, detail="Music generation failed")
 
 
 @router.get("/jobs/{job_id}", response_model=JobStatusResponse)
