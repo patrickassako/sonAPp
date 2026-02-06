@@ -92,6 +92,10 @@ export default function CreateWizardPage() {
         fetchStyles();
     }, []);
 
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, [step]);
+
     const fetchStyles = async () => {
         try {
             const response = await fetch(`${API_BASE_URL}/api/v1/styles/`);
