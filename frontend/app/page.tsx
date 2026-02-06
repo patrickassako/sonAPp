@@ -3,7 +3,7 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/atoms/Button";
-import { Music2, Sparkles, Zap, Download, Radio, Shield, Play, Pause } from "lucide-react";
+import { Sparkles, Zap, Download, Radio, Shield, Play, Pause } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 const HERO_TRACK = {
@@ -93,16 +93,82 @@ export default function LandingPage() {
     };
 
     const isHeroPlaying = playingUrl === HERO_TRACK.url;
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "WebApplication",
+                "name": "BimZik",
+                "url": "https://bimzik.com",
+                "description": "Créez votre chanson personnalisée avec l'IA. Afrobeats, Makossa, Amapiano et plus.",
+                "applicationCategory": "MusicApplication",
+                "operatingSystem": "Web",
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "XAF",
+                    "description": "Inscription gratuite, crédits à l'achat"
+                },
+                "creator": {
+                    "@type": "Organization",
+                    "name": "BimZik",
+                    "url": "https://bimzik.com",
+                    "logo": "https://bimzik.com/images/logo-bimzik.png"
+                }
+            },
+            {
+                "@type": "WebSite",
+                "name": "BimZik",
+                "url": "https://bimzik.com",
+                "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": "https://bimzik.com/styles?q={search_term_string}",
+                    "query-input": "required name=search_term_string"
+                }
+            },
+            {
+                "@type": "FAQPage",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": "Comment créer une chanson personnalisée sur BimZik ?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Racontez votre histoire, choisissez un style musical (Afrobeats, Makossa, Amapiano...) et recevez votre chanson en 2 minutes."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Combien coûte une chanson sur BimZik ?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Une chanson personnalisée coûte 5 crédits. Les packs démarrent à partir de quelques centaines de FCFA. Paiement par Mobile Money ou carte bancaire."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Quels styles de musique sont disponibles ?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "BimZik propose plus de 20 styles : Afrobeats, Makossa, Amapiano, Coupé-Décalé, Bikutsi, Gospel, Hip-Hop, R&B, Drill et bien d'autres."
+                        }
+                    }
+                ]
+            }
+        ]
+    };
+
     return (
         <div className="min-h-screen bg-[#0a0a0a] text-white font-sans selection:bg-primary/30">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             {/* Navbar */}
             <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-md">
                 <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="bg-primary rounded-lg p-1.5 flex items-center justify-center">
-                            <Music2 className="w-6 h-6 text-white" />
-                        </div>
-                        <span className="text-xl font-bold tracking-tight">MusicApp</span>
+                        <img src="/images/logo-bimzik.png" alt="BimZik" className="h-8" />
                     </div>
 
                     <div className="hidden md:flex items-center gap-10">
@@ -481,8 +547,7 @@ export default function LandingPage() {
                 <footer className="py-12 px-6 border-t border-white/5 bg-[#0a0a0a]">
                     <div className="max-w-7xl mx-auto flex flex-col items-center gap-8">
                         <div className="flex items-center gap-2">
-                            <Music2 className="text-primary" />
-                            <span className="font-bold text-xl uppercase tracking-tighter">MusicApp</span>
+                            <img src="/images/logo-bimzik.png" alt="BimZik" className="h-8" />
                         </div>
 
                         <div className="flex flex-wrap justify-center gap-10">
@@ -492,7 +557,7 @@ export default function LandingPage() {
                             <a href="#" className="text-sm text-white/50 hover:text-white transition-colors">Contact</a>
                         </div>
 
-                        <p className="text-white/20 text-xs">© 2026 MusicApp. Transformez vos émotions en musique.</p>
+                        <p className="text-white/20 text-xs">© 2026 BimZik. Transformez vos émotions en musique.</p>
                     </div>
                 </footer>
             </main>

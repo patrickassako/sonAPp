@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Music2, Mail, Lock, User, ArrowRight } from "lucide-react";
+import { Mail, Lock, User, ArrowRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 export default function SignupPage() {
@@ -50,11 +50,8 @@ export default function SignupPage() {
 
             <div className="w-full max-w-md relative z-10">
                 {/* Logo */}
-                <Link href="/" className="flex items-center justify-center gap-3 mb-8">
-                    <div className="bg-primary rounded-lg p-2">
-                        <Music2 className="w-6 h-6 text-white" />
-                    </div>
-                    <span className="text-2xl font-bold text-white">MusicApp</span>
+                <Link href="/" className="flex items-center justify-center mb-8">
+                    <img src="/images/logo-bimzik.png" alt="BimZik" className="h-10" />
                 </Link>
 
                 {/* Card */}

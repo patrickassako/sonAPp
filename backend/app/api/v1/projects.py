@@ -2,20 +2,24 @@
 Projects API routes - Migrated to Supabase REST API.
 """
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from typing import List
 import uuid
-from datetime import datetime
 
 from app.supabase_client import get_supabase_client
 from app.auth import get_current_user
 from app.schemas import ProjectCreate, ProjectResponse, AudioFileResponse
 
+limiter = Limiter(key_func=get_remote_address)
 router = APIRouter()
 
 
 @router.post("/", response_model=ProjectResponse, status_code=201)
+@limiter.limit("20/minute")
 async def create_project(
+    request: Request,
     project_data: ProjectCreate,
     user_id: str = Depends(get_current_user)
 ):
@@ -46,9 +50,11 @@ async def create_project(
         "mode": project_data.mode,
         "language": project_data.language,
         "style_id": project_data.style_id,
+        "custom_style_text": project_data.custom_style_text,
         "context_input": project_data.context_input,
         "lyrics_final": project_data.lyrics_final,
         "audio_url": project_data.audio_url,
+        "generate_video": project_data.generate_video,
         "status": "draft"
     })
     
@@ -87,39 +93,17 @@ async def get_project(
     user_id: str = Depends(get_current_user)
 ):
     """Get project details."""
-    if project_id.startswith("mock-"):
-        return {
-            "id": project_id,
-            "user_id": user_id,
-            "title": "Mock Project",
-            "mode": "TEXT",
-            "language": "en",
-            "style_id": "Afrobeats",
-            "context_input": None,
-            "lyrics_final": "[Verse 1]\nThis is a mock song\nTesting the versions\n[Chorus]\nYeah yeah",
-            "status": "completed",
-            "created_at": datetime.now(),
-            "updated_at": datetime.now()
-        }
-
     client = get_supabase_client()
-    # Debug: First check if project exists at all
     projects = client.select(
         "projects",
-        filters={"id": project_id},
+        filters={"id": project_id, "user_id": user_id},
         limit=1
     )
-    
+
     if not projects:
-        raise HTTPException(status_code=404, detail=f"Project {project_id} not found in database")
-        
-    project = projects[0]
-    
-    # Check ownership
-    if project["user_id"] != user_id:
-        raise HTTPException(status_code=403, detail=f"Project belongs to user {project['user_id']}, not {user_id}")
-    
-    return project
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    return projects[0]
 
 
 @router.get("/{project_id}/audio", response_model=List[AudioFileResponse])
@@ -133,28 +117,6 @@ async def get_project_audio(
     Returns audio files ordered by version number.
     """
     # Verify project ownership
-    if project_id.startswith("mock-"):
-        return [
-            {
-                "id": str(uuid.uuid4()),
-                "file_url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-                "stream_url": None,
-                "image_url": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bXVzaWN8ZW58MHx8MHx8fDA%3D",
-                "duration": 120,
-                "version_number": 1,
-                "created_at": datetime.now()
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "file_url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-                "stream_url": None,
-                "image_url": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bXVzaWN8ZW58MHx8MHx8fDA%3D",
-                "duration": 130,
-                "version_number": 2,
-                "created_at": datetime.now()
-            }
-        ]
-
     client = get_supabase_client()
     projects = client.select(
         "projects",

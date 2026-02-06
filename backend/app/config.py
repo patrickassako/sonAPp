@@ -48,6 +48,15 @@ class Settings(BaseSettings):
     # CORS
     CORS_ORIGINS: str = "http://localhost:3000"
     
+    # SMTP (for email notifications)
+    SMTP_HOST: str = "mail.bimzik.com"
+    SMTP_PORT: int = 465
+    SMTP_USER: str = "service@bimzik.com"
+    SMTP_PASSWORD: str | None = None
+
+    # Frontend URL (for share links in notifications)
+    FRONTEND_URL: str = "http://localhost:3000"
+
     # Storage
     UPLOAD_DIR: str = "./uploads"
     

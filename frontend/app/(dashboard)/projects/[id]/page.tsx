@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { API_BASE_URL } from "@/lib/api/client";
 import { Loader2 } from "lucide-react";
 
 interface Project {
@@ -23,6 +24,7 @@ interface AudioVersion {
     id: string;
     file_url: string | null;
     image_url: string | null;
+    video_url?: string | null;
     version_number: number;
     duration: number | null;
 }
@@ -39,54 +41,65 @@ export default function ProjectResultPage() {
     const [isPlaying, setIsPlaying] = useState(false);
     const [duration, setDuration] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
+    const [copiedLink, setCopiedLink] = useState(false);
+    const [copiedAudio, setCopiedAudio] = useState(false);
+    const [videoGenerating, setVideoGenerating] = useState(false);
+    const [videoError, setVideoError] = useState("");
     const audioRef = useRef<HTMLAudioElement>(null);
 
     useEffect(() => {
-        fetchProjectData();
-    }, [projectId]);
+        const controller = new AbortController();
 
-    const fetchProjectData = async () => {
-        try {
-            const supabase = createClient();
-            const { data: { session } } = await supabase.auth.getSession();
-            const token = session?.access_token;
+        const fetchProjectData = async () => {
+            try {
+                const supabase = createClient();
+                const { data: { session } } = await supabase.auth.getSession();
+                const token = session?.access_token;
 
-            // 1. Fetch Project Details
-            const projectRes = await fetch(`http://localhost:8000/api/v1/projects/${projectId}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+                // 1. Fetch Project Details
+                const projectRes = await fetch(`${API_BASE_URL}/api/v1/projects/${projectId}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                    signal: controller.signal,
+                });
 
-            if (!projectRes.ok) throw new Error("Failed to fetch project");
-            const projectData = await projectRes.json();
-            setProject(projectData);
+                if (!projectRes.ok) throw new Error("Failed to fetch project");
+                const projectData = await projectRes.json();
+                setProject(projectData);
 
-            // 2. Fetch Audio Versions
-            const audioRes = await fetch(`http://localhost:8000/api/v1/projects/${projectId}/audio`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+                // 2. Fetch Audio Versions
+                const audioRes = await fetch(`${API_BASE_URL}/api/v1/projects/${projectId}/audio`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                    signal: controller.signal,
+                });
 
-            if (audioRes.ok) {
-                const audioData = await audioRes.json();
-                setVersions(audioData);
-                if (audioData.length > 0) {
-                    setSelectedVersion(audioData[0]);
-                } else if (projectData.audio_url) {
-                    // Fallback if no specific audio files but project has url
-                    setSelectedVersion({
-                        id: 'default',
-                        file_url: projectData.audio_url,
-                        image_url: projectData.image_url,
-                        version_number: 1,
-                        duration: null
-                    });
+                if (audioRes.ok) {
+                    const audioData = await audioRes.json();
+                    setVersions(audioData);
+                    if (audioData.length > 0) {
+                        setSelectedVersion(audioData[0]);
+                    } else if (projectData.audio_url) {
+                        setSelectedVersion({
+                            id: 'default',
+                            file_url: projectData.audio_url,
+                            image_url: projectData.image_url,
+                            version_number: 1,
+                            duration: null
+                        });
+                    }
                 }
+            } catch (error: any) {
+                if (error.name !== "AbortError") {
+                    console.error("Error loading project:", error);
+                }
+            } finally {
+                setLoading(false);
             }
-        } catch (error) {
-            console.error("Error loading project:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+        };
+
+        fetchProjectData();
+
+        return () => controller.abort();
+    }, [projectId]);
 
     const togglePlay = () => {
         if (audioRef.current) {
@@ -240,6 +253,106 @@ export default function ProjectResultPage() {
                 </div>
             </div>
 
+            {/* Video Player or Generate Button */}
+            {selectedVersion?.video_url ? (
+                <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-xl p-8 mb-8 shadow-2xl">
+                    <div className="flex items-center gap-3 mb-6">
+                        <span className="material-symbols-outlined text-primary">videocam</span>
+                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">Video Clip</h3>
+                    </div>
+                    <video
+                        controls
+                        className="w-full rounded-lg max-h-[500px] bg-black"
+                        poster={selectedVersion?.image_url || undefined}
+                    >
+                        <source src={selectedVersion.video_url} type="video/mp4" />
+                    </video>
+                    <div className="mt-4 flex justify-end">
+                        <a
+                            href={selectedVersion.video_url}
+                            download
+                            className="flex items-center gap-2 px-5 py-2.5 bg-primary/20 text-primary text-sm font-bold rounded-lg hover:bg-primary hover:text-white transition-all"
+                        >
+                            <span className="material-symbols-outlined text-[18px]">download</span>
+                            Download Video
+                        </a>
+                    </div>
+                </div>
+            ) : project.status === "completed" && (
+                <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-xl p-6 mb-8 shadow-2xl">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <span className="material-symbols-outlined text-white/40">videocam</span>
+                            <div>
+                                <h3 className="font-bold text-slate-900 dark:text-white">Video Clip</h3>
+                                <p className="text-white/40 text-sm">Generate an MP4 video clip from your track</p>
+                            </div>
+                        </div>
+                        <button
+                            onClick={async () => {
+                                setVideoGenerating(true);
+                                setVideoError("");
+                                try {
+                                    const supabase = createClient();
+                                    const { data: { session } } = await supabase.auth.getSession();
+                                    const res = await fetch(`${API_BASE_URL}/api/v1/generate/video/${projectId}`, {
+                                        method: "POST",
+                                        headers: { Authorization: `Bearer ${session?.access_token}` },
+                                    });
+                                    if (!res.ok) {
+                                        const err = await res.json();
+                                        throw new Error(err.detail || "Failed to start video generation");
+                                    }
+                                    // Poll for video_url by re-fetching audio files periodically
+                                    const pollVideo = async () => {
+                                        for (let i = 0; i < 30; i++) {
+                                            await new Promise(r => setTimeout(r, 6000));
+                                            const { data: { session: s } } = await supabase.auth.getSession();
+                                            const audioRes = await fetch(`${API_BASE_URL}/api/v1/projects/${projectId}/audio`, {
+                                                headers: { Authorization: `Bearer ${s?.access_token}` },
+                                            });
+                                            if (audioRes.ok) {
+                                                const audioData = await audioRes.json();
+                                                const withVideo = audioData.find((a: AudioVersion) => a.video_url);
+                                                if (withVideo) {
+                                                    setVersions(audioData);
+                                                    setSelectedVersion(audioData.find((a: AudioVersion) => a.id === selectedVersion?.id) || audioData[0]);
+                                                    setVideoGenerating(false);
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                        setVideoError("Video generation timed out. Refresh the page to check.");
+                                        setVideoGenerating(false);
+                                    };
+                                    pollVideo();
+                                } catch (error: any) {
+                                    setVideoError(error.message);
+                                    setVideoGenerating(false);
+                                }
+                            }}
+                            disabled={videoGenerating}
+                            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-purple-600 text-white font-bold rounded-xl hover:shadow-lg hover:shadow-primary/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {videoGenerating ? (
+                                <>
+                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                    Generating...
+                                </>
+                            ) : (
+                                <>
+                                    <span className="material-symbols-outlined text-[20px]">movie</span>
+                                    Generate Clip
+                                </>
+                            )}
+                        </button>
+                    </div>
+                    {videoError && (
+                        <p className="text-red-400 text-sm mt-3">{videoError}</p>
+                    )}
+                </div>
+            )}
+
             {/* Versions Selector */}
             {versions.length > 0 && (
                 <div className="flex justify-center gap-4 mb-12">
@@ -260,19 +373,38 @@ export default function ProjectResultPage() {
                 <div className="flex flex-col gap-6">
                     <h3 className="text-xl font-bold text-slate-900 dark:text-white px-1">Share your masterpiece</h3>
                     <div className="grid grid-cols-3 gap-4">
-                        <button className="flex flex-col items-center gap-3 p-6 bg-white/5 border border-white/5 rounded-xl hover:bg-primary/5 transition-all group">
+                        <button
+                            onClick={() => {
+                                const shareUrl = `${window.location.origin}/share/${project.id}`;
+                                window.open(`https://wa.me/?text=${encodeURIComponent(`Check out my track "${project.title}"! ${shareUrl}`)}`, "_blank");
+                            }}
+                            className="flex flex-col items-center gap-3 p-6 bg-white/5 border border-white/5 rounded-xl hover:bg-primary/5 transition-all group"
+                        >
                             <div className="size-12 bg-[#25D366]/20 rounded-full flex items-center justify-center text-[#25D366] group-hover:scale-110 transition-transform">
                                 <span className="material-symbols-outlined">chat_bubble</span>
                             </div>
                             <span className="text-xs font-semibold text-slate-500 dark:text-[#cbb290] uppercase tracking-tighter">WhatsApp</span>
                         </button>
-                        <button className="flex flex-col items-center gap-3 p-6 bg-white/5 border border-white/5 rounded-xl hover:bg-primary/5 transition-all group">
+                        <button
+                            onClick={() => {
+                                const shareUrl = `${window.location.origin}/share/${project.id}`;
+                                navigator.clipboard.writeText(shareUrl);
+                                alert("Link copied! Paste it in your Instagram story.");
+                            }}
+                            className="flex flex-col items-center gap-3 p-6 bg-white/5 border border-white/5 rounded-xl hover:bg-primary/5 transition-all group"
+                        >
                             <div className="size-12 bg-[#E4405F]/20 rounded-full flex items-center justify-center text-[#E4405F] group-hover:scale-110 transition-transform">
                                 <span className="material-symbols-outlined">photo_camera</span>
                             </div>
                             <span className="text-xs font-semibold text-slate-500 dark:text-[#cbb290] uppercase tracking-tighter">Stories</span>
                         </button>
-                        <button className="flex flex-col items-center gap-3 p-6 bg-white/5 border border-white/5 rounded-xl hover:bg-primary/5 transition-all group">
+                        <button
+                            onClick={() => {
+                                const shareUrl = `${window.location.origin}/share/${project.id}`;
+                                window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, "_blank", "width=600,height=400");
+                            }}
+                            className="flex flex-col items-center gap-3 p-6 bg-white/5 border border-white/5 rounded-xl hover:bg-primary/5 transition-all group"
+                        >
                             <div className="size-12 bg-[#1877F2]/20 rounded-full flex items-center justify-center text-[#1877F2] group-hover:scale-110 transition-transform">
                                 <span className="material-symbols-outlined">social_leaderboard</span>
                             </div>
@@ -284,10 +416,40 @@ export default function ProjectResultPage() {
                     <div className="bg-white/5 border border-white/5 p-4 rounded-xl flex items-center justify-between">
                         <div className="flex items-center gap-3 overflow-hidden">
                             <span className="material-symbols-outlined text-primary">link</span>
-                            <span className="text-sm text-slate-400 truncate">https://aimusic.studio/share/{project.id.substring(0, 8)}</span>
+                            <span className="text-sm text-slate-400 truncate">{typeof window !== "undefined" ? window.location.origin : ""}/share/{project.id.substring(0, 8)}</span>
                         </div>
-                        <button onClick={() => navigator.clipboard.writeText(`https://aimusic.studio/share/${project.id}`)} className="px-4 py-2 bg-primary/20 text-primary text-xs font-bold rounded-lg hover:bg-primary hover:text-white transition-all">COPY</button>
+                        <button
+                            onClick={() => {
+                                const shareUrl = `${window.location.origin}/share/${project.id}`;
+                                navigator.clipboard.writeText(shareUrl);
+                                setCopiedLink(true);
+                                setTimeout(() => setCopiedLink(false), 2000);
+                            }}
+                            className="px-4 py-2 bg-primary/20 text-primary text-xs font-bold rounded-lg hover:bg-primary hover:text-white transition-all min-w-[70px]"
+                        >
+                            {copiedLink ? "COPIED!" : "COPY"}
+                        </button>
                     </div>
+
+                    {/* Copy Audio Link */}
+                    {selectedVersion?.file_url && (
+                        <div className="bg-white/5 border border-white/5 p-4 rounded-xl flex items-center justify-between">
+                            <div className="flex items-center gap-3 overflow-hidden">
+                                <span className="material-symbols-outlined text-primary">audio_file</span>
+                                <span className="text-sm text-slate-400 truncate">Direct audio link</span>
+                            </div>
+                            <button
+                                onClick={() => {
+                                    navigator.clipboard.writeText(selectedVersion.file_url!);
+                                    setCopiedAudio(true);
+                                    setTimeout(() => setCopiedAudio(false), 2000);
+                                }}
+                                className="px-4 py-2 bg-primary/20 text-primary text-xs font-bold rounded-lg hover:bg-primary hover:text-white transition-all min-w-[70px]"
+                            >
+                                {copiedAudio ? "COPIED!" : "COPY"}
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 {/* How It Was Made Card */}

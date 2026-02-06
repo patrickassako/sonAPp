@@ -33,8 +33,15 @@ export function useProjects() {
         '/api/v1/projects',
         () => fetchProjects(),
         {
-            refreshInterval: 5000, // Poll every 5s for processing jobs
+            // Only poll when projects are actively processing, otherwise stop
+            refreshInterval: (latestData) => {
+                const hasProcessing = latestData?.some(
+                    (p) => p.status === 'processing' || p.status === 'pending'
+                );
+                return hasProcessing ? 5000 : 0;
+            },
             revalidateOnFocus: true,
+            dedupingInterval: 10000,
         }
     );
 

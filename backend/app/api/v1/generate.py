@@ -2,9 +2,11 @@
 Generation API routes - Migrated to Supabase REST API.
 """
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from rq import Queue
 from redis import Redis, ConnectionPool
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 import logging
 import uuid
 import asyncio
@@ -12,13 +14,15 @@ from functools import partial
 
 from app.supabase_client import get_supabase_client
 from app.auth import get_current_user
-from app.schemas import GenerateRequest, JobStatusResponse, GenerateLyricsRequest, LyricsResponse
+import re
+from app.schemas import GenerateRequest, JobStatusResponse, GenerateLyricsRequest, LyricsResponse, SuccessResponse
 from app.utils.credits import reserve_credits_supabase, debit_credits_supabase
 from app.config import settings
 from app.providers.suno import get_suno_provider
 
 logger = logging.getLogger(__name__)
 
+limiter = Limiter(key_func=get_remote_address)
 router = APIRouter()
 
 # Initialize Redis with connection pool and RQ
@@ -29,8 +33,10 @@ job_queue = Queue("music_generation", connection=redis_conn)
 
 
 @router.post("/lyrics", response_model=LyricsResponse)
+@limiter.limit("10/minute")
 async def generate_lyrics(
-    request: GenerateLyricsRequest,
+    request: Request,
+    body: GenerateLyricsRequest,
     user_id: str = Depends(get_current_user)
 ):
     """
@@ -39,7 +45,7 @@ async def generate_lyrics(
     """
     try:
         client = get_supabase_client()
-        
+
         # 1. Debit 1 credit immediately (direct debit, no prior reservation)
         try:
             debit_credits_supabase(client, user_id, 1, metadata={"action": "generate_lyrics"}, from_reserved=False)
@@ -49,10 +55,10 @@ async def generate_lyrics(
         suno = get_suno_provider()
 
         # Build prompt (SunoAPI limit: 200 characters)
-        full_prompt = f"{request.description}"
-        if request.style:
-            full_prompt += f" Style: {request.style}."
-        if request.language == "fr":
+        full_prompt = f"{body.description}"
+        if body.style:
+            full_prompt += f" Style: {body.style}."
+        if body.language == "fr":
             full_prompt += " French."
         else:
             full_prompt += " English."
@@ -91,8 +97,10 @@ async def generate_lyrics(
 
 
 @router.post("/", response_model=JobStatusResponse, status_code=202)
+@limiter.limit("5/minute")
 async def start_generation(
-    request: GenerateRequest,
+    request: Request,
+    body: GenerateRequest,
     user_id: str = Depends(get_current_user)
 ):
     """
@@ -114,7 +122,7 @@ async def start_generation(
         # Verify project
         projects = client.select(
             "projects",
-            filters={"id": request.project_id, "user_id": user_id},
+            filters={"id": body.project_id, "user_id": user_id},
             limit=1
         )
         
@@ -145,6 +153,11 @@ async def start_generation(
                 credits_cost += 1
             else:
                 credits_cost += 2
+
+        # Video clip surcharge: 1 credit per 30s (estimate 4 credits for ~2min)
+        if project.get("generate_video"):
+            credits_cost += 4
+
         try:
             reserve_credits_supabase(client, user_id, credits_cost)
         except ValueError as e:
@@ -154,7 +167,7 @@ async def start_generation(
         job_id = str(uuid.uuid4())
         job = client.insert("generation_jobs", {
             "id": job_id,
-            "project_id": request.project_id,
+            "project_id": body.project_id,
             "user_id": user_id,
             "status": "queued",
             "credits_cost": credits_cost,
@@ -165,14 +178,14 @@ async def start_generation(
         client.update(
             "projects",
             {"status": "generating"},
-            {"id": request.project_id}
+            {"id": body.project_id}
         )
         
         # Queue job for async processing
         job_queue.enqueue(
             'app.workers.music_worker.generate_music',
             job_id,
-            request.project_id,
+            body.project_id,
             job_timeout='7m'
         )
         
@@ -186,24 +199,123 @@ async def start_generation(
 
 
 @router.get("/jobs/{job_id}", response_model=JobStatusResponse)
+@limiter.limit("30/minute")
 async def get_job_status(
+    request: Request,
     job_id: str,
     user_id: str = Depends(get_current_user)
 ):
     """
     Get generation job status.
-    
+
     Returns current status, progress, and error information if applicable.
     """
     client = get_supabase_client()
-    
+
     jobs = client.select(
         "generation_jobs",
         filters={"id": job_id, "user_id": user_id},
         limit=1
     )
-    
+
     if not jobs:
         raise HTTPException(status_code=404, detail="Job not found")
-    
-    return jobs[0]
+
+    job = jobs[0]
+    # Extract video_status from metadata if present
+    metadata = job.get("metadata") or {}
+    if isinstance(metadata, dict):
+        job["video_status"] = metadata.get("video_status")
+
+    return job
+
+
+@router.post("/video/{project_id}", response_model=SuccessResponse)
+@limiter.limit("3/minute")
+async def generate_video_clip(
+    request: Request,
+    project_id: str,
+    user_id: str = Depends(get_current_user)
+):
+    """
+    Manually trigger video clip generation for a completed project.
+    Finds the first audio file with a provider_audio_id and queues video generation.
+    """
+    client = get_supabase_client()
+
+    # Verify project ownership
+    projects = client.select(
+        "projects",
+        filters={"id": project_id, "user_id": user_id},
+        limit=1
+    )
+    if not projects:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    project = projects[0]
+    if project.get("status") != "completed":
+        raise HTTPException(status_code=400, detail="Project must be completed first")
+
+    # Get audio files
+    audio_files = client.select(
+        "audio_files",
+        filters={"project_id": project_id},
+        order="version_number.asc"
+    )
+    if not audio_files:
+        raise HTTPException(status_code=404, detail="No audio files found")
+
+    # Check if video already exists
+    first_af = audio_files[0]
+    if first_af.get("video_url"):
+        raise HTTPException(status_code=400, detail="Video already exists for this track")
+
+    # Get provider_job_id from generation job
+    jobs = client.select(
+        "generation_jobs",
+        filters={"project_id": project_id, "status": "completed"},
+        order="created_at.desc",
+        limit=1
+    )
+    if not jobs:
+        raise HTTPException(status_code=400, detail="No completed generation job found")
+
+    job = jobs[0]
+    provider_job_id = job.get("provider_job_id")
+    if not provider_job_id:
+        raise HTTPException(status_code=400, detail="Missing provider job ID")
+
+    # Get or derive the suno audio ID
+    provider_audio_id = first_af.get("provider_audio_id")
+    if not provider_audio_id and first_af.get("file_url"):
+        # Try extracting UUID from the audio URL
+        match = re.search(r'/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})', first_af["file_url"])
+        if match:
+            provider_audio_id = match.group(1)
+            # Save it for future use
+            client.update("audio_files", {"provider_audio_id": provider_audio_id}, {"id": first_af["id"]})
+
+    if not provider_audio_id:
+        raise HTTPException(status_code=400, detail="Cannot determine Suno audio ID for this track")
+
+    # Debit credits for video: 1 credit per 30s
+    duration = first_af.get("duration", 120)
+    video_credits = max(1, -(-duration // 30))  # ceil division
+    try:
+        debit_credits_supabase(client, user_id, video_credits, metadata={"action": "generate_video", "project_id": project_id}, from_reserved=False)
+    except ValueError as e:
+        raise HTTPException(status_code=402, detail=str(e))
+
+    # Queue the video generation job
+    job_queue.enqueue(
+        'app.workers.music_worker.generate_video',
+        first_af["id"],
+        provider_job_id,
+        provider_audio_id,
+        project.get("title", "BimZik"),
+        user_id,
+        video_credits,
+        job_timeout='5m'
+    )
+
+    return SuccessResponse(message="Video generation started")

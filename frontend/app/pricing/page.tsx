@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Zap, Infinity, Check, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { API_BASE_URL } from "@/lib/api/client";
 
 interface Package {
     id: string;
@@ -24,7 +25,7 @@ export default function PricingPage() {
 
     const fetchPackages = async () => {
         try {
-            const response = await fetch("http://localhost:8000/api/v1/payments/packages");
+            const response = await fetch(`${API_BASE_URL}/api/v1/payments/packages`);
             const data = await response.json();
             setPacks(data);
         } catch (error) {
@@ -40,10 +41,7 @@ export default function PricingPage() {
             <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-md">
                 <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-3">
-                        <div className="bg-primary rounded-lg p-1.5">
-                            <span className="material-symbols-outlined text-white text-2xl">music_note</span>
-                        </div>
-                        <span className="text-xl font-bold">MusicApp</span>
+                        <img src="/images/logo-bimzik.png" alt="BimZik" className="h-8" />
                     </Link>
                     <div className="flex items-center gap-4">
                         <Link href="/login" className="text-sm text-white/70 hover:text-white">Login</Link>
@@ -55,11 +53,16 @@ export default function PricingPage() {
             </nav>
 
             <div className="pt-32 pb-16 px-6 max-w-5xl mx-auto">
+                {/* Valentine Banner */}
+                <div className="mb-8 p-4 rounded-xl bg-gradient-to-r from-pink-500/20 to-red-500/20 border border-pink-500/30 text-center">
+                    <p className="text-pink-400 font-bold">💕 Offre Saint-Valentin : -20% avec le code VALENTIN2026 • Jusqu'au 14 Février</p>
+                </div>
+
                 {/* Header */}
                 <div className="text-center mb-12">
-                    <h1 className="text-5xl font-bold mb-4">Fuel Your Creativity</h1>
+                    <h1 className="text-5xl font-bold mb-4">Combien coûte un souvenir éternel ?</h1>
                     <p className="text-white/60 text-lg max-w-2xl mx-auto">
-                        Simple, transparent pricing for African creators. Buy once, use anytime with localized payment methods.
+                        Une chanson personnalisée pour marquer un moment de vie. Paiement simple par Mobile Money ou carte bancaire.
                     </p>
                 </div>
 
@@ -70,8 +73,8 @@ export default function PricingPage() {
                             <Zap className="w-5 h-5 text-primary" />
                         </div>
                         <div>
-                            <p className="font-bold text-sm">1 Song = 5 Credits</p>
-                            <p className="text-xs text-white/40">Predictable cost</p>
+                            <p className="font-bold text-sm">1 Chanson = 5 Crédits</p>
+                            <p className="text-xs text-white/40">Prix transparent</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
@@ -79,8 +82,8 @@ export default function PricingPage() {
                             <Infinity className="w-5 h-5 text-primary" />
                         </div>
                         <div>
-                            <p className="font-bold text-sm">No Expiry</p>
-                            <p className="text-xs text-white/40">Credits stay forever</p>
+                            <p className="font-bold text-sm">Jamais d'expiration</p>
+                            <p className="text-xs text-white/40">Vos crédits restent</p>
                         </div>
                     </div>
                 </div>
@@ -141,15 +144,15 @@ export default function PricingPage() {
                 <div className="glass-card rounded-2xl p-8 text-center">
                     <div className="inline-flex items-center gap-2 text-[#FFD700] text-sm font-bold mb-4">
                         <Sparkles className="w-4 h-4" />
-                        LOCALIZED PAYMENTS
+                        PAIEMENT AFRICAIN
                     </div>
-                    <h2 className="text-2xl font-bold mb-2">Pay with Mobile Money</h2>
+                    <h2 className="text-2xl font-bold mb-2">Payez avec Mobile Money</h2>
                     <p className="text-white/60 mb-6">
-                        M-PESA, MTN Mobile Money, Airtel Money, Orange Money supported.
+                        MTN MoMo, Orange Money, M-PESA, Airtel Money - tous supportés.
                     </p>
                     <Link href="/signup">
-                        <button className="bg-primary hover:bg-primary/90 text-white font-bold px-8 py-3 rounded-xl">
-                            Get Started
+                        <button className="bg-gradient-to-r from-pink-500 to-red-500 hover:opacity-90 text-white font-bold px-8 py-3 rounded-xl">
+                            Créer ma première chanson 💕
                         </button>
                     </Link>
                 </div>

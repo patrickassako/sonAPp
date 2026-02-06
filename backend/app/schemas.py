@@ -74,9 +74,21 @@ class ProjectCreate(BaseModel):
     mode: str  # "TEXT" or "CONTEXT"
     language: str = "fr"  # "fr" or "en"
     style_id: str
+    custom_style_text: Optional[str] = None  # For custom style mode
     context_input: Optional[str] = None  # For CONTEXT mode
     lyrics_final: Optional[str] = None   # For TEXT mode
     audio_url: Optional[str] = None      # For AUDIO_INPUT mode or idea
+    generate_video: bool = False
+
+    @model_validator(mode="after")
+    def validate_custom_style(self):
+        # Parse base style_id (strip voice suffix like ":male")
+        base_style = self.style_id.split(":")[0] if self.style_id else ""
+        if base_style == "custom" and not self.custom_style_text:
+            raise ValueError("custom_style_text is required when style_id is 'custom'")
+        if base_style != "custom":
+            self.custom_style_text = None  # Ignore for preset styles
+        return self
 
 
 class ProjectResponse(BaseModel):
@@ -87,13 +99,15 @@ class ProjectResponse(BaseModel):
     mode: str
     language: str
     style_id: str
+    custom_style_text: Optional[str] = None
     context_input: Optional[str]
     lyrics_final: Optional[str]
     audio_url: Optional[str]
+    generate_video: bool = False
     status: str
     created_at: datetime
     updated_at: datetime
-    
+
     class Config:
         from_attributes = True
 
@@ -128,9 +142,10 @@ class JobStatusResponse(BaseModel):
     status: str
     credits_cost: int
     error_message: Optional[str]
+    video_status: Optional[str] = None
     created_at: datetime
     completed_at: Optional[datetime]
-    
+
     class Config:
         from_attributes = True
 
@@ -141,10 +156,11 @@ class AudioFileResponse(BaseModel):
     file_url: Optional[str]
     stream_url: Optional[str]
     image_url: Optional[str]
+    video_url: Optional[str] = None
     duration: Optional[int]
     version_number: int
     created_at: datetime
-    
+
     class Config:
         from_attributes = True
 

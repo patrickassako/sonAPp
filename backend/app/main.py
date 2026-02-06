@@ -90,7 +90,7 @@ async def queue_health():
 # API ROUTES
 # ============================================================================
 
-from app.api.v1 import auth, users, styles, projects, generate, payments
+from app.api.v1 import auth, users, styles, projects, generate, payments, share, notifications
 
 # Include routers
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Auth"])
@@ -99,6 +99,8 @@ app.include_router(styles.router, prefix="/api/v1/styles", tags=["Styles"])
 app.include_router(projects.router, prefix="/api/v1/projects", tags=["Projects"])
 app.include_router(generate.router, prefix="/api/v1/generate", tags=["Generation"])
 app.include_router(payments.router, prefix="/api/v1/payments", tags=["Payments"])
+app.include_router(share.router, prefix="/api/v1/share", tags=["Share"])
+app.include_router(notifications.router, prefix="/api/v1/notifications", tags=["Notifications"])
 
 
 if __name__ == "__main__":

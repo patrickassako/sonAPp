@@ -1,0 +1,27 @@
+{
+  "name": "BimZik - Musique IA personnalisée",
+  "short_name": "BimZik",
+  "description": "Créez votre chanson personnalisée avec l'IA. Afrobeats, Makossa, Amapiano et plus.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#121212",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

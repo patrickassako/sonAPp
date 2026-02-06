@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Sparkles, Loader2, Music2, Edit, Check, Clock, Globe, Mic } from "lucide-react";
+import { ArrowLeft, ArrowRight, Sparkles, Loader2, Music2, Edit, Check, Globe, Mic, Wand2, Video } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { API_BASE_URL } from "@/lib/api/client";
 import { useWallet } from "@/lib/hooks/useWallet";
 import { AudioRecorder } from "@/components/molecules/AudioRecorder";
 
@@ -22,6 +23,7 @@ export default function CreateWizardPage() {
     const [mode, setMode] = useState<"text" | "idea">("idea");
     const [styles, setStyles] = useState<Style[]>([]);
     const [selectedStyle, setSelectedStyle] = useState("");
+    const [customStyleText, setCustomStyleText] = useState("");
 
     // Step 2: Content
     const [title, setTitle] = useState("");
@@ -29,8 +31,8 @@ export default function CreateWizardPage() {
     const [lyrics, setLyrics] = useState("");
     const [language, setLanguage] = useState<"en" | "fr">("fr");
     const [voice, setVoice] = useState<"auto" | "male" | "female">("auto");
-    const [duration, setDuration] = useState(60);
     const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+    const [generateVideo, setGenerateVideo] = useState(false);
 
     // Step 3: Confirmation
     const [generatingLyrics, setGeneratingLyrics] = useState(false);
@@ -44,7 +46,7 @@ export default function CreateWizardPage() {
             const supabase = createClient();
             const { data: { session } } = await supabase.auth.getSession();
 
-            const response = await fetch("http://localhost:8000/api/v1/generate/lyrics", {
+            const response = await fetch(`${API_BASE_URL}/api/v1/generate/lyrics`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -82,7 +84,7 @@ export default function CreateWizardPage() {
 
     const fetchStyles = async () => {
         try {
-            const response = await fetch("http://localhost:8000/api/v1/styles/");
+            const response = await fetch(`${API_BASE_URL}/api/v1/styles/`);
             const data = await response.json();
             setStyles(data.styles || data || []);
         } catch (error) {
@@ -96,13 +98,38 @@ export default function CreateWizardPage() {
 
     const handleNextStep = async () => {
         if (step === 1) {
-            if (selectedStyle) setStep(2);
+            if (selectedStyle && (selectedStyle !== "custom" || customStyleText.trim().length > 0)) setStep(2);
         } else if (step === 2) {
-            // Validation?
-            if (mode === "text" && !lyrics) return;
-            if (mode === "idea" && !lyrics) return; // Must generate first
+            // Validation
+            // Text mode: Lyrics required UNLESS audio is present (Singing mode)
+            if (mode === "text" && !lyrics && !audioBlob) return;
+            // Idea mode: Lyrics required (generated) UNLESS audio is present? (Though idea implies lyrics)
+            if (mode === "idea" && !lyrics && !audioBlob) return;
+
             setStep(3);
         }
+    };
+
+    const getCost = () => {
+        let cost = 4;
+        if (mode === "idea") cost = 3; // Context mode (1 paid for lyrics)
+
+        if (audioBlob) {
+            if (lyrics) {
+                // Humming (Audio + Text)
+                cost += 1;
+            } else {
+                // Singing (Audio Only)
+                cost += 2;
+            }
+        }
+
+        // Video clip: ~4 credits (1 per 30s, estimated ~2min song)
+        if (generateVideo) {
+            cost += 4;
+        }
+
+        return cost;
     };
 
     const handleSubmit = async () => {
@@ -135,7 +162,7 @@ export default function CreateWizardPage() {
             }
 
             // Create project
-            const projectResponse = await fetch("http://localhost:8000/api/v1/projects/", {
+            const projectResponse = await fetch(`${API_BASE_URL}/api/v1/projects/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -146,10 +173,11 @@ export default function CreateWizardPage() {
                     mode: mode === "text" ? "TEXT" : "CONTEXT",
                     language: language,
                     style_id: voice !== "auto" ? `${selectedStyle}:${voice}` : selectedStyle,
-                    context_input: description, // Mapped from description
+                    custom_style_text: selectedStyle === "custom" ? customStyleText : undefined,
+                    context_input: description,
                     lyrics_final: lyrics,
                     audio_url: audioUrl || undefined,
-                    // Invalid fields removed: description, settings
+                    generate_video: generateVideo,
                 })
             });
 
@@ -161,7 +189,7 @@ export default function CreateWizardPage() {
             const project = await projectResponse.json();
 
             // Start generation
-            const generateResponse = await fetch("http://localhost:8000/api/v1/generate/", {
+            const generateResponse = await fetch(`${API_BASE_URL}/api/v1/generate/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -288,6 +316,40 @@ export default function CreateWizardPage() {
                                         </div>
                                     </div>
                                 ))}
+
+                                {/* Custom Style Option */}
+                                <div>
+                                    <h3 className="text-sm font-bold text-white/40 uppercase tracking-wider mb-4 border-b border-white/5 pb-2">
+                                        CUSTOM
+                                    </h3>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        <button
+                                            onClick={() => setSelectedStyle("custom")}
+                                            className={`group relative flex flex-col items-center justify-center p-4 rounded-xl border transition-all ${selectedStyle === "custom" ? "border-primary bg-primary/20 scale-105" : "border-white/10 bg-white/5 hover:border-primary/50"}`}
+                                        >
+                                            {selectedStyle === "custom" && <div className="absolute top-2 right-2 text-primary"><Check className="w-4 h-4" /></div>}
+                                            <div className="w-12 h-12 mb-3 rounded-full bg-gradient-to-br from-primary/30 to-[#FFD700]/30 flex items-center justify-center group-hover:from-primary/40 group-hover:to-[#FFD700]/40 transition-colors">
+                                                <Wand2 className="w-6 h-6 text-[#FFD700] group-hover:text-primary" />
+                                            </div>
+                                            <span className="font-semibold text-sm">Custom Style</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Custom Style Textarea */}
+                                {selectedStyle === "custom" && (
+                                    <div className="mt-6 animate-fade-in">
+                                        <label className="text-sm text-white/60 mb-2 block font-medium">Describe your style</label>
+                                        <textarea
+                                            value={customStyleText}
+                                            onChange={(e) => setCustomStyleText(e.target.value)}
+                                            placeholder="Ex: Makossa mixed with jazz, nocturnal vibe, smooth bass and soft piano..."
+                                            rows={3}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-primary transition-colors resize-none leading-relaxed"
+                                        />
+                                        <p className="text-xs text-white/30 mt-2">Our AI will enrich your description to create the perfect sound.</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -466,28 +528,24 @@ export default function CreateWizardPage() {
                                 </div>
                             </div>
 
-                            {/* Duration */}
+                            {/* Video Clip Toggle */}
                             <div className="w-full">
-                                <div className="flex justify-between mb-4">
-                                    <label className="text-sm text-white/40 font-bold uppercase tracking-wider">Duration</label>
-                                    <span className="text-primary font-bold text-lg">{Math.floor(duration / 60)}m {duration % 60}s</span>
-                                </div>
-                                <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
-                                    <input
-                                        type="range"
-                                        min="30"
-                                        max="300"
-                                        step="30"
-                                        value={duration}
-                                        onChange={(e) => setDuration(parseInt(e.target.value))}
-                                        className="w-full h-3 bg-white/10 rounded-lg appearance-none cursor-pointer accent-primary"
-                                    />
-                                    <div className="flex justify-between mt-4 text-xs font-bold text-white/40 uppercase tracking-wider">
-                                        <span>30 Seconds</span>
-                                        <span>2.5 Minutes</span>
-                                        <span>5 Minutes</span>
+                                <label className="text-sm text-white/40 font-bold uppercase tracking-wider mb-4 block">Video Clip</label>
+                                <button
+                                    onClick={() => setGenerateVideo(!generateVideo)}
+                                    className={`w-full flex items-center gap-4 p-5 rounded-2xl border transition-all ${generateVideo ? "bg-primary/10 border-primary" : "bg-white/5 border-white/10 hover:border-white/20"}`}
+                                >
+                                    <div className={`p-3 rounded-xl ${generateVideo ? "bg-primary/20" : "bg-white/10"}`}>
+                                        <Video className={`w-6 h-6 ${generateVideo ? "text-primary" : "text-white/60"}`} />
                                     </div>
-                                </div>
+                                    <div className="flex-1 text-left">
+                                        <p className="font-bold text-sm">{generateVideo ? "Video clip enabled" : "Generate a video clip"}</p>
+                                        <p className="text-white/40 text-xs mt-0.5">An MP4 video will be created from your track with visual effects.</p>
+                                    </div>
+                                    <div className={`w-12 h-7 rounded-full transition-colors relative ${generateVideo ? "bg-primary" : "bg-white/20"}`}>
+                                        <div className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow transition-transform ${generateVideo ? "translate-x-6" : "translate-x-1"}`} />
+                                    </div>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -515,16 +573,19 @@ export default function CreateWizardPage() {
                                         <div className="flex justify-between items-start mb-4">
                                             <div>
                                                 <p className="text-primary text-xs font-bold uppercase tracking-widest mb-1">
-                                                    {styles.find(s => s.id === selectedStyle)?.label || "Unknown Style"}
+                                                    {selectedStyle === "custom" ? "Custom Style" : (styles.find(s => s.id === selectedStyle)?.label || "Unknown Style")}
                                                 </p>
                                                 <h3 className="text-2xl font-bold">{title || "Untitled Track"}</h3>
+                                                {selectedStyle === "custom" && customStyleText && (
+                                                    <p className="text-white/50 text-sm mt-1 italic">"{customStyleText}"</p>
+                                                )}
                                             </div>
                                             <button onClick={() => setStep(2)} className="text-white/40 hover:text-white transition-colors">
                                                 <Edit className="w-5 h-5" />
                                             </button>
                                         </div>
 
-                                        <div className="grid grid-cols-2 gap-4 py-4 border-y border-white/10">
+                                        <div className="py-4 border-y border-white/10">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
                                                     <Globe className="w-4 h-4 text-primary" />
@@ -534,15 +595,6 @@ export default function CreateWizardPage() {
                                                     <p className="text-sm font-medium">{language === "en" ? "English" : "Français"}</p>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                                                    <Clock className="w-4 h-4 text-primary" />
-                                                </div>
-                                                <div>
-                                                    <p className="text-[10px] text-white/40 uppercase font-bold">Duration</p>
-                                                    <p className="text-sm font-medium">{duration} Seconds</p>
-                                                </div>
-                                            </div>
                                         </div>
 
                                         {/* Audio Present */}
@@ -550,6 +602,14 @@ export default function CreateWizardPage() {
                                             <div className="mt-4 p-3 bg-primary/10 rounded-lg flex items-center gap-3 border border-primary/20">
                                                 <Mic className="w-5 h-5 text-primary" />
                                                 <span className="text-sm font-bold text-primary">Audio Guide Included</span>
+                                            </div>
+                                        )}
+
+                                        {/* Video Clip */}
+                                        {generateVideo && (
+                                            <div className="mt-4 p-3 bg-primary/10 rounded-lg flex items-center gap-3 border border-primary/20">
+                                                <Video className="w-5 h-5 text-primary" />
+                                                <span className="text-sm font-bold text-primary">Video Clip Enabled</span>
                                             </div>
                                         )}
 
@@ -568,7 +628,7 @@ export default function CreateWizardPage() {
                             <div className="flex justify-center gap-6 max-w-2xl mx-auto">
                                 <div className="flex-1 bg-primary/10 border border-primary/30 rounded-xl p-4 text-center">
                                     <p className="text-primary text-xs font-bold uppercase tracking-wider mb-1">Cost</p>
-                                    <p className="text-3xl font-bold">5 <span className="text-sm font-medium text-white/60">Credits</span></p>
+                                    <p className="text-3xl font-bold">{getCost()} <span className="text-sm font-medium text-white/60">Credits</span></p>
                                 </div>
                                 <div className="flex-1 bg-white/5 border border-white/10 rounded-xl p-4 text-center">
                                     <p className="text-white/40 text-xs font-bold uppercase tracking-wider mb-1">Your Balance</p>
@@ -595,7 +655,7 @@ export default function CreateWizardPage() {
                     step === 3 ? (
                         <button
                             onClick={handleSubmit}
-                            disabled={loading || (credits < 5)}
+                            disabled={loading || (credits < getCost())}
                             className="flex items-center gap-2 px-10 h-14 rounded-full bg-gradient-to-r from-primary to-[#FFD700] text-black font-bold text-lg hover:shadow-[0_0_30px_rgba(127,19,236,0.4)] transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:transform-none disabled:shadow-none"
                         >
                             {loading ? (
@@ -606,14 +666,14 @@ export default function CreateWizardPage() {
                             ) : (
                                 <>
                                     <Sparkles className="w-5 h-5 fill-black" />
-                                    Generate Track (5 Cr.)
+                                    Generate Track ({getCost()} Cr.)
                                 </>
                             )}
                         </button>
                     ) : (
                         <button
                             onClick={handleNextStep}
-                            disabled={step === 1 && !selectedStyle || step === 2 && (!title || !lyrics)}
+                            disabled={(step === 1 && (!selectedStyle || (selectedStyle === "custom" && !customStyleText.trim()))) || (step === 2 && ((mode === "text" && !lyrics && !audioBlob) || (mode === "idea" && !lyrics && !audioBlob)))}
                             className="flex items-center gap-2 px-8 h-12 rounded-full bg-primary text-white font-bold hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed border border-white/5"
                         >
                             Next Step

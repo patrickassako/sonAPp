@@ -113,9 +113,14 @@ def build_prompt(style_id: str, lyrics: str, language: str = "fr") -> Dict:
         if not style:
              raise ValueError(f"Style '{style_id}' not found")
     
-    # Selection du template selon la langue
+    # Prefer boosted prompt (enriched via Suno Style API), fallback to original
+    boosted_key = f"boosted_prompt_{language}"
     template_key = f"prompt_template_{language}"
-    style_description = style.get(template_key, style["prompt_template_en"])
+    style_description = (
+        style.get(boosted_key)
+        or style.get(template_key)
+        or style["prompt_template_en"]
+    )
     
     # NEW: Build more explicit style text for Suno
     # Format: "Genre/Style, Key instruments, Energy level"

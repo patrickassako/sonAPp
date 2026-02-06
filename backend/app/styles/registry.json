@@ -31,7 +31,9 @@
                 "monotone",
                 "distortion"
             ],
-            "style_weight": 0.75
+            "style_weight": 0.75,
+            "boosted_prompt_en": "A radio-ready pop song featuring a crisp, ear-catching melody over airy synths and tight percussion. Verses are minimal with sparkling keys and subtle bass, supporting ultra-clear vocals. Anthemic choruses lift with layered harmonies, brisk beats, and vibrant, uplifting textures.",
+            "boosted_prompt_fr": "Un morceau pop moderne débute sur un arpège de guitare électrique clair soutenu par des claps et synthés discrets. Les couplets s’appuient sur une basse ronde, batterie sobre et percussions aérées. Les refrains, portés par des choeurs lumineux, explosent dans une production ample et euphorique."
         },
         {
             "id": "makossa",
@@ -66,7 +68,9 @@
                 "dark",
                 "sad"
             ],
-            "style_weight": 0.88
+            "style_weight": 0.88,
+            "boosted_prompt_en": "A Douala-style Makossa bursts with festive percussion and dynamic, interlocking congas, driving an infectious dance rhythm. Syncopated electric guitars weave melodic riffs, while a lively slap bass lays down buoyant grooves. Jazz-funk brass brings sizzling hits and playful melodic lines throughout.",
+            "boosted_prompt_fr": "Section rythmique dynamique portée par une basse slappée bondissante, batterie syncopée et percussions festives (congas, shakers). Guitare cocotte tranchante, riffs précis et groovy. Cuivres jazz-funk éclatants, interventions punchy et arrangements sophistiqués. Ambiance irrésistible et dansante."
         },
         {
             "id": "amapiano",
@@ -100,7 +104,9 @@
                 "fast techno",
                 "aggressive rap"
             ],
-            "style_weight": 0.82
+            "style_weight": 0.82,
+            "boosted_prompt_en": "This Deep South African Amapiano track builds on a hypnotic, slow groove anchored by deep, resonant Log Drum bass. Jazzy, melodic piano lines weave with lush atmospheric pads, while syncopated percussion and gently filtered synths complete the immersive, soulful sonic landscape.",
+            "boosted_prompt_fr": "Le morceau Amapiano sud-africain deep débute sur de riches accords de piano jazzy, mélodiques et expressifs, soutenus par une nappe atmosphérique vaporeuse. La basse Log Drum, puissante et résonnante, sculpte un groove lent, hypnotique et chaleureux, irrésistiblement envoutant."
         },
         {
             "id": "afrobeats",
@@ -134,7 +140,9 @@
                 "noise",
                 "operatic"
             ],
-            "style_weight": 0.8
+            "style_weight": 0.8,
+            "boosted_prompt_en": "A modern Naija Afrobeats track opens with intricate African percussion, crisp shekere rhythms, and nuanced accents from a subtle talking drum. The groove is anchored by a round, punchy bass and ultra-clean production. Smooth, emotive autotuned vocals soar over the lively instrumental layers.",
+            "boosted_prompt_fr": "Intro percussions africaines complexes habillées d’un doux shekere, une basse ronde puissante s’installe. Le couplet pose une mélodie vocale autotunée, subtilement appuyée par le talking drum. Arrangement épuré, beats précis, progression fluide et production très clean."
         },
         {
             "id": "coupe_decale",
@@ -167,7 +175,9 @@
                 "chill",
                 "jazz"
             ],
-            "style_weight": 0.88
+            "style_weight": 0.88,
+            "boosted_prompt_en": "The song bursts in with high-octane electronic percussion driving a frantic Coupé-Décalé groove, layered with pulsating bass and dynamic, punchy synth stabs. Atalaku chants jump in and out, animating the mix with vocal interjections while swirling FX capture the crowded, festive energy of a bustling maquis.",
+            "boosted_prompt_fr": "Intro percussive, rythmique rapide typique Coupé-Décalé, vocaux Atalaku animés en réponse à la basse lourde et profonde. Synthés percutants accentuent chaque break, samples électroniques s’empilent sur groove binaire puissant. Breaks festifs et relances créent une tension constante, ambiance de maquis survoltée."
         },
         {
             "id": "bikutsi",
@@ -200,7 +210,9 @@
                 "trap beat",
                 "synthesizer loop"
             ],
-            "style_weight": 0.9
+            "style_weight": 0.9,
+            "boosted_prompt_fr": "Chanson bikutsi camerounaise en 6/8 rapide, où la guitare électrique imite les motifs du balafon sur des percussions tribales puissantes et syncopées. Le groove est dense, amplifié par la basse entraînante. Le chant énergique, répétitif, dynamise chaque section polyrythmique.",
+            "boosted_prompt_en": "This frenetic Bikutsi track bursts with a driving fast 6/8 groove led by layered tribal percussion—hand drums, sticks, and vibrant accents. Electric guitar mimics balafon with sharp, percussive melodic riffs. Energetic, repetitive group vocals charge each section, fueling relentless momentum."
         },
         {
             "id": "rap",
@@ -239,7 +251,9 @@
                 "Opera",
                 "Country"
             ],
-            "style_weight": 0.9
+            "style_weight": 0.9,
+            "boosted_prompt_en": "This track kicks off with a gritty sampled motif layered over punchy, chest-rattling 808s. Fast, skittering hi-hats and a crisp snare power the groove. The verses ride tightly on precise rapid-fire bars, while subtle synth stabs and urban textures evoke a moody, modern cityscape.",
+            "boosted_prompt_fr": "Un beat rap moderne mêle boom-bap et trap, alternant kicks massifs et 808 bass vibrante. Hi-hats ultra-rapides et snare claquante structurent le rythme. Le flow technique se pose sur une nappe sombre et texturée, enrichie de samples urbains, créant une tension et une énergie brute."
         },
         {
             "id": "drill",
@@ -275,7 +289,9 @@
                 "acoustic",
                 "major key"
             ],
-            "style_weight": 0.85
+            "style_weight": 0.85,
+            "boosted_prompt_en": "A dark, menacing UK/NY drill track featuring deep, aggressive rap vocals cutting through a haunted minor key piano. The beat rides on sliding 808s, tightly produced kicks, and complex triplet hi-hats, creating a tense, cinematic atmosphere with brooding synth stabs for extra depth.",
+            "boosted_prompt_fr": "Le morceau drill UK/NY démarre sur un piano mineur hanté qui installe une ambiance sombre et menaçante. Les 808 slides glissantes ancrent la rythmique, soutenues par des hi-hats complexes en triplets. La voix rap grave et agressive domine le mix, appuyée par une production épurée."
         },
         {
             "id": "afrotrap",
@@ -309,7 +325,9 @@
                 "slow ballad",
                 "rock"
             ],
-            "style_weight": 0.85
+            "style_weight": 0.85,
+            "boosted_prompt_en": "Opening with layered balafon and kalimba melodies, the Afro Trap beat merges crisp trap hi-hats with talking drums and djembe for rhythmic drive. Melodic autotuned rap vocals float over a bouncy, deep 808 bass. The chorus features a hypnotic synth loop, building an infectious, festive groove.",
+            "boosted_prompt_fr": "Ce morceau Afro Trap festif débute avec un loop de mélodie accrocheur joué au synthé digital. Les percussions africaines syncopées fusionnent avec une rythmique trap, accentuées par une 808 bondissante. Des voix rap autotunées apportent une touche mélodique, surfant sur l’énergie collective du groove."
         },
         {
             "id": "acoustic",
@@ -340,7 +358,9 @@
                 "synthesizer",
                 "autotune"
             ],
-            "style_weight": 0.75
+            "style_weight": 0.75,
+            "boosted_prompt_en": "The song opens with tender fingerpicked folk guitar, warm and resonant, supported by sparse percussion—maybe a soft cajón and brushes. Upright bass adds subtle low-end, with intimate, close-miked vocals. The arrangement stays earthy, evoking a cozy, fireside ambience.",
+            "boosted_prompt_fr": "Une chanson acoustique intimiste, centrée sur une guitare folk en fingerpicking délicat. La voix, très proche et chargée d’émotion, domine un décor minimaliste, enrichi de touches boisées comme un léger glockenspiel ou des percussions naturelles, évoquant une atmosphère feu de camp."
         },
         {
             "id": "gospel",
@@ -373,7 +393,9 @@
                 "techno",
                 "secular"
             ],
-            "style_weight": 0.8
+            "style_weight": 0.8,
+            "boosted_prompt_en": "The gospel song opens with expressive grand piano chords and swelling Hammond B3 organ. Verses feature gospel choir harmonies that gradually thicken, leading to a rousing chorus. The arrangement crescendos into a dramatic vocal climax with layered call-and-response and dynamic power.",
+            "boosted_prompt_fr": "Chanson gospel spirituelle intense construite sur un piano à queue émotionnel et expressif, soutenu par un orgue Hammond B3 vibrant. Les chœurs massifs apportent des harmonies riches et superposées. L’intensité monte vers un climax vocal puissant, porté par des breaks dynamiques."
         },
         {
             "id": "zouk",
@@ -406,7 +428,9 @@
                 "trap",
                 "screaming"
             ],
-            "style_weight": 0.85
+            "style_weight": 0.85,
+            "boosted_prompt_en": "This Zouk Love song opens with a gentle, syncopated zouk rhythm layered under airy crystal-synth melodies. Delicate percussion and breezy pads enhance a lush tropical feel. Light melodic slap bass adds a playful groove, supporting sensual vocals that float intimately atop the mix.",
+            "boosted_prompt_fr": "Une chanson zouk love antillaise débute sur un rythme zouk romantique posé, basse slap à la fois légère et jouée en mélodie. Les synthés crystal ajoutent brillance à la mélodie principale. Voix sensuelle, arrangements aériens et touches percussives tropicales créent une ambiance moite et enveloppante."
         },
         {
             "id": "salsa",
@@ -439,7 +463,9 @@
                 "heavy guitar",
                 "drum machine"
             ],
-            "style_weight": 0.82
+            "style_weight": 0.82,
+            "boosted_prompt_en": "A high-energy salsa dura track with a pulsating, syncopated montuno piano opening, layered by a sharp brass section delivering bold, staccato hits. Congas and timbales drive relentless polyrhythms, locked into a crisp, dancing clave groove, fueling infectious movement through every section.",
+            "boosted_prompt_fr": "Une salsa dura latine éclate avec un piano montuno rythmé en intro, basse syncopée et percussions dynamiques (congas, timbales) installant une clave irrésistible. Les cuivres percent dans les refrains, offrant des riffs incisifs. Pont instrumental explosif, énergie constante."
         },
         {
             "id": "rnb",
@@ -472,7 +498,9 @@
                 "rock",
                 "country"
             ],
-            "style_weight": 0.8
+            "style_weight": 0.8,
+            "boosted_prompt_en": "Lush silky synth pads set a seductive atmosphere as velvety sub bass grounds the track. Finger snaps accent crisp programmed drums, while melismatic vocals glide atop, weaving runs and harmonies. Subtle electric piano and ethereal layers add depth through the verses and chorus.",
+            "boosted_prompt_fr": "Intro doux avec nappes de synthés soyeuses et claquements de doigts espacés, basse sub profonde s'installe au premier couplet. Voix principale riche en mélismes sur une ligne sensuelle, progression relevée par des harmonies vocales et quelques touches de Rhodes en arrière-plan, groove lent et suave tout du long."
         },
         {
             "id": "jazz",
@@ -504,7 +532,9 @@
                 "distorted guitar",
                 "pop synth"
             ],
-            "style_weight": 0.75
+            "style_weight": 0.75,
+            "boosted_prompt_en": "A smoky jazz club vibe unfolds with a walking double bass laying a rich foundation, sophisticated swing piano featuring tasteful comping, and subtle brushwork on drums setting a soft groove. Melodious tenor saxophone weaves soulful lines throughout, supporting sultry crooner or diva vocals.",
+            "boosted_prompt_fr": "Ambiance jazz club feutré : intro piano swing sophistiqué et contrebasse en walking. La batterie aux balais insuffle une pulsation discrète, tandis qu’un saxophone ténor mélodieux dialogue avec la voix expressive, crooner ou diva. Le solo central laisse respirer chaque instrument."
         },
         {
             "id": "fusion",
@@ -536,7 +566,9 @@
                 "simple",
                 "repetitive"
             ],
-            "style_weight": 0.65
+            "style_weight": 0.65,
+            "boosted_prompt_en": "This experimental cinematic fusion opens with layered traditional strings and electronic drones, building intricate hybrid rhythms that weave hand percussion with processed beats. Orchestral brass and synth pads create expansive textures; dynamic flourishes and unexpected timbral shifts drive intensity.",
+            "boosted_prompt_fr": "Ce morceau expérimental fusionne cordes traditionnelles, percussions ethniques et chants gutturaux avec synthétiseurs modulaires et glitch électro. Les rythmes hybrides alternent structures irrégulières et pulsations profondes. L'orchestration évolue vers des couches sonores sophistiquées et immersives."
         }
     ],
     "categories": [

@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Mic, Square, Play, Trash2 } from "lucide-react";
 
 interface AudioRecorderProps {
@@ -16,6 +16,15 @@ export function AudioRecorder({ onAudioCaptured, onClear }: AudioRecorderProps) 
 
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
+
+    // Cleanup object URL on unmount to prevent memory leaks
+    useEffect(() => {
+        return () => {
+            if (audioUrl) {
+                URL.revokeObjectURL(audioUrl);
+            }
+        };
+    }, [audioUrl]);
 
     const startRecording = async () => {
         try {
@@ -55,6 +64,9 @@ export function AudioRecorder({ onAudioCaptured, onClear }: AudioRecorderProps) 
     };
 
     const handleClear = () => {
+        if (audioUrl) {
+            URL.revokeObjectURL(audioUrl);
+        }
         setAudioBlob(null);
         setAudioUrl(null);
         onClear();

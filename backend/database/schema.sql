@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS projects (
   mode TEXT NOT NULL CHECK (mode IN ('TEXT', 'CONTEXT')),
   language TEXT NOT NULL DEFAULT 'fr' CHECK (language IN ('fr', 'en')),
   style_id TEXT NOT NULL,
+  custom_style_text TEXT,
   context_input TEXT,
   lyrics_final TEXT,
   status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'generating', 'completed', 'failed')),

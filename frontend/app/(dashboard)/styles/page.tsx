@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Play, Pause, Info } from "lucide-react";
+import { API_BASE_URL } from "@/lib/api/client";
 
 interface Style {
     id: string;
@@ -24,7 +25,7 @@ export default function StylesPage() {
 
     const fetchStyles = async () => {
         try {
-            const response = await fetch("http://localhost:8000/api/v1/styles/");
+            const response = await fetch(`${API_BASE_URL}/api/v1/styles/`);
             const data = await response.json();
             setStyles(data.styles || data || []);
         } catch (error) {
