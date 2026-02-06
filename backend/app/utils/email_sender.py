@@ -38,12 +38,16 @@ def send_notification_email(to_email: str, track_title: str, style_id: str, shar
 
     msg.attach(MIMEText(html, "html"))
 
-    try:
-        with smtplib.SMTP_SSL(settings.SMTP_HOST, settings.SMTP_PORT, timeout=10) as server:
-            server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
-            server.sendmail(settings.SMTP_USER, to_email, msg.as_string())
-        print(f"📧 Email sent to {to_email}")
-        return True
-    except Exception as e:
-        print(f"⚠️ SMTP error: {e}")
-        return False
+    for attempt in range(3):
+        try:
+            with smtplib.SMTP_SSL(settings.SMTP_HOST, settings.SMTP_PORT, timeout=30) as server:
+                server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
+                server.sendmail(settings.SMTP_USER, to_email, msg.as_string())
+            print(f"📧 Email sent to {to_email}")
+            return True
+        except Exception as e:
+            print(f"⚠️ SMTP error (attempt {attempt + 1}/3): {e}")
+            if attempt < 2:
+                import time
+                time.sleep(2)
+    return False
