@@ -615,16 +615,53 @@ export default function CreditsPage() {
                 <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
                 <h2 className="text-2xl font-bold mb-2">Paiement echoue</h2>
                 <p className="text-white/60 mb-6">{error || "Une erreur est survenue"}</p>
-                <button
-                  onClick={() => {
-                    setPaymentStatus("idle");
-                    setError("");
-                    setProcessing(false);
-                  }}
-                  className="bg-white/10 text-white font-bold px-8 py-3 rounded-xl hover:bg-white/20 transition-colors"
-                >
-                  Reessayer
-                </button>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  {txRef && (
+                    <button
+                      onClick={async () => {
+                        setError("");
+                        setProcessing(true);
+                        try {
+                          const supabase = createClient();
+                          const { data: { session } } = await supabase.auth.getSession();
+                          const res = await fetch(`${API_BASE}/payments/charge-status/${txRef}`, {
+                            headers: session?.access_token
+                              ? { Authorization: `Bearer ${session.access_token}` }
+                              : {},
+                          });
+                          const data: ChargeStatusResponse = await res.json();
+                          if (data.status === "successful") {
+                            setPaymentStatus("successful");
+                          } else if (data.status === "failed") {
+                            setError(data.message || "Paiement non trouve");
+                          } else {
+                            setError("Paiement toujours en attente. Reessayez dans quelques instants.");
+                          }
+                        } catch {
+                          setError("Erreur de verification");
+                        } finally {
+                          setProcessing(false);
+                        }
+                      }}
+                      disabled={processing}
+                      className="bg-primary text-white font-bold px-8 py-3 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+                    >
+                      {processing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                      Verifier mon paiement
+                    </button>
+                  )}
+                  <button
+                    onClick={() => {
+                      setPaymentStatus("idle");
+                      setError("");
+                      setProcessing(false);
+                      setTxRef(null);
+                    }}
+                    className="bg-white/10 text-white font-bold px-8 py-3 rounded-xl hover:bg-white/20 transition-colors"
+                  >
+                    Reessayer
+                  </button>
+                </div>
               </div>
             )}
           </div>

@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 from typing import List
+from datetime import datetime, timezone
 import logging
 import uuid
 
@@ -283,6 +284,47 @@ async def get_charge_status(
                 tx_ref=tx_ref
             )
 
+        # If already marked as expired/failed locally
+        if transaction["status"] in ("expired", "failed"):
+            return ChargeStatusResponse(
+                status="failed",
+                message="Transaction expired or failed",
+                tx_ref=tx_ref
+            )
+
+        # Check transaction age — expire after 5 minutes of pending
+        created_at = transaction.get("created_at")
+        if created_at:
+            try:
+                if isinstance(created_at, str):
+                    created_dt = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
+                else:
+                    created_dt = created_at
+                age_seconds = (datetime.now(timezone.utc) - created_dt).total_seconds()
+                if age_seconds > 300:  # 5 minutes
+                    # Check one last time with Flutterwave before expiring
+                    metadata = transaction.get("metadata", {})
+                    flw_ref = metadata.get("flw_ref") if isinstance(metadata, dict) else None
+                    final_check = await flutterwave_service.get_charge_status(tx_ref, flw_ref)
+
+                    if final_check["status"] == "successful":
+                        _complete_transaction_and_credit(tx_ref, str(final_check.get("flw_id", "")))
+                        return ChargeStatusResponse(
+                            status="successful",
+                            message="Payment completed",
+                            tx_ref=tx_ref
+                        )
+
+                    # Mark as expired
+                    supabase.update("transactions", {"status": "expired"}, {"id": tx_ref, "status": "pending"})
+                    return ChargeStatusResponse(
+                        status="failed",
+                        message="Transaction expiree. Si vous avez paye, contactez le support.",
+                        tx_ref=tx_ref
+                    )
+            except Exception as e:
+                logger.warning("Age check error for %s: %s", tx_ref, e)
+
         # Get flw_ref from metadata if available
         metadata = transaction.get("metadata", {})
         flw_ref = metadata.get("flw_ref") if isinstance(metadata, dict) else None
@@ -293,6 +335,10 @@ async def get_charge_status(
         # If successful, atomically update transaction and credits
         if result["status"] == "successful":
             _complete_transaction_and_credit(tx_ref, str(result.get("flw_id", "")))
+
+        # If Flutterwave says failed, mark locally too
+        if result["status"] == "failed":
+            supabase.update("transactions", {"status": "failed"}, {"id": tx_ref, "status": "pending"})
 
         return ChargeStatusResponse(
             status=result["status"],
