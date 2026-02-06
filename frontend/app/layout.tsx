@@ -109,6 +109,11 @@ export default function RootLayout({
             </head>
             <body className="font-sans bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen">
                 {children}
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}`,
+                    }}
+                />
             </body>
         </html>
     );

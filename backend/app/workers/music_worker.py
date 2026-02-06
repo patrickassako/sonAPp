@@ -21,13 +21,14 @@ from app.providers import get_suno_provider
 from app.utils.credits import debit_credits_supabase, refund_credits_supabase
 from app.config import settings
 from app.utils.email_sender import send_notification_email
+from app.utils.web_push import send_push_notification
 
 
 import asyncio
 
 
 def _send_notification(client, job_id: str, project_id: str, project: dict):
-    """Send email notification if user opted in."""
+    """Send notification (email or push) if user opted in."""
     try:
         prefs = client.select("notification_preferences", filters={"job_id": job_id}, limit=1)
         if not prefs:
@@ -36,19 +37,32 @@ def _send_notification(client, job_id: str, project_id: str, project: dict):
         if pref.get("notified"):
             return
 
-        # Get image_url from audio files
-        audio_files = client.select("audio_files", filters={"job_id": job_id}, limit=1)
-        image_url = audio_files[0].get("image_url", "") if audio_files else ""
-
+        channel = pref.get("channel", "email")
         share_url = f"{settings.FRONTEND_URL}/share/{project_id}"
+        project_url = f"{settings.FRONTEND_URL}/projects/{project_id}"
+        track_title = project.get("title", "Votre chanson")
 
-        sent = send_notification_email(
-            to_email=pref["destination"],
-            track_title=project.get("title", ""),
-            style_id=project.get("style_id", ""),
-            share_url=share_url,
-            image_url=image_url,
-        )
+        sent = False
+
+        if channel == "push":
+            sent = send_push_notification(
+                subscription_json=pref["destination"],
+                title=f"{track_title} est prête !",
+                body="Votre chanson a été générée avec succès. Cliquez pour l'écouter.",
+                url=project_url,
+            )
+        else:
+            # Default: email
+            audio_files = client.select("audio_files", filters={"job_id": job_id}, limit=1)
+            image_url = audio_files[0].get("image_url", "") if audio_files else ""
+
+            sent = send_notification_email(
+                to_email=pref["destination"],
+                track_title=track_title,
+                style_id=project.get("style_id", ""),
+                share_url=share_url,
+                image_url=image_url,
+            )
 
         if sent:
             client.update("notification_preferences", {"notified": True}, {"id": pref["id"]})

@@ -57,6 +57,11 @@ class Settings(BaseSettings):
     # Frontend URL (for share links in notifications)
     FRONTEND_URL: str = "http://localhost:3000"
 
+    # VAPID (for Web Push notifications)
+    VAPID_PUBLIC_KEY: str | None = None
+    VAPID_PRIVATE_KEY: str | None = None
+    VAPID_CLAIMS_EMAIL: str = "mailto:service@bimzik.com"
+
     # Storage
     UPLOAD_DIR: str = "./uploads"
     

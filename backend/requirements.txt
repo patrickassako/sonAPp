@@ -31,5 +31,8 @@ slowapi>=0.1.9
 # Payment
 requests>=2.31
 
+# Web Push
+pywebpush>=1.14.0
+
 # Utils
 python-dateutil>=2.8

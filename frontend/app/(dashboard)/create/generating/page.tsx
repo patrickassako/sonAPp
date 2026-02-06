@@ -15,13 +15,92 @@ export default function GeneratingPage() {
     );
 }
 
+function urlBase64ToUint8Array(base64String: string) {
+    const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+    const rawData = atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
+
 function NotificationOptIn({ jobId }: { jobId: string }) {
     const [destination, setDestination] = useState("");
     const [submitting, setSubmitting] = useState(false);
     const [subscribed, setSubscribed] = useState(false);
+    const [subscribedChannel, setSubscribedChannel] = useState<"push" | "email">("push");
     const [error, setError] = useState("");
+    const [pushSupported, setPushSupported] = useState(true);
+    const [pushDenied, setPushDenied] = useState(false);
 
-    const handleSubscribe = async () => {
+    useEffect(() => {
+        const supported = "serviceWorker" in navigator && "PushManager" in window;
+        setPushSupported(supported);
+        if (supported && Notification.permission === "denied") {
+            setPushDenied(true);
+        }
+    }, []);
+
+    const sendSubscription = async (channel: string, dest: string) => {
+        const supabase = createClient();
+        const { data: { session } } = await supabase.auth.getSession();
+
+        const response = await fetch(`${API_BASE_URL}/api/v1/notifications/subscribe`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${session?.access_token}`,
+            },
+            body: JSON.stringify({
+                job_id: jobId,
+                channel,
+                destination: dest,
+            }),
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.detail || "Erreur lors de l'inscription");
+        }
+    };
+
+    const handlePushSubscribe = async () => {
+        setError("");
+        setSubmitting(true);
+        try {
+            const permission = await Notification.requestPermission();
+            if (permission !== "granted") {
+                setPushDenied(true);
+                setSubmitting(false);
+                return;
+            }
+
+            // Get VAPID key from backend
+            const vapidRes = await fetch(`${API_BASE_URL}/api/v1/notifications/vapid-key`);
+            const vapidData = await vapidRes.json();
+            if (!vapidRes.ok) {
+                throw new Error("Push non configuré sur le serveur");
+            }
+
+            const registration = await navigator.serviceWorker.ready;
+            const subscription = await registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(vapidData.vapid_public_key),
+            });
+
+            await sendSubscription("push", JSON.stringify(subscription.toJSON()));
+            setSubscribedChannel("push");
+            setSubscribed(true);
+        } catch (err: any) {
+            setError(err.message || "Erreur lors de l'activation");
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const handleEmailSubscribe = async () => {
         setError("");
         if (!destination.trim()) {
             setError("Entrez votre email");
@@ -30,30 +109,11 @@ function NotificationOptIn({ jobId }: { jobId: string }) {
 
         setSubmitting(true);
         try {
-            const supabase = createClient();
-            const { data: { session } } = await supabase.auth.getSession();
-
-            const response = await fetch(`${API_BASE_URL}/api/v1/notifications/subscribe`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${session?.access_token}`,
-                },
-                body: JSON.stringify({
-                    job_id: jobId,
-                    destination: destination.trim(),
-                }),
-            });
-
-            const data = await response.json();
-            if (!response.ok) {
-                setError(data.detail || "Erreur lors de l'inscription");
-                return;
-            }
-
+            await sendSubscription("email", destination.trim());
+            setSubscribedChannel("email");
             setSubscribed(true);
-        } catch {
-            setError("Erreur réseau");
+        } catch (err: any) {
+            setError(err.message || "Erreur réseau");
         } finally {
             setSubmitting(false);
         }
@@ -65,36 +125,62 @@ function NotificationOptIn({ jobId }: { jobId: string }) {
                 <div className="flex items-center gap-2 justify-center text-green-400">
                     <Bell className="w-4 h-4" />
                     <span className="text-sm font-medium">
-                        Vous serez notifié par email ({destination})
+                        {subscribedChannel === "push"
+                            ? "Notifications push activées"
+                            : `Vous serez notifié par email (${destination})`}
                     </span>
                 </div>
             </div>
         );
     }
 
+    const showEmailFallback = !pushSupported || pushDenied;
+
     return (
         <div className="mt-8 p-5 rounded-xl bg-white/5 border border-white/10">
-            <p className="text-sm text-white/70 mb-4 flex items-center gap-2 justify-center">
-                <Mail className="w-4 h-4" />
-                Recevez un lien vers votre track par email :
-            </p>
-
-            <div className="flex gap-2">
-                <input
-                    type="email"
-                    value={destination}
-                    onChange={(e) => setDestination(e.target.value)}
-                    placeholder="votre@email.com"
-                    className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-primary"
-                />
-                <button
-                    onClick={handleSubscribe}
-                    disabled={submitting}
-                    className="bg-primary hover:bg-primary/90 disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
-                >
-                    {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : "Activer"}
-                </button>
-            </div>
+            {!showEmailFallback ? (
+                <>
+                    <p className="text-sm text-white/70 mb-4 flex items-center gap-2 justify-center">
+                        <Bell className="w-4 h-4" />
+                        Recevez une notification quand votre track est prête :
+                    </p>
+                    <button
+                        onClick={handlePushSubscribe}
+                        disabled={submitting}
+                        className="w-full bg-primary hover:bg-primary/90 disabled:opacity-50 text-white text-sm font-medium px-4 py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+                    >
+                        {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : (
+                            <>
+                                <Bell className="w-4 h-4" />
+                                Activer les notifications
+                            </>
+                        )}
+                    </button>
+                </>
+            ) : (
+                <>
+                    <p className="text-sm text-white/70 mb-4 flex items-center gap-2 justify-center">
+                        <Mail className="w-4 h-4" />
+                        Recevez un lien vers votre track par email :
+                    </p>
+                    <div className="flex gap-2">
+                        <input
+                            type="email"
+                            value={destination}
+                            onChange={(e) => setDestination(e.target.value)}
+                            placeholder="votre@email.com"
+                            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-primary"
+                        />
+                        <button
+                            onClick={handleEmailSubscribe}
+                            disabled={submitting}
+                            className="bg-primary hover:bg-primary/90 disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+                        >
+                            {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : "Activer"}
+                        </button>
+                    </div>
+                </>
+            )}
 
             {error && <p className="text-red-400 text-xs mt-2">{error}</p>}
         </div>
@@ -110,6 +196,7 @@ function GeneratingContent() {
     const [audioUrl, setAudioUrl] = useState("");
     const [error, setError] = useState("");
     const [videoPhase, setVideoPhase] = useState(false);
+    const [projectId, setProjectId] = useState<string | null>(null);
 
     useEffect(() => {
         if (!jobId) return;
@@ -117,29 +204,67 @@ function GeneratingContent() {
         let attempts = 0;
         const maxAttempts = 80;
         let delay = 3000;
+        let consecutiveErrors = 0;
         let timeoutId: NodeJS.Timeout;
         const controller = new AbortController();
+
+        const getToken = async () => {
+            const supabase = createClient();
+            // Refresh session if needed (prevents expired token issues)
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                // Try refreshing
+                const { data } = await supabase.auth.refreshSession();
+                return data.session?.access_token;
+            }
+            return session.access_token;
+        };
 
         const checkStatus = async () => {
             attempts++;
             if (attempts > maxAttempts) {
                 setStatus("failed");
-                setError("La génération a pris trop de temps. Veuillez réessayer.");
+                setError("La génération a pris trop de temps. Vérifiez votre projet, la musique a peut-être été générée.");
                 return;
             }
 
             try {
-                const supabase = createClient();
-                const { data: { session } } = await supabase.auth.getSession();
+                const token = await getToken();
+                if (!token) {
+                    setStatus("failed");
+                    setError("Session expirée. Reconnectez-vous et vérifiez vos projets.");
+                    return;
+                }
 
                 const response = await fetch(`${API_BASE_URL}/api/v1/generate/jobs/${jobId}`, {
-                    headers: {
-                        Authorization: `Bearer ${session?.access_token}`
-                    },
+                    headers: { Authorization: `Bearer ${token}` },
                     signal: controller.signal,
                 });
 
+                // Handle HTTP errors explicitly
+                if (!response.ok) {
+                    consecutiveErrors++;
+                    console.warn(`Poll error ${response.status} (attempt ${consecutiveErrors})`);
+                    // After 5 consecutive errors, show failure
+                    if (consecutiveErrors >= 5) {
+                        setStatus("failed");
+                        setError("Impossible de vérifier le statut. Vérifiez votre projet.");
+                        return;
+                    }
+                    // Otherwise retry
+                    delay = Math.min(delay * 1.15, 8000);
+                    timeoutId = setTimeout(checkStatus, delay);
+                    return;
+                }
+
+                // Reset consecutive error count on success
+                consecutiveErrors = 0;
                 const data = await response.json();
+
+                // Store project_id for fallback navigation
+                if (data.project_id && !projectId) {
+                    setProjectId(data.project_id);
+                }
 
                 if (data.status === "completed") {
                     const vs = data.video_status;
@@ -168,7 +293,13 @@ function GeneratingContent() {
                 }
             } catch (error: any) {
                 if (error.name === "AbortError") return;
+                consecutiveErrors++;
                 console.error("Error checking status:", error);
+                if (consecutiveErrors >= 5) {
+                    setStatus("failed");
+                    setError("Erreur réseau. Vérifiez votre connexion et consultez vos projets.");
+                    return;
+                }
             }
 
             delay = Math.min(delay * 1.15, 8000);
@@ -234,17 +365,26 @@ function GeneratingContent() {
                         <h1 className="text-2xl font-bold mb-4">Échec de la génération</h1>
                         <p className="text-white/60 mb-8">{error}</p>
 
-                        <div className="flex gap-4 justify-center">
-                            <Link href="/create">
-                                <button className="bg-primary hover:bg-primary/90 text-white font-bold px-6 py-3 rounded-xl">
-                                    Réessayer
-                                </button>
-                            </Link>
-                            <Link href="/dashboard">
-                                <button className="border border-white/10 hover:bg-white/5 text-white font-bold px-6 py-3 rounded-xl">
-                                    Dashboard
-                                </button>
-                            </Link>
+                        <div className="flex flex-col gap-3 items-center">
+                            {projectId && (
+                                <Link href={`/projects/${projectId}`}>
+                                    <button className="bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-3 rounded-xl">
+                                        Voir mon projet
+                                    </button>
+                                </Link>
+                            )}
+                            <div className="flex gap-4">
+                                <Link href="/create">
+                                    <button className="bg-primary hover:bg-primary/90 text-white font-bold px-6 py-3 rounded-xl">
+                                        Réessayer
+                                    </button>
+                                </Link>
+                                <Link href="/dashboard">
+                                    <button className="border border-white/10 hover:bg-white/5 text-white font-bold px-6 py-3 rounded-xl">
+                                        Dashboard
+                                    </button>
+                                </Link>
+                            </div>
                         </div>
                     </>
                 )}

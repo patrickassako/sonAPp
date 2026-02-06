@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS notification_preferences (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   job_id UUID REFERENCES generation_jobs(id) ON DELETE CASCADE,
   user_id UUID REFERENCES profiles(id),
-  channel TEXT NOT NULL CHECK (channel IN ('whatsapp', 'email')),
+  channel TEXT NOT NULL CHECK (channel IN ('whatsapp', 'email', 'push')),
   destination TEXT NOT NULL,
   notified BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW()
