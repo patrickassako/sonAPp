@@ -145,11 +145,11 @@ export default function CreditsPage() {
     }
   }, [customerInfo.country]);
 
-  // Polling for Mobile Money status (max 3 minutes = 60 polls * 3s)
+  // Polling for Mobile Money status (max 2 minutes = 24 polls * 5s)
   useEffect(() => {
     if (processing && paymentMethod === "mobile_money" && txRef && paymentStatus === "pending") {
       let attempts = 0;
-      const maxAttempts = 60;
+      const maxAttempts = 24;
       const controller = new AbortController();
 
       const interval = setInterval(async () => {
@@ -157,7 +157,7 @@ export default function CreditsPage() {
         if (attempts > maxAttempts) {
           clearInterval(interval);
           setPaymentStatus("failed");
-          setError("Delai d'attente depasse. Verifiez votre telephone ou contactez le support.");
+          setError("Delai d'attente depasse. Si vous avez valide le paiement, vos credits seront ajoutes automatiquement.");
           setProcessing(false);
           return;
         }
@@ -189,7 +189,7 @@ export default function CreditsPage() {
             console.error("Status check error:", err);
           }
         }
-      }, 3000);
+      }, 5000);
 
       return () => {
         clearInterval(interval);
@@ -568,9 +568,20 @@ export default function CreditsPage() {
                     <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-3" />
                     <h3 className="font-bold mb-2">En attente de validation</h3>
                     <p className="text-white/60 text-sm mb-3">{instructions}</p>
-                    <p className="text-xs text-white/40">
+                    <p className="text-xs text-white/40 mb-4">
                       Veuillez valider le paiement sur votre telephone...
                     </p>
+                    <button
+                      onClick={() => {
+                        setProcessing(false);
+                        setPaymentStatus("idle");
+                        setTxRef(null);
+                        setError("");
+                      }}
+                      className="text-sm text-white/50 hover:text-white underline transition-colors"
+                    >
+                      Annuler
+                    </button>
                   </div>
                 )}
 
