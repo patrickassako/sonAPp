@@ -55,8 +55,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     {/* Language Switcher */}
                     <LanguageSwitcher />
 
-                    {/* User Avatar */}
-                    <Link href="/settings" className="relative group">
+                    {/* User Avatar — hidden on mobile (accessible via bottom nav) */}
+                    <Link href="/settings" className="relative group hidden sm:block">
                         <div className="w-10 h-10 rounded-full bg-[#1e1e1e] border-2 border-primary/20 flex items-center justify-center overflow-hidden group-hover:border-primary transition-colors">
                             <UserIcon className="w-5 h-5 text-white/60 group-hover:text-white" />
                         </div>
