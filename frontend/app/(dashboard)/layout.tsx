@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useWallet } from "@/lib/hooks/useWallet";
 import { useTranslation } from "@/i18n/useTranslation";
 import { LanguageSwitcher } from "@/components/atoms/LanguageSwitcher";
+import { PushNotificationBanner } from "@/components/atoms/PushNotificationBanner";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
@@ -63,6 +64,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </Link>
                 </div>
             </header>
+
+            {/* Push Notification Banner */}
+            {!isCreateWizard && <div className="max-w-[1000px] w-full mx-auto mt-4"><PushNotificationBanner /></div>}
 
             {/* Main Content */}
             <main className="flex-1 flex justify-center py-8 px-4 md:px-10">

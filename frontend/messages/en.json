@@ -58,7 +58,11 @@
     },
     "dashboardLayout": {
         "credits_one": "{count} Credit",
-        "credits_other": "{count} Credits"
+        "credits_other": "{count} Credits",
+        "pushBanner": "Enable notifications to know when your tracks are ready",
+        "pushBannerButton": "Enable",
+        "pushBannerEnabled": "Notifications enabled",
+        "pushBannerDenied": "Notifications blocked. Enable them in your browser settings."
     },
     "dashboard": {
         "heroTitle": "Ready to make some noise?",

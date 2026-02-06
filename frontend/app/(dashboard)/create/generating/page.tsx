@@ -43,6 +43,17 @@ function NotificationOptIn({ jobId }: { jobId: string }) {
         if (supported && Notification.permission === "denied") {
             setPushDenied(true);
         }
+
+        // Auto-subscribe if user already enabled push from dashboard
+        const storedSub = localStorage.getItem("bimzik_push_subscription");
+        if (storedSub && supported) {
+            sendSubscription("push", storedSub)
+                .then(() => {
+                    setSubscribedChannel("push");
+                    setSubscribed(true);
+                })
+                .catch(() => {}); // silent fail, user can still manually subscribe
+        }
     }, []);
 
     const sendSubscription = async (channel: string, dest: string) => {

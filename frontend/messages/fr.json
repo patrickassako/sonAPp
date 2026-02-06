@@ -58,7 +58,11 @@
     },
     "dashboardLayout": {
         "credits_one": "{count} Credit",
-        "credits_other": "{count} Credits"
+        "credits_other": "{count} Credits",
+        "pushBanner": "Activez les notifications pour savoir quand vos morceaux sont prêts",
+        "pushBannerButton": "Activer",
+        "pushBannerEnabled": "Notifications activées",
+        "pushBannerDenied": "Notifications bloquées. Activez-les dans les paramètres du navigateur."
     },
     "dashboard": {
         "heroTitle": "Pr\u00eat \u00e0 cr\u00e9er de la musique ?",
