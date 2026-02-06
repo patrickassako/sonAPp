@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { API_BASE_URL } from "@/lib/api/client";
 import { Loader2 } from "lucide-react";
+import { useTranslation } from "@/i18n/useTranslation";
 
 interface SharedAudioFile {
     id: string;
@@ -25,6 +26,7 @@ interface SharedProject {
 }
 
 export default function SharePlayerClient({ projectId }: { projectId: string }) {
+    const { t } = useTranslation();
     const [project, setProject] = useState<SharedProject | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -107,13 +109,13 @@ export default function SharePlayerClient({ projectId }: { projectId: string }) 
         return (
             <div className="min-h-screen flex flex-col items-center justify-center gap-6 bg-[#0a0a0a] text-white px-4">
                 <span className="material-symbols-outlined text-6xl text-white/20">music_off</span>
-                <h1 className="text-2xl font-bold">Track Not Found</h1>
-                <p className="text-white/50 text-center">This track may have been removed or doesn&apos;t exist.</p>
+                <h1 className="text-2xl font-bold">{t("share.trackNotFound")}</h1>
+                <p className="text-white/50 text-center">{t("share.trackNotFoundDesc")}</p>
                 <Link
                     href="/"
                     className="mt-4 px-8 py-3 bg-[#f49d25] text-black font-bold rounded-full hover:scale-105 transition-transform"
                 >
-                    Create Your Own Music
+                    {t("share.createYourOwn")}
                 </Link>
             </div>
         );
@@ -133,7 +135,7 @@ export default function SharePlayerClient({ projectId }: { projectId: string }) 
                     href="/create"
                     className="px-5 py-2 bg-[#f49d25] text-black text-sm font-bold rounded-full hover:scale-105 transition-transform"
                 >
-                    Create Your Own
+                    {t("share.createYourOwnShort")}
                 </Link>
             </header>
 
@@ -173,7 +175,7 @@ export default function SharePlayerClient({ projectId }: { projectId: string }) 
                         <p className="text-white/50 text-sm">
                             {project.style_id && <span className="text-[#f49d25]">#{project.style_id}</span>}
                             {project.style_id && " · "}
-                            Created {new Date(project.created_at).toLocaleDateString()}
+                            {t("share.created")} {new Date(project.created_at).toLocaleDateString()}
                         </p>
                     </div>
 
@@ -254,7 +256,7 @@ export default function SharePlayerClient({ projectId }: { projectId: string }) 
                             className="flex items-center gap-2 px-8 py-3 bg-white/5 border border-white/10 rounded-full text-white font-semibold hover:bg-white/10 transition-colors"
                         >
                             <span className="material-symbols-outlined text-[20px]">download</span>
-                            Download Track
+                            {t("share.downloadTrack")}
                         </a>
                     )}
                 </div>
@@ -263,11 +265,11 @@ export default function SharePlayerClient({ projectId }: { projectId: string }) 
             {/* Footer */}
             <footer className="text-center py-8 border-t border-white/5">
                 <p className="text-white/30 text-sm">
-                    Made with{" "}
+                    {t("share.madeWith")}{" "}
                     <Link href="/" className="text-[#f49d25] hover:underline">
                         BimZik
                     </Link>
-                    {" "}- AI Music Generation
+                    {" "}{t("share.aiMusic")}
                 </p>
             </footer>
         </div>

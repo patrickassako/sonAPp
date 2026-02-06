@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk, Noto_Sans } from "next/font/google";
 import "./globals.css";
+import { LocaleProvider } from "@/i18n/LocaleContext";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space" });
@@ -108,7 +109,9 @@ export default function RootLayout({
                 />
             </head>
             <body className="font-sans bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen">
-                {children}
+                <LocaleProvider>
+                    {children}
+                </LocaleProvider>
                 <script
                     dangerouslySetInnerHTML={{
                         __html: `if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}`,

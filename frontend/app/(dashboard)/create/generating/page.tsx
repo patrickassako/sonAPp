@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Loader2, CheckCircle, XCircle, Music, Mail, Bell } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { API_BASE_URL } from "@/lib/api/client";
+import { useTranslation } from "@/i18n/useTranslation";
 
 export default function GeneratingPage() {
     return (
@@ -27,6 +28,7 @@ function urlBase64ToUint8Array(base64String: string) {
 }
 
 function NotificationOptIn({ jobId }: { jobId: string }) {
+    const { t } = useTranslation();
     const [destination, setDestination] = useState("");
     const [submitting, setSubmitting] = useState(false);
     const [subscribed, setSubscribed] = useState(false);
@@ -62,7 +64,7 @@ function NotificationOptIn({ jobId }: { jobId: string }) {
 
         const data = await response.json();
         if (!response.ok) {
-            throw new Error(data.detail || "Erreur lors de l'inscription");
+            throw new Error(data.detail || t("generating.notifError"));
         }
     };
 
@@ -77,11 +79,10 @@ function NotificationOptIn({ jobId }: { jobId: string }) {
                 return;
             }
 
-            // Get VAPID key from backend
             const vapidRes = await fetch(`${API_BASE_URL}/api/v1/notifications/vapid-key`);
             const vapidData = await vapidRes.json();
             if (!vapidRes.ok) {
-                throw new Error("Push non configuré sur le serveur");
+                throw new Error(t("generating.notifPushNotConfigured"));
             }
 
             const registration = await navigator.serviceWorker.ready;
@@ -94,7 +95,7 @@ function NotificationOptIn({ jobId }: { jobId: string }) {
             setSubscribedChannel("push");
             setSubscribed(true);
         } catch (err: any) {
-            setError(err.message || "Erreur lors de l'activation");
+            setError(err.message || t("generating.notifActivationError"));
         } finally {
             setSubmitting(false);
         }
@@ -103,7 +104,7 @@ function NotificationOptIn({ jobId }: { jobId: string }) {
     const handleEmailSubscribe = async () => {
         setError("");
         if (!destination.trim()) {
-            setError("Entrez votre email");
+            setError(t("generating.notifEmailRequired"));
             return;
         }
 
@@ -113,7 +114,7 @@ function NotificationOptIn({ jobId }: { jobId: string }) {
             setSubscribedChannel("email");
             setSubscribed(true);
         } catch (err: any) {
-            setError(err.message || "Erreur réseau");
+            setError(err.message || t("generating.notifNetworkError"));
         } finally {
             setSubmitting(false);
         }
@@ -126,8 +127,8 @@ function NotificationOptIn({ jobId }: { jobId: string }) {
                     <Bell className="w-4 h-4" />
                     <span className="text-sm font-medium">
                         {subscribedChannel === "push"
-                            ? "Notifications push activées"
-                            : `Vous serez notifié par email (${destination})`}
+                            ? t("generating.notifPushEnabled")
+                            : t("generating.notifEmailEnabled", { email: destination })}
                     </span>
                 </div>
             </div>
@@ -142,7 +143,7 @@ function NotificationOptIn({ jobId }: { jobId: string }) {
                 <>
                     <p className="text-sm text-white/70 mb-4 flex items-center gap-2 justify-center">
                         <Bell className="w-4 h-4" />
-                        Recevez une notification quand votre track est prête :
+                        {t("generating.notifPushPrompt")}
                     </p>
                     <button
                         onClick={handlePushSubscribe}
@@ -152,7 +153,7 @@ function NotificationOptIn({ jobId }: { jobId: string }) {
                         {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : (
                             <>
                                 <Bell className="w-4 h-4" />
-                                Activer les notifications
+                                {t("generating.notifPushButton")}
                             </>
                         )}
                     </button>
@@ -161,14 +162,14 @@ function NotificationOptIn({ jobId }: { jobId: string }) {
                 <>
                     <p className="text-sm text-white/70 mb-4 flex items-center gap-2 justify-center">
                         <Mail className="w-4 h-4" />
-                        Recevez un lien vers votre track par email :
+                        {t("generating.notifEmailPrompt")}
                     </p>
                     <div className="flex gap-2">
                         <input
                             type="email"
                             value={destination}
                             onChange={(e) => setDestination(e.target.value)}
-                            placeholder="votre@email.com"
+                            placeholder={t("generating.notifEmailPlaceholder")}
                             className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-primary"
                         />
                         <button
@@ -176,7 +177,7 @@ function NotificationOptIn({ jobId }: { jobId: string }) {
                             disabled={submitting}
                             className="bg-primary hover:bg-primary/90 disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
                         >
-                            {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : "Activer"}
+                            {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : t("generating.notifEmailButton")}
                         </button>
                     </div>
                 </>
@@ -188,6 +189,7 @@ function NotificationOptIn({ jobId }: { jobId: string }) {
 }
 
 function GeneratingContent() {
+    const { t } = useTranslation();
     const searchParams = useSearchParams();
     const jobId = searchParams.get("job");
 
@@ -210,10 +212,8 @@ function GeneratingContent() {
 
         const getToken = async () => {
             const supabase = createClient();
-            // Refresh session if needed (prevents expired token issues)
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) {
-                // Try refreshing
                 const { data } = await supabase.auth.refreshSession();
                 return data.session?.access_token;
             }
@@ -224,7 +224,7 @@ function GeneratingContent() {
             attempts++;
             if (attempts > maxAttempts) {
                 setStatus("failed");
-                setError("La génération a pris trop de temps. Vérifiez votre projet, la musique a peut-être été générée.");
+                setError(t("generating.descTimeout"));
                 return;
             }
 
@@ -232,7 +232,7 @@ function GeneratingContent() {
                 const token = await getToken();
                 if (!token) {
                     setStatus("failed");
-                    setError("Session expirée. Reconnectez-vous et vérifiez vos projets.");
+                    setError(t("generating.descSessionExpired"));
                     return;
                 }
 
@@ -241,39 +241,32 @@ function GeneratingContent() {
                     signal: controller.signal,
                 });
 
-                // Handle HTTP errors explicitly
                 if (!response.ok) {
                     consecutiveErrors++;
                     console.warn(`Poll error ${response.status} (attempt ${consecutiveErrors})`);
-                    // After 5 consecutive errors, show failure
                     if (consecutiveErrors >= 5) {
                         setStatus("failed");
-                        setError("Impossible de vérifier le statut. Vérifiez votre projet.");
+                        setError(t("generating.descStatusError"));
                         return;
                     }
-                    // Otherwise retry
                     delay = Math.min(delay * 1.15, 8000);
                     timeoutId = setTimeout(checkStatus, delay);
                     return;
                 }
 
-                // Reset consecutive error count on success
                 consecutiveErrors = 0;
                 const data = await response.json();
 
-                // Store project_id for fallback navigation
                 if (data.project_id && !projectId) {
                     setProjectId(data.project_id);
                 }
 
                 if (data.status === "completed") {
                     const vs = data.video_status;
-                    // If video is still processing, keep polling
                     if (vs === "processing") {
                         setVideoPhase(true);
                         setProgress(92);
                     } else {
-                        // No video, or video completed/failed -> redirect
                         setStatus("completed");
                         setProgress(100);
                         setTimeout(() => {
@@ -283,7 +276,7 @@ function GeneratingContent() {
                     }
                 } else if (data.status === "failed") {
                     setStatus("failed");
-                    setError(data.error || "La génération a échoué");
+                    setError(data.error || t("generating.descFailed"));
                     return;
                 } else {
                     setProgress((prev) => {
@@ -297,7 +290,7 @@ function GeneratingContent() {
                 console.error("Error checking status:", error);
                 if (consecutiveErrors >= 5) {
                     setStatus("failed");
-                    setError("Erreur réseau. Vérifiez votre connexion et consultez vos projets.");
+                    setError(t("generating.descNetworkError"));
                     return;
                 }
             }
@@ -331,14 +324,14 @@ function GeneratingContent() {
                         </div>
 
                         <h1 className="text-2xl font-bold mb-4">
-                            {status === "completed" ? "Terminé !" : videoPhase ? "Création du clip vidéo..." : "Création en cours..."}
+                            {status === "completed" ? t("generating.titleDone") : videoPhase ? t("generating.titleVideo") : t("generating.title")}
                         </h1>
                         <p className="text-white/60 mb-8">
                             {status === "completed"
-                                ? "Redirection vers votre chanson..."
+                                ? t("generating.descDone")
                                 : videoPhase
-                                    ? "L'audio est prêt ! Génération du clip vidéo en cours..."
-                                    : "Notre IA compose votre chanson africaine. Cela peut prendre 1-2 minutes."}
+                                    ? t("generating.descVideo")
+                                    : t("generating.descGenerating")}
                         </p>
 
                         <div className="w-full bg-white/10 rounded-full h-2 mb-2">
@@ -349,7 +342,6 @@ function GeneratingContent() {
                         </div>
                         <p className="text-sm text-white/40">{progress}%</p>
 
-                        {/* Notification opt-in (only while generating) */}
                         {status === "generating" && jobId && (
                             <NotificationOptIn jobId={jobId} />
                         )}
@@ -362,21 +354,21 @@ function GeneratingContent() {
                             <XCircle className="w-16 h-16 text-red-500" />
                         </div>
 
-                        <h1 className="text-2xl font-bold mb-4">Échec de la génération</h1>
+                        <h1 className="text-2xl font-bold mb-4">{t("generating.titleFailed")}</h1>
                         <p className="text-white/60 mb-8">{error}</p>
 
                         <div className="flex flex-col gap-3 items-center">
                             {projectId && (
                                 <Link href={`/projects/${projectId}`}>
                                     <button className="bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-3 rounded-xl">
-                                        Voir mon projet
+                                        {t("generating.viewProject")}
                                     </button>
                                 </Link>
                             )}
                             <div className="flex gap-4">
                                 <Link href="/create">
                                     <button className="bg-primary hover:bg-primary/90 text-white font-bold px-6 py-3 rounded-xl">
-                                        Réessayer
+                                        {t("generating.retry")}
                                     </button>
                                 </Link>
                                 <Link href="/dashboard">

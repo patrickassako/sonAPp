@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Play, Pause, Info } from "lucide-react";
 import { API_BASE_URL } from "@/lib/api/client";
+import { useTranslation } from "@/i18n/useTranslation";
 
 interface Style {
     id: string;
@@ -15,6 +16,7 @@ interface Style {
 }
 
 export default function StylesPage() {
+    const { t } = useTranslation();
     const [styles, setStyles] = useState<Style[]>([]);
     const [selectedStyle, setSelectedStyle] = useState<Style | null>(null);
     const [playing, setPlaying] = useState<string | null>(null);
@@ -37,9 +39,9 @@ export default function StylesPage() {
 
     const getCategoryLabel = (category: string): string => {
         const labels: Record<string, string> = {
-            AFRICAN: "🌍 Styles Africains",
-            URBAN: "🎤 Urbain",
-            UNIVERSAL: "🌐 Universel"
+            AFRICAN: `🌍 ${t("styles.categoryAfrican")}`,
+            URBAN: `🎤 ${t("styles.categoryUrban")}`,
+            UNIVERSAL: `🌐 ${t("styles.categoryUniversal")}`
         };
         return labels[category] || category;
     };
@@ -48,10 +50,8 @@ export default function StylesPage() {
         <div className="p-8">
             {/* Header */}
             <div className="mb-8">
-                <h1 className="text-3xl font-bold">Styles Musicaux</h1>
-                <p className="text-white/60 mt-1">
-                    Découvrez notre collection de styles africains authentiques
-                </p>
+                <h1 className="text-3xl font-bold">{t("styles.title")}</h1>
+                <p className="text-white/60 mt-1">{t("styles.subtitle")}</p>
             </div>
 
             {/* Categories */}
@@ -126,7 +126,7 @@ export default function StylesPage() {
 
                         {selectedStyle.instrumentation && (
                             <div className="mb-6">
-                                <h4 className="text-sm font-bold text-white/60 mb-2">Instrumentation</h4>
+                                <h4 className="text-sm font-bold text-white/60 mb-2">{t("styles.instrumentation")}</h4>
                                 <div className="flex flex-wrap gap-2">
                                     {selectedStyle.instrumentation.map((inst, i) => (
                                         <span
@@ -145,13 +145,13 @@ export default function StylesPage() {
                                 onClick={() => setSelectedStyle(null)}
                                 className="flex-1 border border-white/10 hover:bg-white/5 text-white font-bold py-3 rounded-xl"
                             >
-                                Fermer
+                                {t("styles.close")}
                             </button>
                             <a
                                 href={`/create?style=${selectedStyle.id}`}
                                 className="flex-1 bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl text-center"
                             >
-                                Créer avec ce style
+                                {t("styles.createWithStyle")}
                             </a>
                         </div>
                     </div>

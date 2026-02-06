@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Button } from "@/components/atoms/Button";
 import { Sparkles, Zap, Download, Radio, Shield, Play, Pause } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useTranslation } from "@/i18n/useTranslation";
+import { LanguageSwitcher } from "@/components/atoms/LanguageSwitcher";
 
 const HERO_TRACK = {
     title: "Une demande de Saint-Valentin",
@@ -23,6 +25,7 @@ const PREVIEW_TRACKS = [
 ];
 
 export default function LandingPage() {
+    const { t } = useTranslation();
     const audioRef = useRef<HTMLAudioElement>(null);
     const [user, setUser] = useState<any>(null);
     const [playingUrl, setPlayingUrl] = useState<string | null>(null);
@@ -50,7 +53,6 @@ export default function LandingPage() {
         if (!audio) return;
 
         if (playingUrl === url) {
-            // Toggle pause/play for the same track
             if (audio.paused) {
                 audio.play();
             } else {
@@ -60,7 +62,6 @@ export default function LandingPage() {
             return;
         }
 
-        // Switch to new track
         audio.src = url;
         audio.play();
         setPlayingUrl(url);
@@ -173,33 +174,34 @@ export default function LandingPage() {
 
                     <div className="hidden md:flex items-center gap-10">
                         <a href="#how-it-works" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-                            Comment ça marche
+                            {t("landing.nav.howItWorks")}
                         </a>
-                        <Link href="/styles" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-                            Styles
-                        </Link>
+                        <a href="#previews" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
+                            {t("landing.nav.styles")}
+                        </a>
                         <Link href="/pricing" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-                            Tarifs
+                            {t("landing.nav.pricing")}
                         </Link>
                     </div>
 
                     <div className="flex items-center gap-4">
+                        <LanguageSwitcher />
                         {user ? (
                             <Link href="/dashboard">
                                 <button className="bg-gradient-to-r from-primary to-[#FFD700] text-white hover:opacity-90 px-5 py-2 rounded-full text-sm font-bold transition-all">
-                                    Dashboard
+                                    {t("landing.nav.dashboard")}
                                 </button>
                             </Link>
                         ) : (
                             <>
                                 <Link href="/login">
                                     <button className="text-sm font-medium text-white/70 hover:text-white px-4">
-                                        Connexion
+                                        {t("landing.nav.login")}
                                     </button>
                                 </Link>
                                 <Link href="/signup">
                                     <button className="bg-gradient-to-r from-pink-500 to-red-500 text-white hover:opacity-90 px-5 py-2 rounded-full text-sm font-bold transition-all">
-                                        💕 Offre St-Valentin
+                                        💕 {t("landing.nav.valentineOffer")}
                                     </button>
                                 </Link>
                             </>
@@ -227,37 +229,35 @@ export default function LandingPage() {
                         <div className="text-left">
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-500/10 border border-pink-500/30 text-pink-400 text-[10px] font-bold uppercase tracking-widest mb-6">
                                 <span className="flex h-2 w-2">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-500 opacity-75" />
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-500 opacity-75 pointer-events-none" />
                                     <span className="relative inline-flex rounded-full h-2 w-2 bg-pink-500" />
                                 </span>
-                                💕 Offre Saint-Valentin : -20% jusqu'au 14 Février
+                                💕 {t("landing.hero.badge")}
                             </div>
 
                             <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-[1.05]">
-                                Offrez une chanson{" "}
+                                {t("landing.hero.titleStart")}{" "}
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#FFD700]">
-                                    unique au monde
+                                    {t("landing.hero.titleHighlight")}
                                 </span>{" "}
-                                à ceux que vous aimez.
+                                {t("landing.hero.titleEnd")}
                             </h1>
 
                             <p className="text-lg md:text-xl text-white/60 max-w-xl mb-10 leading-relaxed">
-                                Une déclaration d'amour, un mariage, un anniversaire, des excuses sincères ou un hommage... Transformez vos émotions en une chanson personnalisée qui restera gravée pour toujours.
+                                {t("landing.hero.description")}
                             </p>
 
                             <div className="flex flex-col sm:flex-row items-center gap-4">
-                                <Link href={user ? "/create" : "/signup"} className="w-full sm:w-auto">
-                                    <button className="w-full cta-gradient text-white px-8 py-4 rounded-full text-lg font-bold transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2 hover:opacity-90">
-                                        Créer ma chanson maintenant
-                                        <Sparkles className="w-5 h-5" />
-                                    </button>
+                                <Link href={user ? "/create" : "/signup"} className="w-full sm:w-auto cta-gradient text-white px-8 py-4 rounded-full text-lg font-bold transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2 hover:opacity-90">
+                                    {t("landing.hero.cta")}
+                                    <Sparkles className="w-5 h-5" />
                                 </Link>
                                 <button
                                     onClick={toggleHeroPlay}
                                     className="w-full sm:w-auto px-8 py-4 rounded-full text-lg font-bold border border-white/10 hover:bg-white/5 transition-all flex items-center justify-center gap-2"
                                 >
                                     {isHeroPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-                                    {isHeroPlaying ? "Mettre en pause" : "Écouter un exemple"}
+                                    {isHeroPlaying ? t("landing.hero.pause") : t("landing.hero.listenExample")}
                                 </button>
                             </div>
 
@@ -267,7 +267,7 @@ export default function LandingPage() {
                                     <img src="https://i.pravatar.cc/150?img=2" alt="User" className="w-8 h-8 rounded-full border-2 border-[#0a0a0a] object-cover" />
                                     <img src="https://i.pravatar.cc/150?img=3" alt="User" className="w-8 h-8 rounded-full border-2 border-[#0a0a0a] object-cover" />
                                 </div>
-                                <p>+2 500 moments inoubliables créés</p>
+                                <p>{t("landing.hero.socialProof")}</p>
                             </div>
                         </div>
 
@@ -286,7 +286,7 @@ export default function LandingPage() {
 
                                 <div className="flex items-center justify-between mb-8">
                                     <span className="text-xs font-bold text-pink-400 uppercase tracking-widest">💕 Saint-Valentin</span>
-                                    <span className="material-symbols-outlined text-primary">more_horiz</span>
+                                    <span className="text-xs text-white/30 font-mono">BimZik AI</span>
                                 </div>
 
                                 <div
@@ -310,7 +310,7 @@ export default function LandingPage() {
                                 </div>
 
                                 <div className="mb-6">
-                                    <h3 className="text-xl font-bold mb-1">"Une demande de Saint-Valentin"</h3>
+                                    <h3 className="text-xl font-bold mb-1">&quot;Une demande de Saint-Valentin&quot;</h3>
                                     <p className="text-pink-400 text-sm font-medium">💍 Demande en mariage • Afrobeats romantique</p>
                                 </div>
 
@@ -350,10 +350,10 @@ export default function LandingPage() {
                     <div className="w-full max-w-7xl mx-auto mt-20 border-t border-white/5 pt-12">
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                             {[
-                                { icon: <Sparkles className="text-[#FFD700]" />, title: "Unique au monde", desc: "Créée juste pour vous" },
-                                { icon: <Zap className="text-[#FFD700]" />, title: "Prête en 2 min", desc: "Téléchargement instant" },
-                                { icon: <Radio className="text-[#FFD700]" />, title: "Qualité Studio", desc: "Son professionnel" },
-                                { icon: <Shield className="text-[#FFD700]" />, title: "Vos mots, votre voix", desc: "100% personnalisée" }
+                                { icon: <Sparkles className="text-[#FFD700]" />, title: t("landing.features.unique"), desc: t("landing.features.uniqueDesc") },
+                                { icon: <Zap className="text-[#FFD700]" />, title: t("landing.features.fast"), desc: t("landing.features.fastDesc") },
+                                { icon: <Radio className="text-[#FFD700]" />, title: t("landing.features.studio"), desc: t("landing.features.studioDesc") },
+                                { icon: <Shield className="text-[#FFD700]" />, title: t("landing.features.custom"), desc: t("landing.features.customDesc") }
                             ].map((feature, i) => (
                                 <div key={i} className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-lg bg-[#0d0d0d] flex items-center justify-center border border-white/5">
@@ -373,24 +373,24 @@ export default function LandingPage() {
                 <section className="py-24 px-6 bg-[#0d0d0d] border-t border-white/5">
                     <div className="max-w-7xl mx-auto">
                         <div className="text-center mb-16">
-                            <h2 className="text-pink-400 font-bold uppercase tracking-widest text-sm mb-4">Pour chaque moment de vie</h2>
-                            <h3 className="text-4xl md:text-5xl font-bold tracking-tight">Une chanson pour chaque émotion</h3>
+                            <h2 className="text-pink-400 font-bold uppercase tracking-widest text-sm mb-4">{t("landing.occasions.sectionTag")}</h2>
+                            <h3 className="text-4xl md:text-5xl font-bold tracking-tight">{t("landing.occasions.sectionTitle")}</h3>
                         </div>
 
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                             {[
-                                { emoji: "💕", title: "Saint-Valentin", desc: "Déclarez votre amour" },
-                                { emoji: "💍", title: "Demande en mariage", desc: "Le plus beau OUI" },
-                                { emoji: "👰", title: "Mariage", desc: "Votre premier slow" },
-                                { emoji: "🎂", title: "Anniversaire", desc: "Un cadeau unique" },
-                                { emoji: "🙏", title: "Excuses", desc: "Des mots qui touchent" },
-                                { emoji: "🕯️", title: "Hommage", desc: "Un souvenir éternel" },
+                                { emoji: "💕", title: t("landing.occasions.valentine"), desc: t("landing.occasions.valentineDesc") },
+                                { emoji: "💍", title: t("landing.occasions.proposal"), desc: t("landing.occasions.proposalDesc") },
+                                { emoji: "👰", title: t("landing.occasions.wedding"), desc: t("landing.occasions.weddingDesc") },
+                                { emoji: "🎂", title: t("landing.occasions.birthday"), desc: t("landing.occasions.birthdayDesc") },
+                                { emoji: "🙏", title: t("landing.occasions.apology"), desc: t("landing.occasions.apologyDesc") },
+                                { emoji: "🕯️", title: t("landing.occasions.tribute"), desc: t("landing.occasions.tributeDesc") },
                             ].map((occasion, i) => (
-                                <div key={i} className="glass-card p-6 rounded-2xl text-center group hover:ring-1 hover:ring-primary/40 transition-all duration-300 hover:scale-105">
+                                <Link key={i} href={user ? "/create" : "/signup"} className="glass-card p-6 rounded-2xl text-center group hover:ring-1 hover:ring-primary/40 transition-all duration-300 hover:scale-105 cursor-pointer block">
                                     <span className="text-4xl mb-4 block">{occasion.emoji}</span>
                                     <h4 className="font-bold mb-1">{occasion.title}</h4>
                                     <p className="text-white/40 text-xs">{occasion.desc}</p>
-                                </div>
+                                </Link>
                             ))}
                         </div>
                     </div>
@@ -400,9 +400,9 @@ export default function LandingPage() {
                 <section id="previews" className="py-24 px-6 bg-[#0a0a0a] border-t border-white/5">
                     <div className="max-w-7xl mx-auto">
                         <div className="text-center mb-16">
-                            <h2 className="text-primary font-bold uppercase tracking-widest text-sm mb-4">Nos créations</h2>
-                            <h3 className="text-4xl md:text-5xl font-bold tracking-tight">Écoutez des exemples</h3>
-                            <p className="text-white/50 mt-4 max-w-2xl mx-auto">Chaque chanson est unique, créée par notre IA à partir des émotions de nos utilisateurs.</p>
+                            <h2 className="text-primary font-bold uppercase tracking-widest text-sm mb-4">{t("landing.previews.sectionTag")}</h2>
+                            <h3 className="text-4xl md:text-5xl font-bold tracking-tight">{t("landing.previews.sectionTitle")}</h3>
+                            <p className="text-white/50 mt-4 max-w-2xl mx-auto">{t("landing.previews.sectionDesc")}</p>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -441,26 +441,26 @@ export default function LandingPage() {
                 <section id="how-it-works" className="py-24 px-6 bg-[#0a0a0a]">
                     <div className="max-w-7xl mx-auto">
                         <div className="text-center mb-16">
-                            <h2 className="text-primary font-bold uppercase tracking-widest text-sm mb-4">Simple comme bonjour</h2>
-                            <h3 className="text-4xl md:text-5xl font-bold tracking-tight">Comment ça marche ?</h3>
+                            <h2 className="text-primary font-bold uppercase tracking-widest text-sm mb-4">{t("landing.howItWorks.sectionTag")}</h2>
+                            <h3 className="text-4xl md:text-5xl font-bold tracking-tight">{t("landing.howItWorks.sectionTitle")}</h3>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {[
                                 {
                                     icon: "favorite",
-                                    title: "1. Racontez votre histoire",
-                                    desc: "Parlez-nous de la personne, de l'occasion, de ce que vous ressentez. Plus c'est personnel, plus la chanson sera touchante."
+                                    title: t("landing.howItWorks.step1Title"),
+                                    desc: t("landing.howItWorks.step1Desc")
                                 },
                                 {
                                     icon: "music_note",
-                                    title: "2. Choisissez l'ambiance",
-                                    desc: "Afrobeats romantique, Makossa festif, ballade douce... Sélectionnez le style qui correspond à l'émotion que vous voulez transmettre."
+                                    title: t("landing.howItWorks.step2Title"),
+                                    desc: t("landing.howItWorks.step2Desc")
                                 },
                                 {
                                     icon: "card_giftcard",
-                                    title: "3. Offrez l'inoubliable",
-                                    desc: "En 2 minutes, recevez une chanson unique au monde. Téléchargez-la, partagez-la, et créez un souvenir qui durera toute une vie."
+                                    title: t("landing.howItWorks.step3Title"),
+                                    desc: t("landing.howItWorks.step3Desc")
                                 }
                             ].map((step, i) => (
                                 <div key={i} className="glass-card p-10 rounded-2xl group hover:ring-1 hover:ring-primary/40 transition-all duration-300">
@@ -481,53 +481,53 @@ export default function LandingPage() {
 
                     <div className="max-w-4xl mx-auto glass-card rounded-2xl p-12 md:p-16 text-center relative z-10 border-pink-500/20">
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 text-pink-400 text-sm font-bold mb-6">
-                            💕 Offre limitée Saint-Valentin
+                            💕 {t("landing.valentineCta.badge")}
                         </div>
                         <h2 className="text-3xl md:text-5xl font-bold mb-6">
-                            Cette année, offrez plus qu'un cadeau.<br/>
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-red-400">Offrez une émotion.</span>
+                            {t("landing.valentineCta.titleStart")}<br/>
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-red-400">{t("landing.valentineCta.titleHighlight")}</span>
                         </h2>
                         <p className="text-white/60 text-lg mb-10 max-w-2xl mx-auto">
-                            Imaginez sa réaction quand il/elle entendra une chanson écrite rien que pour lui/elle, avec son prénom, votre histoire, vos souvenirs...
+                            {t("landing.valentineCta.description")}
                         </p>
 
                         <Link href="/signup">
                             <button className="bg-gradient-to-r from-pink-500 to-red-500 hover:opacity-90 text-white font-bold px-10 py-5 rounded-full transition-all text-lg shadow-xl shadow-pink-500/20">
-                                Créer ma chanson d'amour 💕
+                                {t("landing.valentineCta.cta")} 💕
                             </button>
                         </Link>
-                        <p className="mt-6 text-white/40 text-sm">-20% avec le code VALENTIN2026 • Valable jusqu'au 14 Février</p>
+                        <p className="mt-6 text-white/40 text-sm">{t("landing.valentineCta.promo")}</p>
                     </div>
                 </section>
 
-                {/* Testimonials placeholder */}
+                {/* Testimonials */}
                 <section className="py-24 px-6 bg-[#0a0a0a]">
                     <div className="max-w-7xl mx-auto">
                         <div className="text-center mb-16">
-                            <h2 className="text-primary font-bold uppercase tracking-widest text-sm mb-4">Ils l'ont fait</h2>
-                            <h3 className="text-4xl md:text-5xl font-bold tracking-tight">Des moments magiques</h3>
+                            <h2 className="text-primary font-bold uppercase tracking-widest text-sm mb-4">{t("landing.testimonials.sectionTag")}</h2>
+                            <h3 className="text-4xl md:text-5xl font-bold tracking-tight">{t("landing.testimonials.sectionTitle")}</h3>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {[
                                 {
-                                    quote: "Ma femme a pleuré de joie. 15 ans de mariage résumés en 3 minutes de chanson. Le plus beau cadeau que je lui ai fait.",
-                                    author: "Marc K.",
-                                    occasion: "Anniversaire de mariage"
+                                    quote: t("landing.testimonials.quote1"),
+                                    author: t("landing.testimonials.author1"),
+                                    occasion: t("landing.testimonials.occasion1")
                                 },
                                 {
-                                    quote: "Elle a dit OUI avant même que la chanson soit finie ! Notre histoire d'amour chantée, c'était magique.",
-                                    author: "Thierry M.",
-                                    occasion: "Demande en mariage"
+                                    quote: t("landing.testimonials.quote2"),
+                                    author: t("landing.testimonials.author2"),
+                                    occasion: t("landing.testimonials.occasion2")
                                 },
                                 {
-                                    quote: "Pour l'enterrement de ma mère, j'ai fait une chanson avec ses expressions préférées. Toute la famille était émue.",
-                                    author: "Aminata D.",
-                                    occasion: "Hommage"
+                                    quote: t("landing.testimonials.quote3"),
+                                    author: t("landing.testimonials.author3"),
+                                    occasion: t("landing.testimonials.occasion3")
                                 }
                             ].map((testimonial, i) => (
                                 <div key={i} className="glass-card p-8 rounded-2xl">
-                                    <p className="text-white/80 mb-6 italic">"{testimonial.quote}"</p>
+                                    <p className="text-white/80 mb-6 italic">&quot;{testimonial.quote}&quot;</p>
                                     <div className="flex items-center gap-3">
                                         <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
                                             {testimonial.author.charAt(0)}
@@ -551,13 +551,13 @@ export default function LandingPage() {
                         </div>
 
                         <div className="flex flex-wrap justify-center gap-10">
-                            <a href="#" className="text-sm text-white/50 hover:text-white transition-colors">À propos</a>
-                            <a href="#" className="text-sm text-white/50 hover:text-white transition-colors">FAQ</a>
-                            <a href="#" className="text-sm text-white/50 hover:text-white transition-colors">Confidentialité</a>
-                            <a href="#" className="text-sm text-white/50 hover:text-white transition-colors">Contact</a>
+                            <a href="#how-it-works" className="text-sm text-white/50 hover:text-white transition-colors">{t("landing.footer.about")}</a>
+                            <a href="#how-it-works" className="text-sm text-white/50 hover:text-white transition-colors">{t("landing.footer.faq")}</a>
+                            <Link href="/pricing" className="text-sm text-white/50 hover:text-white transition-colors">{t("landing.footer.pricing")}</Link>
+                            <a href="mailto:service@bimzik.com" className="text-sm text-white/50 hover:text-white transition-colors">{t("landing.footer.contact")}</a>
                         </div>
 
-                        <p className="text-white/20 text-xs">© 2026 BimZik. Transformez vos émotions en musique.</p>
+                        <p className="text-white/20 text-xs">{t("landing.footer.copyright")}</p>
                     </div>
                 </footer>
             </main>

@@ -5,9 +5,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { User, Bell, Globe, Lock, Save, LogOut, ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useTranslation } from "@/i18n/useTranslation";
+import { useLocale } from "@/i18n/LocaleContext";
 
 export default function SettingsPage() {
     const router = useRouter();
+    const { t } = useTranslation();
+    const { locale, setLocale } = useLocale();
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(false);
     const [saved, setSaved] = useState(false);
@@ -15,7 +19,6 @@ export default function SettingsPage() {
     const [settings, setSettings] = useState({
         fullName: "",
         email: "",
-        language: "fr",
         emailNotifications: true,
         pushNotifications: false
     });
@@ -61,21 +64,21 @@ export default function SettingsPage() {
             <div className="mb-8">
                 <Link href="/dashboard" className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors group">
                     <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                    <span>Retour</span>
+                    <span>{t("common.back")}</span>
                 </Link>
             </div>
-            <h1 className="text-3xl font-bold mb-8">Paramètres</h1>
+            <h1 className="text-3xl font-bold mb-8">{t("settings.title")}</h1>
 
             {/* Profile Section */}
             <div className="glass-card rounded-2xl p-6 mb-6">
                 <div className="flex items-center gap-3 mb-6">
                     <User className="w-5 h-5 text-primary" />
-                    <h2 className="text-lg font-bold">Profil</h2>
+                    <h2 className="text-lg font-bold">{t("settings.profile")}</h2>
                 </div>
 
                 <div className="space-y-4">
                     <div>
-                        <label className="text-sm text-white/70 mb-2 block">Nom complet</label>
+                        <label className="text-sm text-white/70 mb-2 block">{t("settings.fullNameLabel")}</label>
                         <input
                             type="text"
                             value={settings.fullName}
@@ -85,14 +88,14 @@ export default function SettingsPage() {
                     </div>
 
                     <div>
-                        <label className="text-sm text-white/70 mb-2 block">Email</label>
+                        <label className="text-sm text-white/70 mb-2 block">{t("settings.emailLabel")}</label>
                         <input
                             type="email"
                             value={settings.email}
                             disabled
                             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white/50 cursor-not-allowed"
                         />
-                        <p className="text-xs text-white/40 mt-1">L&apos;email ne peut pas être modifié</p>
+                        <p className="text-xs text-white/40 mt-1">{t("settings.emailReadonly")}</p>
                     </div>
                 </div>
             </div>
@@ -101,18 +104,18 @@ export default function SettingsPage() {
             <div className="glass-card rounded-2xl p-6 mb-6">
                 <div className="flex items-center gap-3 mb-6">
                     <Globe className="w-5 h-5 text-primary" />
-                    <h2 className="text-lg font-bold">Langue</h2>
+                    <h2 className="text-lg font-bold">{t("settings.language")}</h2>
                 </div>
 
                 <div className="flex gap-3">
                     {[
-                        { code: "fr", label: "Français" },
-                        { code: "en", label: "English" }
+                        { code: "fr" as const, label: "Français" },
+                        { code: "en" as const, label: "English" }
                     ].map((lang) => (
                         <button
                             key={lang.code}
-                            onClick={() => setSettings({ ...settings, language: lang.code })}
-                            className={`px-4 py-2 rounded-xl transition-all ${settings.language === lang.code
+                            onClick={() => setLocale(lang.code)}
+                            className={`px-4 py-2 rounded-xl transition-all ${locale === lang.code
                                 ? "bg-primary text-white"
                                 : "bg-white/5 text-white/60 hover:bg-white/10"
                                 }`}
@@ -127,12 +130,12 @@ export default function SettingsPage() {
             <div className="glass-card rounded-2xl p-6 mb-6">
                 <div className="flex items-center gap-3 mb-6">
                     <Bell className="w-5 h-5 text-primary" />
-                    <h2 className="text-lg font-bold">Notifications</h2>
+                    <h2 className="text-lg font-bold">{t("settings.notifications")}</h2>
                 </div>
 
                 <div className="space-y-4">
                     <label className="flex items-center justify-between cursor-pointer">
-                        <span className="text-white/80">Notifications par email</span>
+                        <span className="text-white/80">{t("settings.emailNotifications")}</span>
                         <input
                             type="checkbox"
                             checked={settings.emailNotifications}
@@ -142,7 +145,7 @@ export default function SettingsPage() {
                     </label>
 
                     <label className="flex items-center justify-between cursor-pointer">
-                        <span className="text-white/80">Notifications push</span>
+                        <span className="text-white/80">{t("settings.pushNotifications")}</span>
                         <input
                             type="checkbox"
                             checked={settings.pushNotifications}
@@ -157,11 +160,11 @@ export default function SettingsPage() {
             <div className="glass-card rounded-2xl p-6 mb-8">
                 <div className="flex items-center gap-3 mb-6">
                     <Lock className="w-5 h-5 text-primary" />
-                    <h2 className="text-lg font-bold">Sécurité</h2>
+                    <h2 className="text-lg font-bold">{t("settings.security")}</h2>
                 </div>
 
                 <button className="text-primary hover:underline text-sm">
-                    Changer le mot de passe →
+                    {t("settings.changePassword")}
                 </button>
             </div>
 
@@ -172,13 +175,13 @@ export default function SettingsPage() {
                 className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 disabled:opacity-50"
             >
                 {saved ? (
-                    <>✓ Sauvegardé</>
+                    <>{t("settings.saved")}</>
                 ) : loading ? (
-                    <>Sauvegarde...</>
+                    <>{t("settings.saving")}</>
                 ) : (
                     <>
                         <Save className="w-5 h-5" />
-                        Sauvegarder
+                        {t("settings.save")}
                     </>
                 )}
             </button>
@@ -189,7 +192,7 @@ export default function SettingsPage() {
                 className="w-full mt-8 bg-red-500/10 hover:bg-red-500/20 text-red-500 font-bold py-3 rounded-xl flex items-center justify-center gap-2 border border-red-500/20 transition-colors"
             >
                 <LogOut className="w-5 h-5" />
-                Déconnexion
+                {t("settings.logout")}
             </button>
 
             <style jsx>{`

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Zap, Infinity, Check, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { API_BASE_URL } from "@/lib/api/client";
+import { useTranslation } from "@/i18n/useTranslation";
 
 interface Package {
     id: string;
@@ -16,6 +17,7 @@ interface Package {
 }
 
 export default function PricingPage() {
+    const { t } = useTranslation();
     const [packs, setPacks] = useState<Package[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -44,9 +46,9 @@ export default function PricingPage() {
                         <img src="/images/logo-bimzik.png" alt="BimZik" className="h-8" />
                     </Link>
                     <div className="flex items-center gap-4">
-                        <Link href="/login" className="text-sm text-white/70 hover:text-white">Login</Link>
+                        <Link href="/login" className="text-sm text-white/70 hover:text-white">{t("pricing.login")}</Link>
                         <Link href="/signup" className="bg-white text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-white/90">
-                            Get Started
+                            {t("pricing.getStarted")}
                         </Link>
                     </div>
                 </div>
@@ -55,14 +57,14 @@ export default function PricingPage() {
             <div className="pt-32 pb-16 px-6 max-w-5xl mx-auto">
                 {/* Valentine Banner */}
                 <div className="mb-8 p-4 rounded-xl bg-gradient-to-r from-pink-500/20 to-red-500/20 border border-pink-500/30 text-center">
-                    <p className="text-pink-400 font-bold">💕 Offre Saint-Valentin : -20% avec le code VALENTIN2026 • Jusqu'au 14 Février</p>
+                    <p className="text-pink-400 font-bold">{t("pricing.valentineBanner")}</p>
                 </div>
 
                 {/* Header */}
                 <div className="text-center mb-12">
-                    <h1 className="text-5xl font-bold mb-4">Combien coûte un souvenir éternel ?</h1>
+                    <h1 className="text-5xl font-bold mb-4">{t("pricing.title")}</h1>
                     <p className="text-white/60 text-lg max-w-2xl mx-auto">
-                        Une chanson personnalisée pour marquer un moment de vie. Paiement simple par Mobile Money ou carte bancaire.
+                        {t("pricing.subtitle")}
                     </p>
                 </div>
 
@@ -73,8 +75,8 @@ export default function PricingPage() {
                             <Zap className="w-5 h-5 text-primary" />
                         </div>
                         <div>
-                            <p className="font-bold text-sm">1 Chanson = 5 Crédits</p>
-                            <p className="text-xs text-white/40">Prix transparent</p>
+                            <p className="font-bold text-sm">{t("pricing.songCost")}</p>
+                            <p className="text-xs text-white/40">{t("pricing.songCostSub")}</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
@@ -82,8 +84,8 @@ export default function PricingPage() {
                             <Infinity className="w-5 h-5 text-primary" />
                         </div>
                         <div>
-                            <p className="font-bold text-sm">Jamais d'expiration</p>
-                            <p className="text-xs text-white/40">Vos crédits restent</p>
+                            <p className="font-bold text-sm">{t("pricing.noExpiry")}</p>
+                            <p className="text-xs text-white/40">{t("pricing.noExpirySub")}</p>
                         </div>
                     </div>
                 </div>
@@ -105,7 +107,7 @@ export default function PricingPage() {
                             >
                                 {pack.is_popular && (
                                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-[#FFD700] text-black text-xs font-bold rounded-full">
-                                        BEST VALUE
+                                        {t("pricing.bestValue")}
                                     </div>
                                 )}
 
@@ -132,7 +134,7 @@ export default function PricingPage() {
                                                 : "border border-white/10 hover:bg-white/5"
                                             }`}
                                     >
-                                        Acheter pour {pack.price.toLocaleString()} {pack.currency}
+                                        {t("pricing.buyFor", { price: pack.price.toLocaleString(), currency: pack.currency })}
                                     </button>
                                 </Link>
                             </div>
@@ -144,15 +146,15 @@ export default function PricingPage() {
                 <div className="glass-card rounded-2xl p-8 text-center">
                     <div className="inline-flex items-center gap-2 text-[#FFD700] text-sm font-bold mb-4">
                         <Sparkles className="w-4 h-4" />
-                        PAIEMENT AFRICAIN
+                        {t("pricing.mobileMoneyTag")}
                     </div>
-                    <h2 className="text-2xl font-bold mb-2">Payez avec Mobile Money</h2>
+                    <h2 className="text-2xl font-bold mb-2">{t("pricing.mobileMoneyTitle")}</h2>
                     <p className="text-white/60 mb-6">
-                        MTN MoMo, Orange Money, M-PESA, Airtel Money - tous supportés.
+                        {t("pricing.mobileMoneyDesc")}
                     </p>
                     <Link href="/signup">
                         <button className="bg-gradient-to-r from-pink-500 to-red-500 hover:opacity-90 text-white font-bold px-8 py-3 rounded-xl">
-                            Créer ma première chanson 💕
+                            {t("pricing.firstSong")}
                         </button>
                     </Link>
                 </div>

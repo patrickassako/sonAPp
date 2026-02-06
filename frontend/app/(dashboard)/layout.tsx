@@ -6,11 +6,16 @@ import { usePathname, useRouter } from "next/navigation";
 import { Plus, LogOut, User as UserIcon } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useWallet } from "@/lib/hooks/useWallet";
+import { useTranslation } from "@/i18n/useTranslation";
+import { LanguageSwitcher } from "@/components/atoms/LanguageSwitcher";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
+    const pathname = usePathname();
+    const { t } = useTranslation();
     const [user, setUser] = useState<any>(null);
     const { credits } = useWallet();
+    const isCreateWizard = pathname.startsWith("/create");
 
     useEffect(() => {
         const supabase = createClient();
@@ -36,16 +41,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         {/* Credit Balance Pill */}
                         <Link href="/credits" className="hidden sm:flex items-center gap-2 h-10 px-4 rounded-full bg-[#1e1e1e] border border-[#2e2e2e] hover:bg-[#2a2a2a] transition-colors">
                             <span className="material-symbols-outlined text-primary text-[20px]">toll</span>
-                            <span className="text-sm font-semibold">{credits} Credits</span>
+                            <span className="text-sm font-semibold">{t("dashboardLayout.credits", { count: credits })}</span>
                         </Link>
 
                         {/* Buy Credits Button */}
                         <Link href="/credits">
                             <button className="flex min-w-[100px] items-center justify-center rounded-lg h-10 px-5 bg-primary text-black text-sm font-bold transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-primary/20">
-                                Buy Credits
+                                {t("common.buyCredits")}
                             </button>
                         </Link>
                     </div>
+
+                    {/* Language Switcher */}
+                    <LanguageSwitcher />
 
                     {/* User Avatar */}
                     <Link href="/settings" className="relative group">
@@ -63,15 +71,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </div>
             </main>
 
-            {/* Mobile Bottom Navigation */}
-            <div className="sm:hidden fixed bottom-0 left-0 right-0 p-4 bg-[#121212]/90 backdrop-blur-md border-t border-[#2e2e2e] flex justify-around items-center z-50">
+            {/* Mobile Bottom Navigation — hidden on create wizard (has its own footer) */}
+            {!isCreateWizard && <div className="sm:hidden fixed bottom-0 left-0 right-0 p-4 bg-[#121212]/90 backdrop-blur-md border-t border-[#2e2e2e] flex justify-around items-center z-50">
                 <Link href="/dashboard" className="flex flex-col items-center text-primary">
                     <span className="material-symbols-outlined">home</span>
-                    <span className="text-[10px] font-bold mt-1">Home</span>
+                    <span className="text-[10px] font-bold mt-1">{t("common.home")}</span>
                 </Link>
                 <Link href="/dashboard" className="flex flex-col items-center text-slate-500 hover:text-white transition-colors">
                     <span className="material-symbols-outlined">library_music</span>
-                    <span className="text-[10px] font-bold mt-1">Projects</span>
+                    <span className="text-[10px] font-bold mt-1">{t("common.projects")}</span>
                 </Link>
                 <Link href="/create" className="relative -mt-8">
                     <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/30 text-black transform transition-transform hover:scale-110">
@@ -80,13 +88,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </Link>
                 <Link href="/credits" className="flex flex-col items-center text-slate-500 hover:text-white transition-colors">
                     <span className="material-symbols-outlined">toll</span>
-                    <span className="text-[10px] font-bold mt-1">Credits</span>
+                    <span className="text-[10px] font-bold mt-1">{t("common.credits")}</span>
                 </Link>
                 <Link href="/settings" className="flex flex-col items-center text-slate-500 hover:text-white transition-colors">
                     <span className="material-symbols-outlined">settings</span>
-                    <span className="text-[10px] font-bold mt-1">Settings</span>
+                    <span className="text-[10px] font-bold mt-1">{t("common.settings")}</span>
                 </Link>
-            </div>
+            </div>}
         </div>
     );
 }

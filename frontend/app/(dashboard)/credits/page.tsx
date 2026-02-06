@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { API_BASE_URL } from "@/lib/api/client";
+import { useTranslation } from "@/i18n/useTranslation";
 import type {
   Country,
   CreditPackage,
@@ -60,15 +61,11 @@ const NETWORK_INFO: Record<string, { id: string; name: string }[]> = {
 };
 
 export default function CreditsPage() {
-  // Step management
+  const { t } = useTranslation();
   const [step, setStep] = useState<PaymentStep>(1);
-
-  // Data
   const [packages, setPackages] = useState<CreditPackage[]>([]);
   const [countries, setCountries] = useState<Country[]>([]);
   const [loading, setLoading] = useState(true);
-
-  // Selections
   const [selectedPack, setSelectedPack] = useState<CreditPackage | null>(null);
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
     name: "",
@@ -77,15 +74,12 @@ export default function CreditsPage() {
   });
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("mobile_money");
   const [selectedNetwork, setSelectedNetwork] = useState<string>("");
-
-  // Payment state
   const [processing, setProcessing] = useState(false);
   const [txRef, setTxRef] = useState<string | null>(null);
   const [instructions, setInstructions] = useState<string>("");
   const [paymentStatus, setPaymentStatus] = useState<"idle" | "pending" | "successful" | "failed">("idle");
   const [error, setError] = useState<string>("");
 
-  // Fetch packages and countries on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -100,11 +94,9 @@ export default function CreditsPage() {
         setPackages(packagesData);
         setCountries(countriesData.countries || []);
 
-        // Auto-select popular pack
         const popular = packagesData.find((p: CreditPackage) => p.is_popular);
         if (popular) setSelectedPack(popular);
 
-        // Try to detect user's country via IP
         detectCountry();
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -116,14 +108,11 @@ export default function CreditsPage() {
     fetchData();
   }, []);
 
-  // Detect country from IP
   const detectCountry = async () => {
     try {
       const res = await fetch("https://ipapi.co/json/");
       const data = await res.json();
       const countryCode = data.country_code;
-
-      // Check if country is in our supported list
       if (countries.find((c) => c.code === countryCode) || NETWORK_INFO[countryCode]) {
         setCustomerInfo((prev) => ({ ...prev, country: countryCode }));
       }
@@ -132,11 +121,9 @@ export default function CreditsPage() {
     }
   };
 
-  // Get current country config
   const currentCountry = countries.find((c) => c.code === customerInfo.country);
   const availableNetworks = NETWORK_INFO[customerInfo.country] || [];
 
-  // Update network when country changes
   useEffect(() => {
     if (availableNetworks.length > 0) {
       setSelectedNetwork(availableNetworks[0].id);
@@ -145,7 +132,6 @@ export default function CreditsPage() {
     }
   }, [customerInfo.country]);
 
-  // Polling for Mobile Money status (max 2 minutes = 24 polls * 5s)
   useEffect(() => {
     if (processing && paymentMethod === "mobile_money" && txRef && paymentStatus === "pending") {
       let attempts = 0;
@@ -157,7 +143,7 @@ export default function CreditsPage() {
         if (attempts > maxAttempts) {
           clearInterval(interval);
           setPaymentStatus("failed");
-          setError("Delai d'attente depasse. Si vous avez valide le paiement, vos credits seront ajoutes automatiquement.");
+          setError(t("credits.timeoutError"));
           setProcessing(false);
           return;
         }
@@ -198,7 +184,6 @@ export default function CreditsPage() {
     }
   }, [processing, paymentMethod, txRef, paymentStatus]);
 
-  // Handle payment submission
   const handlePayment = async () => {
     if (!selectedPack) return;
 
@@ -237,12 +222,10 @@ export default function CreditsPage() {
       }
 
       if (data.payment_method === "card" && data.payment_link) {
-        // Redirect to Flutterwave page
         window.location.href = data.payment_link;
       } else {
-        // Mobile Money - show instructions and poll
         setTxRef(data.transaction_id);
-        setInstructions(data.instructions || "Validez le paiement sur votre telephone");
+        setInstructions(data.instructions || t("credits.defaultInstruction"));
       }
     } catch (err: any) {
       console.error("Payment error:", err);
@@ -252,7 +235,6 @@ export default function CreditsPage() {
     }
   };
 
-  // Navigation
   const canProceed = (): boolean => {
     switch (step) {
       case 1:
@@ -278,7 +260,6 @@ export default function CreditsPage() {
     }
   };
 
-  // Render loading
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -291,10 +272,8 @@ export default function CreditsPage() {
     <div className="p-4 md:p-8 max-w-4xl mx-auto">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold mb-3">Acheter des Credits</h1>
-        <p className="text-white/60">
-          Paiement simple et securise avec Mobile Money ou Carte bancaire
-        </p>
+        <h1 className="text-3xl md:text-4xl font-bold mb-3">{t("credits.title")}</h1>
+        <p className="text-white/60">{t("credits.subtitle")}</p>
       </div>
 
       {/* Stepper */}
@@ -325,10 +304,10 @@ export default function CreditsPage() {
 
       {/* Step Labels */}
       <div className="hidden md:flex justify-between mb-8 px-4">
-        <span className={step === 1 ? "text-primary" : "text-white/40"}>Pack</span>
-        <span className={step === 2 ? "text-primary" : "text-white/40"}>Informations</span>
-        <span className={step === 3 ? "text-primary" : "text-white/40"}>Paiement</span>
-        <span className={step === 4 ? "text-primary" : "text-white/40"}>Confirmation</span>
+        <span className={step === 1 ? "text-primary" : "text-white/40"}>{t("credits.stepPack")}</span>
+        <span className={step === 2 ? "text-primary" : "text-white/40"}>{t("credits.stepInfo")}</span>
+        <span className={step === 3 ? "text-primary" : "text-white/40"}>{t("credits.stepPayment")}</span>
+        <span className={step === 4 ? "text-primary" : "text-white/40"}>{t("credits.stepConfirmation")}</span>
       </div>
 
       {/* Content */}
@@ -336,17 +315,16 @@ export default function CreditsPage() {
         {/* STEP 1: Select Package */}
         {step === 1 && (
           <div>
-            <h2 className="text-xl font-bold mb-6">Choisissez votre pack</h2>
+            <h2 className="text-xl font-bold mb-6">{t("credits.choosePack")}</h2>
 
-            {/* Benefits */}
             <div className="flex flex-wrap gap-4 mb-6">
               <div className="flex items-center gap-2 text-sm">
                 <Zap className="w-4 h-4 text-primary" />
-                <span className="text-white/60">1 chanson = 5 credits</span>
+                <span className="text-white/60">{t("credits.songCost")}</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <Infinity className="w-4 h-4 text-primary" />
-                <span className="text-white/60">Jamais d&apos;expiration</span>
+                <span className="text-white/60">{t("credits.noExpiry")}</span>
               </div>
             </div>
 
@@ -365,14 +343,14 @@ export default function CreditsPage() {
                 >
                   {pack.is_popular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-[#FFD700] text-black text-xs font-bold rounded-full">
-                      POPULAIRE
+                      {t("credits.popular")}
                     </div>
                   )}
 
                   <h3 className="font-bold mb-2">{pack.name}</h3>
                   <div className="mb-3">
                     <span className="text-3xl font-bold">{pack.credits}</span>
-                    <span className="text-white/60 ml-2 text-sm">credits</span>
+                    <span className="text-white/60 ml-2 text-sm">{t("credits.creditsUnit")}</span>
                   </div>
 
                   <ul className="space-y-1 mb-4">
@@ -396,24 +374,22 @@ export default function CreditsPage() {
         {/* STEP 2: Customer Info */}
         {step === 2 && (
           <div>
-            <h2 className="text-xl font-bold mb-6">Vos informations</h2>
+            <h2 className="text-xl font-bold mb-6">{t("credits.yourInfo")}</h2>
 
             <div className="space-y-4 max-w-md">
-              {/* Name */}
               <div>
-                <label className="block text-sm text-white/60 mb-2">Nom complet</label>
+                <label className="block text-sm text-white/60 mb-2">{t("credits.fullNameLabel")}</label>
                 <input
                   type="text"
                   value={customerInfo.name}
                   onChange={(e) => setCustomerInfo({ ...customerInfo, name: e.target.value })}
-                  placeholder="Jean Dupont"
+                  placeholder={t("credits.fullNamePlaceholder")}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
 
-              {/* Country */}
               <div>
-                <label className="block text-sm text-white/60 mb-2">Pays</label>
+                <label className="block text-sm text-white/60 mb-2">{t("credits.countryLabel")}</label>
                 <select
                   value={customerInfo.country}
                   onChange={(e) => setCustomerInfo({ ...customerInfo, country: e.target.value })}
@@ -427,9 +403,8 @@ export default function CreditsPage() {
                 </select>
               </div>
 
-              {/* Phone */}
               <div>
-                <label className="block text-sm text-white/60 mb-2">Numero de telephone</label>
+                <label className="block text-sm text-white/60 mb-2">{t("credits.phoneLabel")}</label>
                 <div className="flex gap-2">
                   <div className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white/60">
                     {currentCountry?.dial_code || "+237"}
@@ -450,10 +425,9 @@ export default function CreditsPage() {
         {/* STEP 3: Payment Method */}
         {step === 3 && (
           <div>
-            <h2 className="text-xl font-bold mb-6">Mode de paiement</h2>
+            <h2 className="text-xl font-bold mb-6">{t("credits.paymentMethod")}</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              {/* Mobile Money Option */}
               {currentCountry?.mobile_money && (
                 <div
                   onClick={() => setPaymentMethod("mobile_money")}
@@ -465,15 +439,12 @@ export default function CreditsPage() {
                 >
                   <div className="flex items-center gap-3 mb-3">
                     <Smartphone className="w-6 h-6" />
-                    <span className="font-bold">Mobile Money</span>
+                    <span className="font-bold">{t("credits.mobileMoney")}</span>
                   </div>
-                  <p className="text-sm text-white/60">
-                    Paiement direct via votre operateur mobile
-                  </p>
+                  <p className="text-sm text-white/60">{t("credits.mobileMoneyDesc")}</p>
                 </div>
               )}
 
-              {/* Card Option */}
               <div
                 onClick={() => setPaymentMethod("card")}
                 className={`rounded-xl p-5 cursor-pointer transition-all ${
@@ -484,18 +455,15 @@ export default function CreditsPage() {
               >
                 <div className="flex items-center gap-3 mb-3">
                   <CreditCard className="w-6 h-6" />
-                  <span className="font-bold">Carte bancaire</span>
+                  <span className="font-bold">{t("credits.card")}</span>
                 </div>
-                <p className="text-sm text-white/60">Visa, Mastercard via Flutterwave</p>
+                <p className="text-sm text-white/60">{t("credits.cardDesc")}</p>
               </div>
             </div>
 
-            {/* Network Selection for Mobile Money */}
             {paymentMethod === "mobile_money" && availableNetworks.length > 0 && (
               <div>
-                <label className="block text-sm text-white/60 mb-3">
-                  Selectionnez votre operateur
-                </label>
+                <label className="block text-sm text-white/60 mb-3">{t("credits.selectOperator")}</label>
                 <div className="flex flex-wrap gap-3">
                   {availableNetworks.map((network) => (
                     <button
@@ -521,31 +489,30 @@ export default function CreditsPage() {
           <div>
             {paymentStatus === "idle" || paymentStatus === "pending" ? (
               <>
-                <h2 className="text-xl font-bold mb-6">Confirmation</h2>
+                <h2 className="text-xl font-bold mb-6">{t("credits.confirmation")}</h2>
 
-                {/* Summary */}
                 <div className="bg-white/5 rounded-xl p-5 mb-6">
-                  <h3 className="font-bold mb-4">Recapitulatif</h3>
+                  <h3 className="font-bold mb-4">{t("credits.summary")}</h3>
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-white/60">Pack</span>
+                      <span className="text-white/60">{t("credits.summaryPack")}</span>
                       <span className="font-medium">{selectedPack?.name}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-white/60">Credits</span>
-                      <span className="font-medium">{selectedPack?.credits} credits</span>
+                      <span className="text-white/60">{t("credits.summaryCredits")}</span>
+                      <span className="font-medium">{selectedPack?.credits} {t("credits.creditsUnit")}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-white/60">Methode</span>
+                      <span className="text-white/60">{t("credits.summaryMethod")}</span>
                       <span className="font-medium">
                         {paymentMethod === "mobile_money"
                           ? `Mobile Money (${selectedNetwork})`
-                          : "Carte bancaire"}
+                          : t("credits.card")}
                       </span>
                     </div>
                     <div className="border-t border-white/10 pt-3 mt-3">
                       <div className="flex justify-between text-lg">
-                        <span className="font-bold">Total</span>
+                        <span className="font-bold">{t("credits.summaryTotal")}</span>
                         <span className="font-bold text-primary">
                           {selectedPack?.price.toLocaleString()} {currentCountry?.currency || "XAF"}
                         </span>
@@ -554,7 +521,6 @@ export default function CreditsPage() {
                   </div>
                 </div>
 
-                {/* Error */}
                 {error && (
                   <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-6 flex items-center gap-3">
                     <AlertCircle className="w-5 h-5 text-red-400" />
@@ -562,15 +528,12 @@ export default function CreditsPage() {
                   </div>
                 )}
 
-                {/* Processing State for Mobile Money */}
                 {processing && paymentMethod === "mobile_money" && (
                   <div className="bg-primary/10 border border-primary/30 rounded-xl p-6 mb-6 text-center">
                     <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-3" />
-                    <h3 className="font-bold mb-2">En attente de validation</h3>
+                    <h3 className="font-bold mb-2">{t("credits.awaitingValidation")}</h3>
                     <p className="text-white/60 text-sm mb-3">{instructions}</p>
-                    <p className="text-xs text-white/40 mb-4">
-                      Veuillez valider le paiement sur votre telephone...
-                    </p>
+                    <p className="text-xs text-white/40 mb-4">{t("credits.validatePhone")}</p>
                     <button
                       onClick={() => {
                         setProcessing(false);
@@ -580,41 +543,40 @@ export default function CreditsPage() {
                       }}
                       className="text-sm text-white/50 hover:text-white underline transition-colors"
                     >
-                      Annuler
+                      {t("common.cancel")}
                     </button>
                   </div>
                 )}
 
-                {/* Confirm Button */}
                 {!processing && (
                   <button
                     onClick={handlePayment}
                     className="w-full bg-gradient-to-r from-primary to-[#FFD700] text-white font-bold py-4 rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
                   >
                     <Sparkles className="w-5 h-5" />
-                    Confirmer le paiement
+                    {t("credits.confirmPayment")}
                   </button>
                 )}
               </>
             ) : paymentStatus === "successful" ? (
               <div className="text-center py-8">
                 <CheckCircle2 className="w-16 h-16 text-green-400 mx-auto mb-4" />
-                <h2 className="text-2xl font-bold mb-2">Paiement reussi!</h2>
+                <h2 className="text-2xl font-bold mb-2">{t("credits.paymentSuccess")}</h2>
                 <p className="text-white/60 mb-6">
-                  {selectedPack?.credits} credits ont ete ajoutes a votre compte
+                  {t("credits.creditsAdded", { count: selectedPack?.credits })}
                 </p>
                 <a
                   href="/create"
                   className="inline-block bg-primary text-white font-bold px-8 py-3 rounded-xl hover:opacity-90 transition-opacity"
                 >
-                  Creer une chanson
+                  {t("credits.createSong")}
                 </a>
               </div>
             ) : (
               <div className="text-center py-8">
                 <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-                <h2 className="text-2xl font-bold mb-2">Paiement echoue</h2>
-                <p className="text-white/60 mb-6">{error || "Une erreur est survenue"}</p>
+                <h2 className="text-2xl font-bold mb-2">{t("credits.paymentFailed")}</h2>
+                <p className="text-white/60 mb-6">{error || t("common.error")}</p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   {txRef && (
                     <button
@@ -633,12 +595,12 @@ export default function CreditsPage() {
                           if (data.status === "successful") {
                             setPaymentStatus("successful");
                           } else if (data.status === "failed") {
-                            setError(data.message || "Paiement non trouve");
+                            setError(data.message || t("credits.paymentNotFound"));
                           } else {
-                            setError("Paiement toujours en attente. Reessayez dans quelques instants.");
+                            setError(t("credits.paymentStillPending"));
                           }
                         } catch {
-                          setError("Erreur de verification");
+                          setError(t("credits.verificationError"));
                         } finally {
                           setProcessing(false);
                         }
@@ -647,7 +609,7 @@ export default function CreditsPage() {
                       className="bg-primary text-white font-bold px-8 py-3 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
                     >
                       {processing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-                      Verifier mon paiement
+                      {t("credits.verifyPayment")}
                     </button>
                   )}
                   <button
@@ -659,7 +621,7 @@ export default function CreditsPage() {
                     }}
                     className="bg-white/10 text-white font-bold px-8 py-3 rounded-xl hover:bg-white/20 transition-colors"
                   >
-                    Reessayer
+                    {t("common.retry")}
                   </button>
                 </div>
               </div>
@@ -676,7 +638,7 @@ export default function CreditsPage() {
               className="flex items-center gap-2 text-white/60 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronLeft className="w-5 h-5" />
-              Retour
+              {t("common.back")}
             </button>
 
             {step < 4 && (
@@ -685,7 +647,7 @@ export default function CreditsPage() {
                 disabled={!canProceed()}
                 className="flex items-center gap-2 bg-primary text-white font-bold px-6 py-2 rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
-                Continuer
+                {t("common.continue")}
                 <ChevronRight className="w-5 h-5" />
               </button>
             )}

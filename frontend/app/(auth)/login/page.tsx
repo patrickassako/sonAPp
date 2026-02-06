@@ -7,9 +7,11 @@ import { Input } from "@/components/atoms/Input";
 import { Button } from "@/components/atoms/Button";
 import { Mail, Lock, ArrowRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useTranslation } from "@/i18n/useTranslation";
 
 export default function LoginPage() {
     const router = useRouter();
+    const { t } = useTranslation();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -33,7 +35,7 @@ export default function LoginPage() {
                 router.push("/dashboard");
             }
         } catch (err) {
-            setError("Une erreur est survenue. Veuillez réessayer.");
+            setError(t("common.error"));
         } finally {
             setLoading(false);
         }
@@ -55,10 +57,10 @@ export default function LoginPage() {
                 {/* Card */}
                 <div className="glass-card rounded-2xl p-8">
                     <h1 className="text-2xl font-bold text-white text-center mb-2">
-                        Bon retour !
+                        {t("login.title")}
                     </h1>
                     <p className="text-white/60 text-center mb-8">
-                        Connectez-vous pour continuer à créer
+                        {t("login.subtitle")}
                     </p>
 
                     <form onSubmit={handleLogin} className="space-y-4">
@@ -69,14 +71,14 @@ export default function LoginPage() {
                         )}
 
                         <div className="space-y-2">
-                            <label className="text-sm text-white/70">Email</label>
+                            <label className="text-sm text-white/70">{t("login.emailLabel")}</label>
                             <div className="relative">
                                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
                                 <input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="votre@email.com"
+                                    placeholder={t("login.emailPlaceholder")}
                                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pl-11 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-primary"
                                     required
                                 />
@@ -84,7 +86,7 @@ export default function LoginPage() {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm text-white/70">Mot de passe</label>
+                            <label className="text-sm text-white/70">{t("login.passwordLabel")}</label>
                             <div className="relative">
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
                                 <input
@@ -100,7 +102,7 @@ export default function LoginPage() {
 
                         <div className="flex justify-end">
                             <Link href="/forgot-password" className="text-sm text-primary hover:underline">
-                                Mot de passe oublié ?
+                                {t("login.forgotPassword")}
                             </Link>
                         </div>
 
@@ -109,15 +111,15 @@ export default function LoginPage() {
                             disabled={loading}
                             className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                         >
-                            {loading ? "Connexion..." : "Se connecter"}
+                            {loading ? t("login.submitting") : t("login.submit")}
                             <ArrowRight className="w-5 h-5" />
                         </button>
                     </form>
 
                     <div className="mt-6 text-center text-white/60">
-                        Pas encore de compte ?{" "}
+                        {t("login.noAccount")}{" "}
                         <Link href="/signup" className="text-primary hover:underline font-medium">
-                            S&apos;inscrire
+                            {t("login.signupLink")}
                         </Link>
                     </div>
                 </div>

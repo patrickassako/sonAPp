@@ -5,9 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, User, ArrowRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useTranslation } from "@/i18n/useTranslation";
 
 export default function SignupPage() {
     const router = useRouter();
+    const { t } = useTranslation();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -35,7 +37,7 @@ export default function SignupPage() {
                 router.push("/dashboard");
             }
         } catch (err) {
-            setError("Une erreur est survenue. Veuillez réessayer.");
+            setError(t("common.error"));
         } finally {
             setLoading(false);
         }
@@ -57,10 +59,10 @@ export default function SignupPage() {
                 {/* Card */}
                 <div className="glass-card rounded-2xl p-8">
                     <h1 className="text-2xl font-bold text-white text-center mb-2">
-                        Créez votre compte
+                        {t("signup.title")}
                     </h1>
                     <p className="text-white/60 text-center mb-8">
-                        Rejoignez la révolution musicale africaine 🌍
+                        {t("signup.subtitle")} 🌍
                     </p>
 
                     <form onSubmit={handleSignup} className="space-y-4">
@@ -71,14 +73,14 @@ export default function SignupPage() {
                         )}
 
                         <div className="space-y-2">
-                            <label className="text-sm text-white/70">Nom complet</label>
+                            <label className="text-sm text-white/70">{t("signup.nameLabel")}</label>
                             <div className="relative">
                                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
                                 <input
                                     type="text"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    placeholder="Votre nom"
+                                    placeholder={t("signup.namePlaceholder")}
                                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pl-11 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-primary"
                                     required
                                 />
@@ -86,14 +88,14 @@ export default function SignupPage() {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm text-white/70">Email</label>
+                            <label className="text-sm text-white/70">{t("signup.emailLabel")}</label>
                             <div className="relative">
                                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
                                 <input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="votre@email.com"
+                                    placeholder={t("signup.emailPlaceholder")}
                                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pl-11 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-primary"
                                     required
                                 />
@@ -101,7 +103,7 @@ export default function SignupPage() {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm text-white/70">Mot de passe</label>
+                            <label className="text-sm text-white/70">{t("signup.passwordLabel")}</label>
                             <div className="relative">
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
                                 <input
@@ -114,7 +116,7 @@ export default function SignupPage() {
                                     minLength={6}
                                 />
                             </div>
-                            <p className="text-xs text-white/40">Minimum 6 caractères</p>
+                            <p className="text-xs text-white/40">{t("signup.passwordHint")}</p>
                         </div>
 
                         <button
@@ -122,24 +124,24 @@ export default function SignupPage() {
                             disabled={loading}
                             className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                         >
-                            {loading ? "Création..." : "Créer mon compte"}
+                            {loading ? t("signup.submitting") : t("signup.submit")}
                             <ArrowRight className="w-5 h-5" />
                         </button>
                     </form>
 
                     <div className="mt-6 text-center text-white/60">
-                        Déjà un compte ?{" "}
+                        {t("signup.hasAccount")}{" "}
                         <Link href="/login" className="text-primary hover:underline font-medium">
-                            Se connecter
+                            {t("signup.loginLink")}
                         </Link>
                     </div>
                 </div>
 
                 <p className="text-center text-white/40 text-xs mt-6">
-                    En créant un compte, vous acceptez nos{" "}
-                    <Link href="/terms" className="text-primary hover:underline">conditions d&apos;utilisation</Link>
-                    {" "}et notre{" "}
-                    <Link href="/privacy" className="text-primary hover:underline">politique de confidentialité</Link>.
+                    {t("signup.terms")}{" "}
+                    <Link href="/terms" className="text-primary hover:underline">{t("signup.termsLink")}</Link>
+                    {" "}{t("signup.termsAnd")}{" "}
+                    <Link href="/privacy" className="text-primary hover:underline">{t("signup.privacyLink")}</Link>.
                 </p>
             </div>
 

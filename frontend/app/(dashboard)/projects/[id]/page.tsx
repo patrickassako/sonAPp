@@ -6,6 +6,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { API_BASE_URL } from "@/lib/api/client";
 import { Loader2 } from "lucide-react";
+import { useTranslation } from "@/i18n/useTranslation";
 
 interface Project {
     id: string;
@@ -30,6 +31,7 @@ interface AudioVersion {
 }
 
 export default function ProjectResultPage() {
+    const { t } = useTranslation();
     const params = useParams();
     const router = useRouter();
     const projectId = params.id as string;
@@ -141,8 +143,8 @@ export default function ProjectResultPage() {
     if (!project) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-                <h1 className="text-2xl font-bold">Project Not Found</h1>
-                <Link href="/dashboard" className="text-primary hover:underline">Return to Dashboard</Link>
+                <h1 className="text-2xl font-bold">{t("project.notFound")}</h1>
+                <Link href="/dashboard" className="text-primary hover:underline">{t("project.returnToDashboard")}</Link>
             </div>
         );
     }
@@ -152,20 +154,20 @@ export default function ProjectResultPage() {
             <div className="mb-8">
                 <Link href="/dashboard" className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors group">
                     <span className="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
-                    <span>Retour à la bibliothèque</span>
+                    <span>{t("project.backToLibrary")}</span>
                 </Link>
             </div>
 
             {/* Header & Metadata */}
             <div className="text-center mb-10">
                 <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase rounded mb-4">
-                    Song Style: {project.style_id}
+                    {t("project.songStyle")}: {project.style_id}
                 </span>
                 <h1 className="text-slate-900 dark:text-white tracking-tight text-4xl md:text-5xl font-bold leading-tight mb-2">
                     {project.title}
                 </h1>
                 <p className="text-slate-500 dark:text-[#cbb290] text-base font-normal">
-                    Produced by You • Created on {new Date(project.created_at).toLocaleDateString()}
+                    {t("project.producedBy")} • {t("project.createdOn", { date: new Date(project.created_at).toLocaleDateString() })}
                 </p>
             </div>
 
@@ -189,7 +191,7 @@ export default function ProjectResultPage() {
                             <div className="flex justify-between items-end mb-4">
                                 <div>
                                     <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{project.title}</h3>
-                                    <p className="text-primary font-medium">AI Generated Track</p>
+                                    <p className="text-primary font-medium">{t("project.aiGenerated")}</p>
                                 </div>
                                 <div className="flex gap-2">
                                     <button className="p-2 hover:bg-white/5 rounded-full transition-colors text-slate-400 dark:text-[#cbb290]">
@@ -258,7 +260,7 @@ export default function ProjectResultPage() {
                 <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-xl p-8 mb-8 shadow-2xl">
                     <div className="flex items-center gap-3 mb-6">
                         <span className="material-symbols-outlined text-primary">videocam</span>
-                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">Video Clip</h3>
+                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">{t("project.videoClip")}</h3>
                     </div>
                     <video
                         controls
@@ -274,7 +276,7 @@ export default function ProjectResultPage() {
                             className="flex items-center gap-2 px-5 py-2.5 bg-primary/20 text-primary text-sm font-bold rounded-lg hover:bg-primary hover:text-white transition-all"
                         >
                             <span className="material-symbols-outlined text-[18px]">download</span>
-                            Download Video
+                            {t("project.downloadVideo")}
                         </a>
                     </div>
                 </div>
@@ -284,8 +286,8 @@ export default function ProjectResultPage() {
                         <div className="flex items-center gap-3">
                             <span className="material-symbols-outlined text-white/40">videocam</span>
                             <div>
-                                <h3 className="font-bold text-slate-900 dark:text-white">Video Clip</h3>
-                                <p className="text-white/40 text-sm">Generate an MP4 video clip from your track</p>
+                                <h3 className="font-bold text-slate-900 dark:text-white">{t("project.videoClip")}</h3>
+                                <p className="text-white/40 text-sm">{t("project.videoClipDesc")}</p>
                             </div>
                         </div>
                         <button
@@ -303,7 +305,7 @@ export default function ProjectResultPage() {
                                         const err = await res.json();
                                         if (res.status === 402) {
                                             setVideoGenerating(false);
-                                            if (confirm(`Credits insuffisants pour generer le clip video.\n\nVoulez-vous acheter des credits ?`)) {
+                                            if (confirm(t("project.insufficientCreditsVideo"))) {
                                                 window.location.href = "/credits";
                                             }
                                             return;
@@ -329,7 +331,7 @@ export default function ProjectResultPage() {
                                                 }
                                             }
                                         }
-                                        setVideoError("Video generation timed out. Refresh the page to check.");
+                                        setVideoError(t("project.videoTimeout"));
                                         setVideoGenerating(false);
                                     };
                                     pollVideo();
@@ -344,12 +346,12 @@ export default function ProjectResultPage() {
                             {videoGenerating ? (
                                 <>
                                     <Loader2 className="w-5 h-5 animate-spin" />
-                                    Generating...
+                                    {t("project.generatingClip")}
                                 </>
                             ) : (
                                 <>
                                     <span className="material-symbols-outlined text-[20px]">movie</span>
-                                    Generate Clip
+                                    {t("project.generateClip")}
                                 </>
                             )}
                         </button>
@@ -369,7 +371,7 @@ export default function ProjectResultPage() {
                             onClick={() => { setSelectedVersion(v); setIsPlaying(false); }}
                             className={`px-8 py-3 rounded-xl font-bold transition-all border border-white/10 ${selectedVersion?.id === v.id ? "bg-[#f49d25] text-white shadow-lg shadow-orange-500/20" : "bg-white/5 hover:bg-white/10 text-white/60"}`}
                         >
-                            VERSION {v.version_number}
+                            {t("project.version", { num: v.version_number })}
                         </button>
                     ))}
                 </div>
@@ -378,7 +380,7 @@ export default function ProjectResultPage() {
             {/* Share Section */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                 <div className="flex flex-col gap-6">
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-white px-1">Share your masterpiece</h3>
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white px-1">{t("project.share")}</h3>
                     <div className="grid grid-cols-3 gap-4">
                         <button
                             onClick={() => {
@@ -396,7 +398,8 @@ export default function ProjectResultPage() {
                             onClick={() => {
                                 const shareUrl = `${window.location.origin}/share/${project.id}`;
                                 navigator.clipboard.writeText(shareUrl);
-                                alert("Link copied! Paste it in your Instagram story.");
+                                setCopiedLink(true);
+                                setTimeout(() => setCopiedLink(false), 2000);
                             }}
                             className="flex flex-col items-center gap-3 p-6 bg-white/5 border border-white/5 rounded-xl hover:bg-primary/5 transition-all group"
                         >
@@ -434,7 +437,7 @@ export default function ProjectResultPage() {
                             }}
                             className="px-4 py-2 bg-primary/20 text-primary text-xs font-bold rounded-lg hover:bg-primary hover:text-white transition-all min-w-[70px]"
                         >
-                            {copiedLink ? "COPIED!" : "COPY"}
+                            {copiedLink ? t("project.copied") : t("project.copyLink")}
                         </button>
                     </div>
 
@@ -443,7 +446,7 @@ export default function ProjectResultPage() {
                         <div className="bg-white/5 border border-white/5 p-4 rounded-xl flex items-center justify-between">
                             <div className="flex items-center gap-3 overflow-hidden">
                                 <span className="material-symbols-outlined text-primary">audio_file</span>
-                                <span className="text-sm text-slate-400 truncate">Direct audio link</span>
+                                <span className="text-sm text-slate-400 truncate">{t("project.directAudioLink")}</span>
                             </div>
                             <button
                                 onClick={() => {
@@ -453,7 +456,7 @@ export default function ProjectResultPage() {
                                 }}
                                 className="px-4 py-2 bg-primary/20 text-primary text-xs font-bold rounded-lg hover:bg-primary hover:text-white transition-all min-w-[70px]"
                             >
-                                {copiedAudio ? "COPIED!" : "COPY"}
+                                {copiedAudio ? t("project.copied") : t("project.copyLink")}
                             </button>
                         </div>
                     )}
@@ -463,12 +466,12 @@ export default function ProjectResultPage() {
                 <div className="bg-white/5 border border-white/5 rounded-xl p-8 flex flex-col gap-6">
                     <div className="flex items-center gap-3 border-b border-white/10 pb-4">
                         <span className="material-symbols-outlined text-primary">auto_awesome</span>
-                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">How it was made</h3>
+                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">{t("project.howItWasMade")}</h3>
                     </div>
                     <div className="flex flex-col gap-4">
                         {(project.lyrics_final || project.lyrics) && (
                             <div>
-                                <p className="text-xs font-bold text-slate-500 dark:text-[#cbb290] uppercase tracking-widest mb-2">Lyrics Snippet</p>
+                                <p className="text-xs font-bold text-slate-500 dark:text-[#cbb290] uppercase tracking-widest mb-2">{t("project.lyricsSnippet")}</p>
                                 <div className="p-4 bg-black/20 rounded-lg border border-white/5 max-h-32 overflow-y-auto">
                                     <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300 italic whitespace-pre-line">
                                         "{(project.lyrics_final || project.lyrics || "").split('\n').slice(0, 4).join('\n')}..."
@@ -477,7 +480,7 @@ export default function ProjectResultPage() {
                             </div>
                         )}
                         <div>
-                            <p className="text-xs font-bold text-slate-500 dark:text-[#cbb290] uppercase tracking-widest mb-2">Style Tags</p>
+                            <p className="text-xs font-bold text-slate-500 dark:text-[#cbb290] uppercase tracking-widest mb-2">{t("project.styleTags")}</p>
                             <div className="flex flex-wrap gap-2">
                                 <span className="px-3 py-1 bg-white/5 text-xs text-slate-400 dark:text-[#cbb290] border border-white/10 rounded-full">#{project.style_id}</span>
                                 <span className="px-3 py-1 bg-white/5 text-xs text-slate-400 dark:text-[#cbb290] border border-white/10 rounded-full">#AI</span>
@@ -493,7 +496,7 @@ export default function ProjectResultPage() {
                 <Link href="/create">
                     <button className="bg-gradient-to-br from-[#f49d25] to-[#ffc163] text-background-dark font-bold text-lg px-12 py-5 rounded-full shadow-2xl shadow-primary/30 flex items-center gap-3 hover:scale-105 transition-transform">
                         <span className="material-symbols-outlined font-bold">add_circle</span>
-                        CREATE ANOTHER TRACK
+                        {t("project.createAnother")}
                     </button>
                 </Link>
             </div>

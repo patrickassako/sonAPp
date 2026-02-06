@@ -6,6 +6,7 @@ import { CheckCircle2, XCircle, Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { API_BASE_URL } from "@/lib/api/client";
+import { useTranslation } from "@/i18n/useTranslation";
 
 export default function PaymentProcessedPage() {
     return (
@@ -16,27 +17,28 @@ export default function PaymentProcessedPage() {
 }
 
 function PaymentProcessedContent() {
+    const { t } = useTranslation();
     const searchParams = useSearchParams();
     const router = useRouter();
     const [status, setStatus] = useState<"verifying" | "success" | "error">("verifying");
-    const [message, setMessage] = useState("We are verifying your payment with the provider...");
+    const [message, setMessage] = useState("");
 
-    // Get params from Flutterwave redirect
-    // URL format: ?status=successful&tx_ref=...&transaction_id=...
     const tx_ref = searchParams.get("tx_ref");
     const transaction_id = searchParams.get("transaction_id");
     const fw_status = searchParams.get("status");
 
     useEffect(() => {
+        setMessage(t("creditsProcessed.verifyingDesc"));
+
         if (!tx_ref) {
             setStatus("error");
-            setMessage("Invalid transaction reference.");
+            setMessage(t("creditsProcessed.invalidTxRef"));
             return;
         }
 
         if (fw_status === "cancelled") {
             setStatus("error");
-            setMessage("Payment was cancelled.");
+            setMessage(t("creditsProcessed.cancelled"));
             return;
         }
 
@@ -63,15 +65,15 @@ function PaymentProcessedContent() {
 
                 if (response.ok && data.success) {
                     setStatus("success");
-                    setMessage("Payment verified! Your credits have been added.");
+                    setMessage(t("creditsProcessed.successDesc"));
                     setTimeout(() => router.push("/credits"), 3000);
                 } else {
-                    throw new Error(data.detail || "Verification failed");
+                    throw new Error(data.detail || t("creditsProcessed.verificationFailed"));
                 }
             } catch (error: any) {
                 console.error(error);
                 setStatus("error");
-                setMessage(error.message || "Payment verification failed. Please contact support.");
+                setMessage(error.message || t("creditsProcessed.verificationFailed"));
             }
         };
 
@@ -84,7 +86,7 @@ function PaymentProcessedContent() {
                 {status === "verifying" && (
                     <div className="flex flex-col items-center gap-4">
                         <Loader2 className="w-16 h-16 text-primary animate-spin" />
-                        <h1 className="text-2xl font-bold">Verifying Payment</h1>
+                        <h1 className="text-2xl font-bold">{t("creditsProcessed.verifying")}</h1>
                         <p className="text-white/60">{message}</p>
                     </div>
                 )}
@@ -92,11 +94,11 @@ function PaymentProcessedContent() {
                 {status === "success" && (
                     <div className="flex flex-col items-center gap-4">
                         <CheckCircle2 className="w-16 h-16 text-green-500" />
-                        <h1 className="text-2xl font-bold text-green-500">Success!</h1>
+                        <h1 className="text-2xl font-bold text-green-500">{t("creditsProcessed.success")}</h1>
                         <p className="text-white/60">{message}</p>
-                        <p className="text-sm text-white/40 mt-4">Redirecting back to credits...</p>
+                        <p className="text-sm text-white/40 mt-4">{t("creditsProcessed.redirecting")}</p>
                         <Link href="/credits" className="mt-4 px-6 py-2 bg-white/10 rounded-full hover:bg-white/20 transition-all font-medium">
-                            Return now
+                            {t("creditsProcessed.returnNow")}
                         </Link>
                     </div>
                 )}
@@ -104,11 +106,11 @@ function PaymentProcessedContent() {
                 {status === "error" && (
                     <div className="flex flex-col items-center gap-4">
                         <XCircle className="w-16 h-16 text-red-500" />
-                        <h1 className="text-2xl font-bold text-red-500">Payment Failed</h1>
+                        <h1 className="text-2xl font-bold text-red-500">{t("creditsProcessed.failed")}</h1>
                         <p className="text-white/60">{message}</p>
                         <Link href="/credits" className="mt-6 flex items-center gap-2 px-6 py-3 bg-white/10 rounded-full hover:bg-white/20 transition-all font-medium">
                             <ArrowLeft className="w-4 h-4" />
-                            Return to Credits
+                            {t("creditsProcessed.returnToCredits")}
                         </Link>
                     </div>
                 )}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { API_BASE_URL } from "@/lib/api/client";
+import { useTranslation } from "@/i18n/useTranslation";
 
 interface Project {
     id: string;
@@ -17,6 +18,7 @@ interface Project {
 }
 
 export default function DashboardPage() {
+    const { t } = useTranslation();
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -34,7 +36,6 @@ export default function DashboardPage() {
                         signal: controller.signal,
                     });
                     const data = await response.json();
-                    // Handle both array and object responses
                     const projectList = Array.isArray(data) ? data : (Array.isArray(data.projects) ? data.projects : []);
                     setProjects(projectList);
                 }
@@ -57,7 +58,7 @@ export default function DashboardPage() {
             return (
                 <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 text-[10px] font-bold uppercase tracking-wider">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                    Completed
+                    {t("dashboard.statusCompleted")}
                 </span>
             );
         }
@@ -65,13 +66,13 @@ export default function DashboardPage() {
             return (
                 <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">
                     <span className="material-symbols-outlined text-[10px] animate-spin">progress_activity</span>
-                    Processing
+                    {t("dashboard.statusProcessing")}
                 </span>
             );
         }
         return (
             <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-500/10 text-slate-400 text-[10px] font-bold uppercase tracking-wider">
-                Draft
+                {t("dashboard.statusDraft")}
             </span>
         );
     };
@@ -87,23 +88,21 @@ export default function DashboardPage() {
             {/* Hero Generation Card */}
             <div className="@container">
                 <div className="flex flex-col items-stretch justify-start rounded-xl overflow-hidden shadow-2xl relative min-h-[220px]" style={{ background: "linear-gradient(135deg, #6d28d9 0%, #f4c025 100%)" }}>
-                    {/* Decorative background pattern */}
                     <div className="absolute inset-0 opacity-20 pointer-events-none mix-blend-overlay" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/carbon-fibre.png')" }}></div>
 
                     <div className="flex flex-col md:flex-row h-full relative z-10">
                         <div className="flex w-full grow flex-col items-start justify-center gap-4 p-8 md:p-12">
-                            <h1 className="text-white text-3xl md:text-4xl font-bold font-display leading-tight tracking-tight">Ready to make some noise?</h1>
-                            <p className="text-white/90 text-lg font-medium max-w-md">Transform your ideas into professional tracks using AI-powered generation in seconds.</p>
+                            <h1 className="text-white text-3xl md:text-4xl font-bold font-display leading-tight tracking-tight">{t("dashboard.heroTitle")}</h1>
+                            <p className="text-white/90 text-lg font-medium max-w-md">{t("dashboard.heroDesc")}</p>
 
                             <Link href="/create">
                                 <button className="mt-4 flex min-w-[160px] items-center justify-center gap-2 overflow-hidden rounded-full h-12 px-6 bg-white text-slate-900 text-base font-bold transition-all hover:bg-slate-100 shadow-lg hover:shadow-white/20">
                                     <span className="material-symbols-outlined">auto_awesome</span>
-                                    <span>Start Generation</span>
+                                    <span>{t("dashboard.startGeneration")}</span>
                                 </button>
                             </Link>
                         </div>
 
-                        {/* Abstract Image Right (Optional) */}
                         <div className="hidden md:block w-1/3 bg-center bg-no-repeat bg-cover opacity-80 mix-blend-soft-light"
                             style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1514525253440-b393452e3383?q=80&w=2000&auto=format&fit=crop")' }}>
                         </div>
@@ -114,8 +113,8 @@ export default function DashboardPage() {
             {/* Recent Projects Section */}
             <section>
                 <div className="flex items-center justify-between px-2 pb-6">
-                    <h2 className="text-white text-2xl font-bold font-display leading-tight tracking-tight">Recent Projects</h2>
-                    <button className="text-primary text-sm font-bold hover:underline">View All</button>
+                    <h2 className="text-white text-2xl font-bold font-display leading-tight tracking-tight">{t("dashboard.recentProjects")}</h2>
+                    <button className="text-primary text-sm font-bold hover:underline">{t("dashboard.viewAll")}</button>
                 </div>
 
                 <div className="flex flex-col gap-3">
@@ -126,7 +125,7 @@ export default function DashboardPage() {
                     ) : projects.length === 0 ? (
                         <div className="text-center py-12 bg-[#1e1e1e] rounded-xl border border-[#2e2e2e]">
                             <span className="material-symbols-outlined text-4xl text-white/20 mb-2">music_off</span>
-                            <p className="text-white/60">No projects yet. Start your first generation!</p>
+                            <p className="text-white/60">{t("dashboard.noProjects")}</p>
                         </div>
                     ) : (
                         projects.map((project) => (
@@ -148,7 +147,7 @@ export default function DashboardPage() {
                                                 {getStatusBadge(project.status)}
                                             </div>
                                             <p className="text-slate-400 text-sm font-medium">
-                                                Style: {project.style_id} • Created {new Date(project.created_at).toLocaleDateString()}
+                                                {t("dashboard.style")}: {project.style_id} • {t("dashboard.created")} {new Date(project.created_at).toLocaleDateString()}
                                             </p>
                                         </div>
                                     </div>
