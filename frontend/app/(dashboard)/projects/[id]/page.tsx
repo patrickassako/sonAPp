@@ -301,6 +301,13 @@ export default function ProjectResultPage() {
                                     });
                                     if (!res.ok) {
                                         const err = await res.json();
+                                        if (res.status === 402) {
+                                            setVideoGenerating(false);
+                                            if (confirm(`Credits insuffisants pour generer le clip video.\n\nVoulez-vous acheter des credits ?`)) {
+                                                window.location.href = "/credits";
+                                            }
+                                            return;
+                                        }
                                         throw new Error(err.detail || "Failed to start video generation");
                                     }
                                     // Poll for video_url by re-fetching audio files periodically

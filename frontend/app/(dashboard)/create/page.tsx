@@ -58,6 +58,15 @@ export default function CreateWizardPage() {
                     language
                 })
             });
+
+            if (response.status === 402) {
+                setGeneratingLyrics(false);
+                if (confirm("Credits insuffisants pour generer les paroles (1 credit).\n\nVoulez-vous acheter des credits ?")) {
+                    router.push("/credits");
+                }
+                return;
+            }
+
             const data = await response.json();
             if (data.candidates && data.candidates.length > 0) {
                 setLyricsCandidates(data.candidates);
@@ -202,6 +211,13 @@ export default function CreateWizardPage() {
 
             if (!generateResponse.ok) {
                 const err = await generateResponse.json();
+                if (generateResponse.status === 402) {
+                    setLoading(false);
+                    if (confirm(`Credits insuffisants pour cette generation.\n\nVoulez-vous acheter des credits ?`)) {
+                        router.push("/credits");
+                    }
+                    return;
+                }
                 throw new Error(err.detail || "Failed to start generation");
             }
 
@@ -212,7 +228,14 @@ export default function CreateWizardPage() {
 
         } catch (error: any) {
             console.error("Error creating project:", error);
-            alert(`Error: ${error.message}`); // Simple feedback
+            if (error.message?.includes("credit") || error.message?.includes("Credit")) {
+                if (confirm(`Credits insuffisants.\n\nVoulez-vous acheter des credits ?`)) {
+                    router.push("/credits");
+                    return;
+                }
+            } else {
+                alert(`Erreur: ${error.message}`);
+            }
         } finally {
             setLoading(false);
         }
@@ -630,11 +653,27 @@ export default function CreateWizardPage() {
                                     <p className="text-primary text-xs font-bold uppercase tracking-wider mb-1">Cost</p>
                                     <p className="text-3xl font-bold">{getCost()} <span className="text-sm font-medium text-white/60">Credits</span></p>
                                 </div>
-                                <div className="flex-1 bg-white/5 border border-white/10 rounded-xl p-4 text-center">
-                                    <p className="text-white/40 text-xs font-bold uppercase tracking-wider mb-1">Your Balance</p>
+                                <div className={`flex-1 rounded-xl p-4 text-center ${credits < getCost() ? "bg-red-500/10 border border-red-500/30" : "bg-white/5 border border-white/10"}`}>
+                                    <p className={`text-xs font-bold uppercase tracking-wider mb-1 ${credits < getCost() ? "text-red-400" : "text-white/40"}`}>Your Balance</p>
                                     <p className="text-3xl font-bold">{credits} <span className="text-sm font-medium text-white/60">Credits</span></p>
                                 </div>
                             </div>
+
+                            {/* Insufficient credits alert */}
+                            {credits < getCost() && (
+                                <div className="max-w-2xl mx-auto mt-4 bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex flex-col sm:flex-row items-center gap-3">
+                                    <div className="flex-1 text-center sm:text-left">
+                                        <p className="text-red-400 font-bold text-sm">Credits insuffisants</p>
+                                        <p className="text-white/50 text-xs mt-1">Il vous manque {getCost() - credits} credit{getCost() - credits > 1 ? "s" : ""} pour cette generation.</p>
+                                    </div>
+                                    <a
+                                        href="/credits"
+                                        className="bg-primary hover:bg-primary/90 text-white font-bold px-6 py-2.5 rounded-full text-sm transition-colors whitespace-nowrap"
+                                    >
+                                        Acheter des credits
+                                    </a>
+                                </div>
+                            )}
                         </div>
                     )
                 }
