@@ -167,8 +167,9 @@ async def _generate_music_impl(job_id: str, project_id: str):
                     stream_url = stream_urls[idx] if idx < len(stream_urls) else None
                     image_url = image_urls[idx] if idx < len(image_urls) else None
                     provider_audio_id = suno_audio_ids[idx] if idx < len(suno_audio_ids) else None
-                    # Use real duration from Suno response
-                    track_duration = suno_data[idx].get("duration", 120) if idx < len(suno_data) else 120
+                    # Use real duration from Suno response (cast to int, DB column is INTEGER)
+                    raw_duration = suno_data[idx].get("duration", 120) if idx < len(suno_data) else 120
+                    track_duration = int(raw_duration) if raw_duration is not None else 120
                     af_id = str(uuid.uuid4())
                     audio_file_ids.append(af_id)
 

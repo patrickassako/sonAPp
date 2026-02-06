@@ -276,7 +276,7 @@ function GeneratingContent() {
                     }
                 } else if (data.status === "failed") {
                     setStatus("failed");
-                    setError(data.error || t("generating.descFailed"));
+                    setError(data.error_message || data.error || t("generating.descFailed"));
                     return;
                 } else {
                     setProgress((prev) => {

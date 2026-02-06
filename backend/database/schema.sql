@@ -81,6 +81,8 @@ CREATE TABLE IF NOT EXISTS audio_files (
   file_url TEXT,
   stream_url TEXT,
   image_url TEXT,
+  provider_audio_id TEXT,
+  video_url TEXT,
   duration INTEGER,
   version_number INTEGER NOT NULL DEFAULT 1,
   created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
